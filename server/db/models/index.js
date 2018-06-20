@@ -36,5 +36,6 @@ module.exports = {
   Pothole,
   Order,
   Comment,
-  Crew
+  Crew,
+  Upvote
 }
