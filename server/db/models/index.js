@@ -1,18 +1,40 @@
 const User = require('./user')
+const Pothole = require('./pothole')
+const Order = require('./order')
+const Comment = require('./comment')
+const Crew = require('./crew')
+const Upvote = require('./upvote')
 
-/**
- * If we had any associations to make, this would be a great place to put them!
- * ex. if we had another model called BlogPost, we might say:
- *
- *    BlogPost.belongsTo(User)
- */
+Pothole.belongsTo(User, {foreignKey: 'reporterId'})
 
-/**
- * We'll export all of our models here, so that any time a module needs a model,
- * we can just require it from 'db/models'
- * for example, we can say: const {User} = require('../db/models')
- * instead of: const User = require('../db/models/user')
- */
+Order.hasMany(Pothole)
+Pothole.belongsTo(Order)
+
+User.hasMany(Order)
+Order.belongsTo(User)
+
+Crew.hasMany(Order)
+Order.belongsTo(Crew)
+
+Crew.hasMany(User)
+User.belongsTo(Crew)
+
+User.hasMany(Comment)
+Comment.belongsTo(User)
+
+Pothole.hasMany(Comment)
+Comment.belongsTo(Pothole)
+
+Pothole.belongsToMany(User, {through: Upvote})
+// Pothole.hasMany(Upvote)
+// User.hasMany(Upvote)
+// // Upvote.belongsTo(Pothole)
+// // Upvote.belongsto(User)
+
 module.exports = {
-  User
+  User,
+  Pothole,
+  Order,
+  Comment,
+  Crew
 }
