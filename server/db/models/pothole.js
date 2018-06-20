@@ -15,7 +15,7 @@ const Pothole = db.define('pothole', {
     type: Sequelize.DATE
   },
   status: {
-    type: Sequelize.ENUM('Requested', 'In Progress', 'Completed')
+    type: Sequelize.ENUM('Requested', 'Approved', 'In Progress', 'Completed')
   },
   serviceNumber: {
     type: Sequelize.INTEGER
@@ -24,10 +24,10 @@ const Pothole = db.define('pothole', {
     type: Sequelize.INTEGER
   },
   latitude: {
-    type: Sequelize.DECIMAL(10, 6)
+    type: Sequelize.DECIMAL(18, 15)
   },
   longitude: {
-    type: Sequelize.DECIMAL(10, 6)
+    type: Sequelize.DECIMAL(18, 15)
   },
   mostRecentAction: {
     type: Sequelize.STRING
