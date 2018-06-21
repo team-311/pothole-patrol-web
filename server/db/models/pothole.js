@@ -15,10 +15,10 @@ const Pothole = db.define('pothole', {
     type: Sequelize.DATE
   },
   status: {
-    type: Sequelize.ENUM('Requested', 'Approved', 'In Progress', 'Completed')
+    type: Sequelize.STRING,
   },
   serviceNumber: {
-    type: Sequelize.INTEGER
+    type: Sequelize.STRING
   },
   ward: {
     type: Sequelize.INTEGER
@@ -34,6 +34,16 @@ const Pothole = db.define('pothole', {
   },
   subscribed: {
     type: Sequelize.BOOLEAN
+  },
+  streetAddress: {
+    type: Sequelize.STRING,
+  },
+  zip: {
+    type: Sequelize.STRING(5),
+  },
+  updatedAt: {
+    type: Sequelize.DATE,
+    defaultValue: Sequelize.literal('NOW()'),
   }
 });
 
