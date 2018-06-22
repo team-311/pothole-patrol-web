@@ -1,13 +1,32 @@
-const router = require('express').Router();
-const { Pothole } = require('../db/models');
-const Sequelize = require('sequelize');
-module.exports = router;
-
+const router = require('express').Router()
+const { Pothole } = require('../db/models')
+const Sequelize = require('sequelize')
 const Op = Sequelize.Op;
 
-router.get('/:lat/:lon/', async (req, res, next) => {
-  const latitude = Number(req.params.lat);
-  const longitude = Number(req.params.lon);
+router.get('/', async (req, res, next) => {
+  const page = req.query.page || 1
+  const limit = process.env.POTHOLES_PAGE_SIZE || 25
+  const offset = (page - 1) * limit
+
+  const {count, rows: requests} = await Pothole.findAndCountAll({
+    order: [['createdAt', 'DESC']],
+    offset,
+    limit,
+  })
+
+  const lastPage = Math.ceil(count / limit) // round up to account for additional items
+
+  res.json({
+    count,
+    requests,
+    currentPage: offset,
+    lastPage,
+  })
+})
+
+router.get('/nearby', async (req, res, next) => {
+  const latitude = Number(req.query.lat);
+  const longitude = Number(req.query.lon);
   const latDelt = 0.01;
   const lonDelt = 0.01;
   try {
@@ -35,3 +54,6 @@ router.get('/:lat/:lon/', async (req, res, next) => {
     next(err);
   }
 });
+
+
+module.exports = router
