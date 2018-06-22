@@ -6,7 +6,7 @@ router.get('/', async (req, res, next) => {
   const limit = process.env.POTHOLES_PAGE_SIZE || 25
   const offset = (page - 1) * limit
 
-  const {count, rows: requests} = await Pothole.findAndCountAll({
+  const { count, rows: requests } = await Pothole.findAndCountAll({
     order: [['createdAt', 'DESC']],
     offset,
     limit,
@@ -20,6 +20,15 @@ router.get('/', async (req, res, next) => {
     currentPage: offset,
     lastPage,
   })
+})
+
+router.get('/:id', async (req, res, next) => {
+  try {
+    const data = await Pothole.findById(req.params.id)
+    res.json(data)
+  } catch (err) {
+    next(err)
+  }
 })
 
 module.exports = router
