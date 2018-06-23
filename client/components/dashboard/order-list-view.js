@@ -29,7 +29,7 @@ class OrderListView extends Component {
     return (
       <div>
         {
-          orders.map(orders => <p key={order.id}>{order.status}</p>)
+          orders.map(order => <p key={order.id}>{order.id} - {order.status}</p>)
         }
         <p>Page {this.state.page} out of {lastPage}</p>
         <button onClick={this.handleClick} type="button">Next page</button>
