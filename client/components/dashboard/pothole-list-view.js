@@ -34,8 +34,7 @@ class PotholeListView extends Component {
       <div>
         {requests.map(request => (
           <Link
-            // to={`./singlepothole/${request.id}`}
-            to="./singlepothole"
+            to={`./singlepothole/${request.id}`}
             style={{ display: 'block' }}
             key={request.id}
           >

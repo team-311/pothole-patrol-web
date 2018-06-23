@@ -26,14 +26,14 @@ class Routes extends Component {
       <Switch>
         {/* Routes placed here are available to all visitors */}
         <Route path="/login" component={Login} />
-        <Route path="/signup" component={SinglePothole} />
-        <Route path="/dashboard" component={Dashboard} />
-        <Route exact path="/singlepothole" component={SinglePothole} />
+        <Route path="/signup" component={Signup} />
 
         {isLoggedIn && (
           <Switch>
             {/* Routes placed here are only available after logging in */}
             <Route path="/home" component={UserHome} />
+            <Route path="/dashboard" component={Dashboard} />
+            <Route path="/singlepothole/:id" component={SinglePothole} />
           </Switch>
         )}
         {/* Displays our Login component as a fallback */}
