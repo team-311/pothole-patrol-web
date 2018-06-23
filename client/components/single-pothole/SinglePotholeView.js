@@ -2,14 +2,18 @@ import React, { Component } from 'react';
 import ReactMapboxGl, { Layer, Feature } from 'react-mapbox-gl';
 import mapAccessToken from '../../../secrets';
 
-const Map = ReactMapboxGl({
+const Map = new ReactMapboxGl({
   accessToken: mapAccessToken,
 });
+
+const style = 'mapbox://styles/mapbox/streets-v9';
 
 class SinglePothole extends Component {
   constructor() {
     super();
-    this.state = {};
+    this.state = {
+      potholePic: '',
+    };
   }
 
   render() {
@@ -17,18 +21,19 @@ class SinglePothole extends Component {
       <h1>Hello</h1>,
       (
         <Map
-          style={'mapbox://styles/mapbox/streets-v9'}
+          style={style}
           containerStyle={{
             height: '100vh',
             width: '100vw',
           }}
+          center={[-87.6354, 41.8885]}
         >
           <Layer
             type="symbol"
             id="marker"
-            layout={{ 'icon-image': 'marker-15' }}
+            layout={{ 'icon-image': 'harbor-15' }}
           >
-            <Feature coordinates={[-0.481747846041145, 51.3233379650232]} />
+            <Feature coordinates={[-87.6354, 41.8885]} />
           </Layer>
         </Map>
       )
