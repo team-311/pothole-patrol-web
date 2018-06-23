@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { createGetLatestOrdersThunk } from '../../store';
-import { Table, Button, Icon } from 'semantic-ui-react';
-import OrderRowItem from './order-row-item';
+import { createGetLatestOrdersThunk } from '../store';
+import { Table, Button} from 'semantic-ui-react';
+import {OrderRowItem} from './';
+import history from '../history'
 import moment from 'moment';
 
 class OrderListView extends Component {
@@ -18,21 +19,28 @@ class OrderListView extends Component {
   }
 
   handleClick = () => {
-    this.setState(
-      prevState => {
-        return {
-          page: prevState.page + 1,
-        };
-      },
-      () => {
-        this.props.getLatestOrders(this.state.page);
-      }
-    );
+    if (this.props.isDashboardCard) history.push('/orders')
+    else {
+      this.setState(
+        prevState => {
+          return {
+            page: prevState.page + 1,
+          };
+        },
+        () => {
+          this.props.getLatestOrders(this.state.page);
+        }
+      );
+    }
   };
 
   render() {
-    const { orders, lastPage } = this.props.orders;
-
+    let { orders, lastPage } = this.props.orders;
+    let buttonText = 'View More'
+    if (this.props.isDashboardCard) {
+      orders = orders.slice(6)
+      buttonText = 'View All'
+    }
     return (
       <Table celled padded>
         <Table.Header>
@@ -69,16 +77,19 @@ class OrderListView extends Component {
         <Table.Footer fullWidth>
           <Table.Row>
             <Table.HeaderCell />
+            {this.props.isDashBoardCard ? <Table.Cell>Viewing page {this.state.page} out of {lastPage}</Table.Cell> :
+            <Table.Cell/>
+          }
             <Table.Cell textAlign='left' colSpan="4">
-            Viewing {this.state.page} out of {lastPage}
               <Button
                 floated="right"
                 labelPosition="left"
                 primary
                 size="large"
                 onClick={this.handleClick}
+                disabled={this.state.page === 1 && !this.props.isDashboardCard }
               >
-              View More
+              {buttonText}
               </Button>
             </Table.Cell>
           </Table.Row>

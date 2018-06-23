@@ -1,10 +1,12 @@
 import React from 'react';
-import { PotholeListView, OrderListView } from '../';
+import { PotholeListView, OrderListView, Analytics, OrderListCard } from '../';
 
 const Dashboard = () => {
   return (
     <div>
-      <OrderListView />
+      <Analytics />
+      <PotholeListView />
+      <OrderListCard />
     </div>
   );
 };
