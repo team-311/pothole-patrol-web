@@ -64,4 +64,28 @@ router.get('/nearby', async (req, res, next) => {
   }
 });
 
+router.get('/:id', async (req, res, next) => {
+  try {
+    const data = await Pothole.findById(req.params.id);
+    res.json(data);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post('/', async (req, res, next) => {
+  const pothole = {
+    placement: req.body.placement,
+    description: req.body.description || '',
+    imageUrl: req.body.imageUrl.slice(0, 25),
+    streetAddress: req.body.location.streetAddress,
+    zip: req.body.location.zip,
+    latitude: req.body.location.latitude,
+    longitude: req.body.location.longitude,
+  };
+
+  const createdPothole = await Pothole.create(pothole);
+  res.json(createdPothole.id);
+});
+
 module.exports = router;

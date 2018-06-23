@@ -16,6 +16,7 @@ const Pothole = db.define('pothole', {
   },
   status: {
     type: Sequelize.STRING,
+    defaultValue: 'Open'
   },
   serviceNumber: {
     type: Sequelize.STRING
