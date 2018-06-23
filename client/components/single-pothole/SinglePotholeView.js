@@ -36,7 +36,8 @@ class SinglePothole extends Component {
 
   render() {
     const { pothole } = this.props.potholes;
-    console.log(pothole.latitude || '-87.6354');
+    console.log(pothole);
+    // console.log(pothole.latitude || '-87.6354');
     const latitude = +pothole.latitude || -87.6354;
     const longitude = +pothole.longitude || 41.8885;
 
