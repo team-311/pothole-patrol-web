@@ -7,27 +7,53 @@ import {
   Dimmer,
   Loader,
   Image,
+  Dropdown,
 } from 'semantic-ui-react';
-import ReactMapboxGl, { Layer, Feature } from 'react-mapbox-gl';
+// import ReactMapboxGl, { Layer, Feature } from 'react-mapbox-gl';
+import GoogleMapReact from 'google-map-react';
 import mapAccessToken from '../../../secrets';
-import { createGotPotholeThunk } from '../../store';
+import { createGotPotholeThunk, createUpdateStatusThunk } from '../../store';
 import { connect } from 'react-redux';
 
-const Map = new ReactMapboxGl({
-  accessToken: mapAccessToken,
-});
-
-const style = 'mapbox://styles/mapbox/streets-v9';
+const accessToken = mapAccessToken;
+const AnyReactComponent = ({ text }) => (
+  <div
+    style={{
+      color: 'white',
+      background: 'grey',
+      padding: '15px 10px',
+      display: 'inline-flex',
+      textAlign: 'center',
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: '100%',
+      transform: 'translate(-50%, -50%)',
+    }}
+  >
+    {text}
+  </div>
+);
+const options = [
+  { key: 'open', text: 'Open', value: 'Open' },
+  { key: 'in-progress', text: 'In-progress', value: 'In-progess' },
+  { key: 'closed', text: 'Closed', value: 'Closed' },
+];
 
 class SinglePothole extends Component {
   constructor() {
     super();
     this.state = {};
+    this.handleClick = this.handleClick.bind(this);
   }
 
   async componentDidMount() {
     const potholeId = this.props.match.params.id;
     await this.props.getPothole(potholeId);
+  }
+
+  handleClick(event) {
+    event.preventDefault();
+    console.log(event.target);
   }
 
   render() {
@@ -45,8 +71,15 @@ class SinglePothole extends Component {
         </div>
       );
     }
-    const latitude = +pothole.latitude || -87.6354;
-    const longitude = +pothole.longitude || 41.8885;
+    const latitude = +pothole.longitude || -87.6354;
+    const longitude = +pothole.latitude || 41.8885;
+    const defaultProps = {
+      center: {
+        lat: longitude,
+        lng: latitude,
+      },
+    };
+    console.log(pothole);
     return (
       <div>
         <Container>
@@ -54,23 +87,19 @@ class SinglePothole extends Component {
             <Grid divided="vertically">
               <Grid.Row columns={2}>
                 <Grid.Column width={12}>
-                  <Map
-                    style={style}
-                    styles={{ display: 'flex' }}
-                    containerStyle={{
-                      height: '75vh',
-                      width: '75vw',
-                    }}
-                    center={[longitude, latitude]}
-                  >
-                    <Layer
-                      type="symbol"
-                      id="marker"
-                      layout={{ 'icon-image': 'harbor-15' }}
+                  <div style={{ height: '100vh', width: '100%' }}>
+                    <GoogleMapReact
+                      bootstrapURLKeys={{ key: accessToken }}
+                      center={defaultProps.center}
+                      defaultZoom={15}
                     >
-                      <Feature coordinates={[longitude, latitude]} />
-                    </Layer>
-                  </Map>
+                      <AnyReactComponent
+                        lat={longitude}
+                        lng={latitude}
+                        text={'Chicago'}
+                      />
+                    </GoogleMapReact>
+                  </div>
                 </Grid.Column>
 
                 <Grid.Column
@@ -93,6 +122,16 @@ class SinglePothole extends Component {
                     Lorem Ipsum has been the industry's standard dummy text ever
                     since the 1500s
                   </Header>
+                  <Dropdown
+                    placeholder="Open"
+                    selection
+                    // search
+                    options={options}
+                    // value={pothole.status}
+                    // defaultValue="Open"
+                    name={pothole.status}
+                    onClick={this.handleClick}
+                  />
                 </Grid.Column>
               </Grid.Row>
             </Grid>

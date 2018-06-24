@@ -2,7 +2,7 @@ const router = require('express').Router();
 const { Pothole } = require('../db/models');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
-const cloudinary = require('cloudinary')
+const cloudinary = require('cloudinary');
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -79,6 +79,21 @@ router.get('/:id', async (req, res, next) => {
   }
 });
 
+router.put('/:id', async (req, res, next) => {
+  try {
+    let response = await Pothole.update(req.body, {
+      where: { id: req.params.id },
+      returning: true,
+    });
+    res.json({
+      message: 'Updated successfully',
+      pothole: response[1][0],
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.post('/', async (req, res, next) => {
   const pothole = {
     placement: req.body.placement,
@@ -91,23 +106,22 @@ router.post('/', async (req, res, next) => {
 
   const createdPothole = await Pothole.create(pothole);
   res.json(createdPothole.id);
-});
+
   if (req.body.imageUrl) {
     cloudinary.v2.uploader.upload(req.body.imageUrl, async (err, photo) => {
       if (err) {
         // the request should not be rejected if the image hosting site is down
-        console.error('Could not upload picture', err)
+        console.error('Could not upload picture', err);
       } else {
-        pothole.imageUrl = photo.url
+        pothole.imageUrl = photo.url;
       }
-      const createdPothole = await Pothole.create(pothole)
-      res.json(createdPothole.id)
-    })
+      const createdPothole = await Pothole.create(pothole);
+      res.json(createdPothole.id);
+    });
   } else {
-    const createdPothole = await Pothole.create(pothole)
-    res.json(createdPothole.id)
+    const createdPothole = await Pothole.create(pothole);
+    res.json(createdPothole.id);
   }
-
-})
+});
 
 module.exports = router;

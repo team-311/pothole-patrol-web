@@ -3,6 +3,7 @@ import axios from 'axios';
 // action types
 const GOT_POTHOLES = 'GOT_POTHOLES';
 const GOT_SINGLE_POTHOLE = 'GOT_SINGLE_POTHOLE';
+const UPDATE_STATUS = 'UPDATE_STATUS';
 
 // initial state
 const initialState = {
@@ -18,6 +19,11 @@ const createGotPotholesAction = potholes => ({ type: GOT_POTHOLES, potholes });
 
 const createGotSinglePotholeAction = pothole => ({
   type: GOT_SINGLE_POTHOLE,
+  pothole,
+});
+
+const createUpdateStatusAction = pothole => ({
+  type: UPDATE_STATUS,
   pothole,
 });
 
@@ -41,8 +47,18 @@ export const createGotPotholeThunk = potholeId => {
       const { data: singlePothole } = await axios.get(
         `/api/potholes/${potholeId}`
       );
-      console.log(singlePothole);
       dispatch(createGotSinglePotholeAction(singlePothole));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+};
+
+export const createUpdateStatusThunk = (pothole, potholeId) => {
+  return async dispatch => {
+    try {
+      const response = await axios.put(`/api/potholes/${potholeId}`, pothole);
+      dispatch(createUpdateStatusAction(response));
     } catch (error) {
       console.error(error);
     }
@@ -55,6 +71,8 @@ export default function(state = initialState, action) {
     case GOT_POTHOLES:
       return action.potholes;
     case GOT_SINGLE_POTHOLE:
+      return { ...state, pothole: action.pothole };
+    case UPDATE_STATUS:
       return { ...state, pothole: action.pothole };
     default:
       return state;
