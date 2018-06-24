@@ -1,18 +1,12 @@
 import React, { Component } from 'react';
 import {
   Container,
-  Divider,
   Grid,
   Header,
-  Menu,
-  Message,
   Segment,
-  Table,
-  GridColumn,
   Dimmer,
   Loader,
   Image,
-  GridRow,
 } from 'semantic-ui-react';
 import ReactMapboxGl, { Layer, Feature } from 'react-mapbox-gl';
 import mapAccessToken from '../../../secrets';
@@ -33,13 +27,11 @@ class SinglePothole extends Component {
 
   async componentDidMount() {
     const potholeId = this.props.match.params.id;
-    console.log(potholeId);
     await this.props.getPothole(potholeId);
   }
 
   render() {
     const { pothole } = this.props.potholes;
-    console.log(pothole);
 
     if (!pothole) {
       return (
@@ -66,7 +58,7 @@ class SinglePothole extends Component {
                     style={style}
                     styles={{ display: 'flex' }}
                     containerStyle={{
-                      height: '100vh',
+                      height: '75vh',
                       width: '75vw',
                     }}
                     center={[longitude, latitude]}
@@ -88,6 +80,18 @@ class SinglePothole extends Component {
                 >
                   <Header textAlign="center" as="h2">
                     Pothole Details
+                  </Header>
+                  <Image
+                    style={{ margin: '1rem' }}
+                    src="https://upload.wikimedia.org/wikipedia/commons/1/10/Newport_Whitepit_Lane_pot_hole.JPG"
+                    size="small"
+                  />
+                  <Header as="h5" style={{ margin: '0 1rem' }}>
+                    {pothole.streetAddress} {pothole.zip}
+                  </Header>
+                  <Header as="h5" style={{ margin: '0 1rem' }}>
+                    Lorem Ipsum has been the industry's standard dummy text ever
+                    since the 1500s
                   </Header>
                 </Grid.Column>
               </Grid.Row>
