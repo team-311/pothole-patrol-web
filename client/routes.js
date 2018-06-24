@@ -33,7 +33,7 @@ class Routes extends Component {
             {/* Routes placed here are only available after logging in */}
             <Route path="/home" component={UserHome} />
             <Route path="/dashboard" component={Dashboard} />
-            <Route path="/singlepothole/:id" component={SinglePothole} />
+            <Route exact path="/singlepothole/:id" component={SinglePothole} />
             <Route path="/analytics" component={Analytics} />
           </Switch>
         )}

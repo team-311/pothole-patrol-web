@@ -41,6 +41,7 @@ export const createGotPotholeThunk = potholeId => {
       const { data: singlePothole } = await axios.get(
         `/api/potholes/${potholeId}`
       );
+      console.log(singlePothole);
       dispatch(createGotSinglePotholeAction(singlePothole));
     } catch (error) {
       console.error(error);
