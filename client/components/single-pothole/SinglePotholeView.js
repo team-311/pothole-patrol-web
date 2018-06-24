@@ -7,10 +7,11 @@ import {
   Dimmer,
   Loader,
   Image,
+  Dropdown,
 } from 'semantic-ui-react';
 import ReactMapboxGl, { Layer, Feature } from 'react-mapbox-gl';
 import mapAccessToken from '../../../secrets';
-import { createGotPotholeThunk } from '../../store';
+import { createGotPotholeThunk, createUpdateStatusThunk } from '../../store';
 import { connect } from 'react-redux';
 
 const Map = new ReactMapboxGl({
@@ -19,15 +20,27 @@ const Map = new ReactMapboxGl({
 
 const style = 'mapbox://styles/mapbox/streets-v9';
 
+const options = [
+  { key: 'open', text: 'Open', value: 'Open' },
+  { key: 'in-progress', text: 'In-progress', value: 'In-progess' },
+  { key: 'closed', text: 'Closed', value: 'Closed' },
+];
+
 class SinglePothole extends Component {
   constructor() {
     super();
     this.state = {};
+    this.handleClick = this.handleClick.bind(this);
   }
 
   async componentDidMount() {
     const potholeId = this.props.match.params.id;
     await this.props.getPothole(potholeId);
+  }
+
+  handleClick(event) {
+    event.preventDefault();
+    console.log(event.target);
   }
 
   render() {
@@ -47,6 +60,7 @@ class SinglePothole extends Component {
     }
     const latitude = +pothole.latitude || -87.6354;
     const longitude = +pothole.longitude || 41.8885;
+    console.log(pothole);
     return (
       <div>
         <Container>
@@ -93,6 +107,16 @@ class SinglePothole extends Component {
                     Lorem Ipsum has been the industry's standard dummy text ever
                     since the 1500s
                   </Header>
+                  <Dropdown
+                    placeholder="Open"
+                    selection
+                    // search
+                    options={options}
+                    // value={pothole.status}
+                    // defaultValue="Open"
+                    name={pothole.status}
+                    onClick={this.handleClick}
+                  />
                 </Grid.Column>
               </Grid.Row>
             </Grid>

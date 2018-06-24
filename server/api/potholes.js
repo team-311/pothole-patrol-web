@@ -73,6 +73,21 @@ router.get('/:id', async (req, res, next) => {
   }
 });
 
+router.put('/:id', async (req, res, next) => {
+  try {
+    let response = await Pothole.update(req.body, {
+      where: { id: req.params.id },
+      returning: true,
+    });
+    res.json({
+      message: 'Updated successfully',
+      pothole: response[1][0],
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.post('/', async (req, res, next) => {
   const pothole = {
     placement: req.body.placement,
