@@ -2,6 +2,12 @@ const router = require('express').Router();
 const { Pothole } = require('../db/models');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
+const cloudinary = require('cloudinary')
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 router.get('/', async (req, res, next) => {
   const page = req.query.page || 1;
@@ -77,7 +83,6 @@ router.post('/', async (req, res, next) => {
   const pothole = {
     placement: req.body.placement,
     description: req.body.description || '',
-    imageUrl: req.body.imageUrl.slice(0, 25),
     streetAddress: req.body.location.streetAddress,
     zip: req.body.location.zip,
     latitude: req.body.location.latitude,
@@ -87,5 +92,22 @@ router.post('/', async (req, res, next) => {
   const createdPothole = await Pothole.create(pothole);
   res.json(createdPothole.id);
 });
+  if (req.body.imageUrl) {
+    cloudinary.v2.uploader.upload(req.body.imageUrl, async (err, photo) => {
+      if (err) {
+        // the request should not be rejected if the image hosting site is down
+        console.error('Could not upload picture', err)
+      } else {
+        pothole.imageUrl = photo.url
+      }
+      const createdPothole = await Pothole.create(pothole)
+      res.json(createdPothole.id)
+    })
+  } else {
+    const createdPothole = await Pothole.create(pothole)
+    res.json(createdPothole.id)
+  }
+
+})
 
 module.exports = router;
