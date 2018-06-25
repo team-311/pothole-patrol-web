@@ -37,6 +37,7 @@ router.get('/nearby', async (req, res, next) => {
   const lonDelt = 0.01;
   try {
     const potholes = await Pothole.findAll({
+      attributes: ['id', 'latitude', 'longitude', 'serviceNumber', 'placement'],
       where: {
         latitude: {
           [Op.and]: [
