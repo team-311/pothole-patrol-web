@@ -73,8 +73,10 @@ export default function(state = initialState, action) {
     case GOT_SINGLE_POTHOLE:
       return { ...state, pothole: action.pothole };
     case UPDATE_STATUS:
-      return { ...state,
-        : action.pothole };
+      return {
+        ...state,
+        pothole: action.pothole,
+      };
     default:
       return state;
   }
