@@ -126,7 +126,8 @@ class SinglePothole extends Component {
                       Address:{' '}
                     </Header>
                     <Header as="h5" style={{ margin: '0 1rem' }}>
-                      {pothole.streetAddress} {pothole.zip}
+                      {this.props.pothole.streetAddress}{' '}
+                      {this.props.pothole.zip}
                     </Header>
                     <br />
                     <Header as="h4" style={{ margin: '0 1rem' }}>

@@ -58,8 +58,7 @@ export const createUpdateStatusThunk = (pothole, potholeId) => {
   return async dispatch => {
     try {
       const response = await axios.put(`/api/potholes/${potholeId}`, pothole);
-      console.log(response.data);
-      dispatch(createUpdateStatusAction(response.data));
+      dispatch(createUpdateStatusAction(response.data.pothole));
     } catch (error) {
       console.error(error);
     }
