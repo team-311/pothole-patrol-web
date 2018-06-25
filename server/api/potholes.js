@@ -1,8 +1,9 @@
 const router = require('express').Router();
-const { Pothole } = require('../db/models');
+const { Pothole, User } = require('../db/models');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 const cloudinary = require('cloudinary');
+
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -114,5 +115,18 @@ router.post('/', async (req, res, next) => {
     res.json(createdPothole.id);
   }
 });
+
+router.post('/upvote', async (req, res, next) => {
+  //how to extract the data without being bad
+  console.log('hitting the upvote route')
+  console.log('req.body', req.body)
+  try {
+    const user = await User.findById(req.body.userId)
+    const pothole = await Pothole.findById(req.body.potholeId)
+    await user.addPothole(pothole)
+    await pothole.addUser(user)
+    res.json(pothole)
+  } catch (err) {next(err)}
+})
 
 module.exports = router;
