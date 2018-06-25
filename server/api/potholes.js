@@ -89,6 +89,8 @@ router.post('/', async (req, res, next) => {
     longitude: req.body.location.longitude,
   };
 
+  if (req.user.id && !req.body.anonymous) pothole.reporterId = req.user.id
+
   if (req.body.imageUrl) {
     cloudinary.v2.uploader.upload(req.body.imageUrl, async (err, photo) => {
       if (err) {
@@ -104,13 +106,6 @@ router.post('/', async (req, res, next) => {
     const createdPothole = await Pothole.create(pothole)
     res.json(createdPothole.id)
   }
-
-
-  if (req.user.id && !req.body.anonymous) pothole.reporterId = req.user.id
-
-  const createdPothole = await Pothole.create(pothole)
-  res.json(createdPothole.id)
-
 })
 
 module.exports = router;
