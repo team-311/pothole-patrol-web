@@ -79,35 +79,35 @@ router.get('/:id', async (req, res, next) => {
   }
 });
 
-router.post('/', async (req, res, next) => {
-  const pothole = {
-    placement: req.body.placement,
-    description: req.body.description || '',
-    streetAddress: req.body.location.streetAddress,
-    zip: req.body.location.zip,
-    latitude: req.body.location.latitude,
-    longitude: req.body.location.longitude,
-  };
+// router.post('/', async (req, res, next) => {
+//   const pothole = {
+//     placement: req.body.placement,
+//     description: req.body.description || '',
+//     streetAddress: req.body.location.streetAddress,
+//     zip: req.body.location.zip,
+//     latitude: req.body.location.latitude,
+//     longitude: req.body.location.longitude,
+//   };
 
-  const createdPothole = await Pothole.create(pothole);
-  res.json(createdPothole.id);
-});
-  if (req.body.imageUrl) {
-    cloudinary.v2.uploader.upload(req.body.imageUrl, async (err, photo) => {
-      if (err) {
-        // the request should not be rejected if the image hosting site is down
-        console.error('Could not upload picture', err)
-      } else {
-        pothole.imageUrl = photo.url
-      }
-      const createdPothole = await Pothole.create(pothole)
-      res.json(createdPothole.id)
-    })
-  } else {
-    const createdPothole = await Pothole.create(pothole)
-    res.json(createdPothole.id)
-  }
+//   const createdPothole = await Pothole.create(pothole);
+//   res.json(createdPothole.id);
+// });
+//   if (req.body.imageUrl) {
+//     cloudinary.v2.uploader.upload(req.body.imageUrl, async (err, photo) => {
+//       if (err) {
+//         // the request should not be rejected if the image hosting site is down
+//         console.error('Could not upload picture', err)
+//       } else {
+//         pothole.imageUrl = photo.url
+//       }
+//       const createdPothole = await Pothole.create(pothole)
+//       res.json(createdPothole.id)
+//     })
+//   } else {
+//     const createdPothole = await Pothole.create(pothole)
+//     res.json(createdPothole.id)
+//   }
 
-})
+// })
 
 module.exports = router;
