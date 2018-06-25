@@ -75,6 +75,8 @@ router.post('/', async (req, res, next) => {
     longitude: req.body.location.longitude,
   }
 
+  if (req.user.id && !req.body.anonymous) pothole.reporterId = req.user.id
+
   const createdPothole = await Pothole.create(pothole)
   res.json(createdPothole.id)
 })
