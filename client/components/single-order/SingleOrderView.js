@@ -17,8 +17,7 @@ class SingleOrderView extends Component {
   };
 
   render() {
-    const order = this.props.order ? this.props.order : {crew: {name: ''}, user: {firstName: '', lastName: ''}}
-    console.log('order', order)
+    const order = this.props.order.potholes ? this.props.order : {crew: {name: ''}, status: '', user: {firstName: '', lastName: ''}}
     const potholes = order.potholes
       ? order.potholes.filter(pothole => {
           return !pothole.status.endsWith('Dup');
@@ -38,15 +37,17 @@ class SingleOrderView extends Component {
               </Card.Meta>
               <Card.Content extra>
                 <List>
+                <List.Header>Status: {order.status}</List.Header>
                   <List.Item>
                     <List.Icon name="users" />
-                    <List.Content>{order.crew.name}</List.Content>
+                    <List.Content>Crew: {order.crew.name}</List.Content>
                   </List.Item>
                   <List.Item>
                     <List.Icon name="user circle" />
                     <List.Content>
+                      Commissioner:
                       {order.user.firstName
-                        ? order.user.firstName + ' ' + order.user.lastName
+                        ? ' ' + order.user.firstName + ' ' + order.user.lastName
                         : 'Unknown authorizer'}{' '}
                     </List.Content>
                   </List.Item>
@@ -81,18 +82,8 @@ class SingleOrderView extends Component {
             </Table.Header>
             <Table.Body>
               {potholes.map(pothole => {
-                return <PotholeRow key={pothole.id} order={pothole} />;
+                return <PotholeRow key={pothole.id} pothole={pothole} />;
               })}
-              {/* <Table.Row>
-                <Table.Cell>John</Table.Cell>
-                <Table.Cell>John</Table.Cell>
-                <Table.Cell>John</Table.Cell>
-                <Table.Cell>John</Table.Cell>
-                <Table.Cell>No Action</Table.Cell>
-                <Table.Cell selectable>
-                  <a href="#">Edit</a>
-                </Table.Cell>
-              </Table.Row> */}
             </Table.Body>
           </Table>
         </Grid.Column>
