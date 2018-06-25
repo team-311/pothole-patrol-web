@@ -70,14 +70,68 @@ router.get('/nearby', async (req, res, next) => {
   }
 });
 
-router.get('/:id', async (req, res, next) => {
+// router.get('/:id', async (req, res, next) => {
+//   try {
+//     const data = await Pothole.findById(req.params.id);
+//     res.json(data);
+//   } catch (err) {
+//     next(err);
+//   }
+// });
+
+router.get('/allopen', async (req, res, next) => {
   try {
-    const data = await Pothole.findById(req.params.id);
-    res.json(data);
+    const data = await Pothole.findAll({
+      where: {
+        status: {
+          [Op.like]: 'Open%',
+        }
+      }
+    })
   } catch (err) {
-    next(err);
+    next(err)
   }
-});
+})
+
+router.get('/allclosed', async (req, res, next) => {
+  try {
+    const data = await Pothole.findAll({
+      where: {
+        status: 'Closed'
+      }
+    })
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.get('/lastweek', async (req, res, next) => {
+  try {
+    const data = await Pothole.findAll({
+      where: {
+        createdAt: {
+          [Op.gt]: new Date(new Date() - 7 * 60 * 60 * 1000)
+        }
+      }
+    })
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.get('/lastmonth', async (req, res, next) => {
+  try {
+    const data = await Pothole.findAll({
+      where: {
+        createdAt: {
+          [Op.gt]: new Date(new Date() - 30 * 60 * 60 * 1000)
+        }
+      }
+    })
+  } catch (err) {
+    next(err)
+  }
+})
 
 router.post('/', async (req, res, next) => {
   const pothole = {
@@ -89,9 +143,9 @@ router.post('/', async (req, res, next) => {
     longitude: req.body.location.longitude,
   };
 
-  const createdPothole = await Pothole.create(pothole);
-  res.json(createdPothole.id);
-});
+  // const createdPothole = await Pothole.create(pothole);
+  // res.json(createdPothole.id);
+  // });
   if (req.body.imageUrl) {
     cloudinary.v2.uploader.upload(req.body.imageUrl, async (err, photo) => {
       if (err) {
