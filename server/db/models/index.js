@@ -28,11 +28,11 @@ Comment.belongsTo(Pothole)
 Pothole.belongsToMany(User, {through: 'upvotes', as: 'upvoters'})
 User.belongsToMany(Pothole, {through: 'upvotes', as: 'upvoted'})
 
-User.addScope('defaultScope', {
-  include: [{model: Pothole, where: { status: 'Open' }}]
-}, {
-  override: true,
-})
+// User.addScope('defaultScope', {
+//   include: [{model: Pothole, where: { status: 'Open' }}]
+// }, {
+//   override: true,
+// })
 
 module.exports = {
   User,

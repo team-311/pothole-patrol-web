@@ -2,6 +2,7 @@ import axios from 'axios'
 
 // action types
 const GOT_ORDERS = 'GOT_ORDERS'
+const GOT_ORDER = 'GOT_ORDER'
 
 // initial state
 const initialState = {
@@ -9,10 +10,13 @@ const initialState = {
   orders: [],
   currentPage: 1,
   lastPage: 1,
+  order: {}
 }
 
 // action creators
 const createGotOrdersAction = (orders) => ({type: GOT_ORDERS, orders})
+
+const createGotOrderAction = (order) => ({type: GOT_ORDER, order})
 
 // thunk creators
 export const createGetLatestOrdersThunk = (page) => {
@@ -25,7 +29,17 @@ export const createGetLatestOrdersThunk = (page) => {
     } catch (error) {
       console.error(error)
     }
+  }
+}
 
+export const createGetOrderThunk = (id) => {
+  return async (dispatch) => {
+    try {
+      const orderData = await axios.get(`/api/orders/${id}`)
+      dispatch(createGotOrderAction(orderData.data))
+    } catch (error) {
+      console.error(error)
+    }
   }
 }
 
@@ -33,7 +47,9 @@ export const createGetLatestOrdersThunk = (page) => {
 export default function (state = initialState, action) {
   switch (action.type) {
     case GOT_ORDERS:
-      return action.orders
+      return {...state, orders: action.orders}
+    case GOT_ORDER:
+      return {...state, order: action.order}
     default:
       return state
   }
