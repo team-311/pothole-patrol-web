@@ -41,26 +41,24 @@ const options = [
 class SinglePothole extends Component {
   constructor() {
     super();
-    this.state = {};
+    this.state = {
+      value: 'Open',
+    };
     this.handleChange = this.handleChange.bind(this);
   }
 
   async componentDidMount() {
     const potholeId = this.props.match.params.id;
     await this.props.getPothole(potholeId);
-    console.log(this.props.potholes.pothole.status);
   }
 
   handleChange = (e, { value }) => {
     e.preventDefault();
-    this.setState({ value }, () => {
-      console.log('value=====', value);
-      this.props.updatestatus(
-        { ...this.props.potholes.pothole, status: value },
-        this.props.potholes.pothole.id
-      );
-    });
-    console.log(this.props.potholes.pothole.status);
+    const pothole = {
+      ...this.props.potholes.pothole,
+      status: value,
+    };
+    this.props.updatestatus(pothole, pothole.id);
   };
 
   render() {
@@ -78,7 +76,7 @@ class SinglePothole extends Component {
         </div>
       );
     }
-    const { value } = this.state;
+    const { value } = this.state.value;
     const latitude = pothole.latitude || 41.8885;
     const longitude = pothole.longitude || -87.6354;
     const defaultCenter = {
@@ -142,11 +140,11 @@ class SinglePothole extends Component {
                   </Header>
                   <Dropdown
                     style={{ margin: '0 1rem' }}
-                    onChange={this.handleChange}
                     options={options}
                     placeholder="Choose an option"
                     selection
                     value={value}
+                    onChange={this.handleChange}
                   />
                 </Grid.Column>
               </Grid.Row>
