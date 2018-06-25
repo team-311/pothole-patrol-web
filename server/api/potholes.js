@@ -108,6 +108,12 @@ router.post('/', async (req, res, next) => {
     res.json(createdPothole.id)
   }
 
+
+  if (req.user.id && !req.body.anonymous) pothole.reporterId = req.user.id
+
+  const createdPothole = await Pothole.create(pothole)
+  res.json(createdPothole.id)
+
 })
 
 module.exports = router;
