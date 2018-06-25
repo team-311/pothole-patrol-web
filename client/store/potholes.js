@@ -58,7 +58,6 @@ export const createUpdateStatusThunk = (pothole, potholeId) => {
   return async dispatch => {
     try {
       const response = await axios.put(`/api/potholes/${potholeId}`, pothole);
-      console.log(response.data);
       dispatch(createUpdateStatusAction(response.data));
     } catch (error) {
       console.error(error);
@@ -74,7 +73,8 @@ export default function(state = initialState, action) {
     case GOT_SINGLE_POTHOLE:
       return { ...state, pothole: action.pothole };
     case UPDATE_STATUS:
-      return { ...state, pothole: action.pothole };
+      return { ...state,
+        : action.pothole };
     default:
       return state;
   }
