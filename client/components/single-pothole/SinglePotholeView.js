@@ -10,6 +10,7 @@ import {
   Dropdown,
 } from 'semantic-ui-react';
 import GoogleMapReact from 'google-map-react';
+import SinglePotholeComments from './SinglePotholeComments';
 import { createGotPotholeThunk, createUpdateStatusThunk } from '../../store';
 import { connect } from 'react-redux';
 
@@ -155,6 +156,12 @@ class SinglePothole extends Component {
                 </Grid.Row>
               </Grid>
             </Segment>
+          </Container>
+          <Container>
+            <SinglePotholeComments
+              id={this.props.pothole.id}
+              style={{ margin: '0 1rem' }}
+            />
           </Container>
         </div>
       );
