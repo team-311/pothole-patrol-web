@@ -9,7 +9,6 @@ import {
   Image,
   Dropdown,
 } from 'semantic-ui-react';
-// import ReactMapboxGl, { Layer, Feature } from 'react-mapbox-gl';
 import GoogleMapReact from 'google-map-react';
 import mapAccessToken from '../../../secrets';
 import { createGotPotholeThunk, createUpdateStatusThunk } from '../../store';
@@ -43,18 +42,26 @@ class SinglePothole extends Component {
   constructor() {
     super();
     this.state = {};
-    this.handleClick = this.handleClick.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
   async componentDidMount() {
     const potholeId = this.props.match.params.id;
     await this.props.getPothole(potholeId);
+    console.log(this.props.potholes.pothole.status);
   }
 
-  handleClick(event) {
-    event.preventDefault();
-    console.log(event.target);
-  }
+  handleChange = (e, { value }) => {
+    e.preventDefault();
+    this.setState({ value }, () => {
+      console.log('value=====', value);
+      this.props.updatestatus(
+        { ...this.props.potholes.pothole, status: value },
+        this.props.potholes.pothole.id
+      );
+    });
+    console.log(this.props.potholes.pothole.status);
+  };
 
   render() {
     const { pothole } = this.props.potholes;
@@ -71,32 +78,29 @@ class SinglePothole extends Component {
         </div>
       );
     }
-    const latitude = +pothole.longitude || -87.6354;
-    const longitude = +pothole.latitude || 41.8885;
-    const defaultProps = {
-      center: {
-        lat: longitude,
-        lng: latitude,
-      },
+    const { value } = this.state;
+    const latitude = pothole.latitude || 41.8885;
+    const longitude = pothole.longitude || -87.6354;
+    const defaultCenter = {
+      center: { lat: parseFloat(latitude), lng: parseFloat(longitude) },
     };
-    console.log(pothole);
     return (
       <div>
         <Container>
           <Segment>
             <Grid divided="vertically">
               <Grid.Row columns={2}>
-                <Grid.Column width={12}>
+                <Grid.Column width={12} style={{ padding: 0 }}>
                   <div style={{ height: '100vh', width: '100%' }}>
                     <GoogleMapReact
                       bootstrapURLKeys={{ key: accessToken }}
-                      center={defaultProps.center}
                       defaultZoom={15}
+                      center={defaultCenter.center}
                     >
                       <AnyReactComponent
-                        lat={longitude}
-                        lng={latitude}
-                        text={'Chicago'}
+                        lat={latitude}
+                        lng={longitude}
+                        text={'Pothole'}
                       />
                     </GoogleMapReact>
                   </div>
@@ -115,22 +119,34 @@ class SinglePothole extends Component {
                     src="https://upload.wikimedia.org/wikipedia/commons/1/10/Newport_Whitepit_Lane_pot_hole.JPG"
                     size="small"
                   />
+                  <Header as="h4" style={{ margin: '0 1rem' }}>
+                    {' '}
+                    Address:{' '}
+                  </Header>
                   <Header as="h5" style={{ margin: '0 1rem' }}>
                     {pothole.streetAddress} {pothole.zip}
+                  </Header>
+                  <br />
+                  <Header as="h4" style={{ margin: '0 1rem' }}>
+                    {' '}
+                    Description:{' '}
                   </Header>
                   <Header as="h5" style={{ margin: '0 1rem' }}>
                     Lorem Ipsum has been the industry's standard dummy text ever
                     since the 1500s
                   </Header>
+                  <br />
+                  <Header as="h4" style={{ margin: '0 1rem' }}>
+                    {' '}
+                    Status:{' '}
+                  </Header>
                   <Dropdown
-                    placeholder="Open"
-                    selection
-                    // search
+                    style={{ margin: '0 1rem' }}
+                    onChange={this.handleChange}
                     options={options}
-                    // value={pothole.status}
-                    // defaultValue="Open"
-                    name={pothole.status}
-                    onClick={this.handleClick}
+                    placeholder="Choose an option"
+                    selection
+                    value={value}
                   />
                 </Grid.Column>
               </Grid.Row>
@@ -151,6 +167,8 @@ const mapToProps = state => {
 const mapDispatch = dispatch => {
   return {
     getPothole: potholeId => dispatch(createGotPotholeThunk(potholeId)),
+    updatestatus: (pothole, potholeId) =>
+      dispatch(createUpdateStatusThunk(pothole, potholeId)),
   };
 };
 
