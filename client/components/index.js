@@ -11,3 +11,6 @@ export { default as PotholeListView } from './dashboard/pothole-list-view';
 export { default as Dashboard } from './dashboard/dashboard';
 export { default as SinglePothole } from './single-pothole/SinglePotholeView';
 export { Analytics } from './analytics';
+export {default as OrderListCard} from './dashboard/order-list-card'
+export {default as OrderRowItem} from './dashboard/order-row-item'
+export {default as OrderListView} from './order-list-view'
