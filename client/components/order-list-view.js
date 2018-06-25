@@ -36,14 +36,21 @@ class OrderListView extends Component {
 
   render() {
     let orders = this.props.orders;
-    let buttonText = this.state.page !== this.props.lastPage ? 'View More' : 'Viewing Last Page'
+    let buttonText =
+      this.state.page !== this.props.lastPage
+        ? 'View More'
+        : 'Viewing Last Page';
     if (this.props.isDashboardCard) {
       orders = orders.slice(6);
       buttonText = 'View All';
     }
     return (
       <Container>
-        {this.props.isDashboardCard ? <div></div> : <Header size='huge'>Order List</Header>}
+        {this.props.isDashboardCard ? (
+          <div />
+        ) : (
+          <Header size="huge">Order List</Header>
+        )}
         <Table celled padded>
           <Table.Header>
             <Table.Row>
@@ -94,7 +101,7 @@ class OrderListView extends Component {
 const mapStateToProps = state => {
   return {
     orders: state.orders.orders,
-    lastPage: state.orders.lastPage
+    lastPage: state.orders.lastPage,
   };
 };
 
