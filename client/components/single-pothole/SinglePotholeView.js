@@ -63,7 +63,6 @@ class SinglePothole extends Component {
 
   render() {
     const pothole = this.props.pothole;
-    console.log(this.props);
 
     if (!pothole) {
       return (
@@ -80,7 +79,6 @@ class SinglePothole extends Component {
       const { value } = this.state.value;
       const latitude = +pothole.latitude;
       const longitude = +pothole.longitude;
-      console.log(typeof latitude);
       const defaultCenter = {
         center: {
           lat: parseFloat(pothole.latitude),
