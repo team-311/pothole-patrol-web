@@ -1,14 +1,14 @@
-import React from 'react'
-import { PotholeListView } from '../'
-import { Analytics } from '../analytics.js'
+import React from 'react';
+import { PotholeListView, Analytics, OrderListCard } from '../';
 
 const Dashboard = () => {
   return (
     <div>
       <Analytics />
       <PotholeListView />
+      <OrderListCard />
     </div>
-  )
-}
+  );
+};
 
-export default Dashboard
+export default Dashboard;
