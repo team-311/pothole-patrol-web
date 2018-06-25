@@ -81,9 +81,9 @@ class SingleOrderView extends Component {
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {potholes.map(pothole => {
+              {potholes.length ? potholes.map(pothole => {
                 return <PotholeRow key={pothole.id} pothole={pothole} />;
-              })}
+              }) : <Table.Row colSpan="6"><Table.Cell>No potholes to view (yet)</Table.Cell></Table.Row>}
             </Table.Body>
           </Table>
         </Grid.Column>

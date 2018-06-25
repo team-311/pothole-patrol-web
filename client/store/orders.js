@@ -24,8 +24,8 @@ export const createGetLatestOrdersThunk = (page) => {
     try {
       let pageQuery = ''
       if (typeof page === 'number') pageQuery = `?page=${page}`
-      const {data: orders} = await axios.get(`/api/orders${pageQuery}`)
-      dispatch(createGotOrdersAction(orders))
+      const orderData = await axios.get(`/api/orders${pageQuery}`)
+      dispatch(createGotOrdersAction(orderData.data.orders))
     } catch (error) {
       console.error(error)
     }

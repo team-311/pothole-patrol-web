@@ -1,6 +1,7 @@
 import React from 'react';
 import { Table } from 'semantic-ui-react';
 import moment from 'moment'
+import {Link} from 'react-router-dom'
 
 const PotholeRow = props => {
   const pothole = props.pothole;
@@ -10,7 +11,7 @@ const PotholeRow = props => {
 
   return (
     <Table.Row>
-      <Table.Cell selectable><a href={`/singlepothole/${pothole.id}`}>{pothole.serviceNumber}</a></Table.Cell>
+      <Table.Cell selectable><Link to={`/singlepothole/${pothole.id}`}>{pothole.serviceNumber}</Link></Table.Cell>
       <Table.Cell>{pothole.status}</Table.Cell>
       <Table.Cell>{date}</Table.Cell>
       <Table.Cell>{pothole.mostRecentAction || 'No Recent Actions'}</Table.Cell>
