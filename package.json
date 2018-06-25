@@ -29,6 +29,7 @@
     "express": "^4.14.1",
     "express-session": "^1.15.1",
     "history": "^4.6.3",
+    "moment": "^2.22.2",
     "mapbox-gl": "^0.46.0",
     "morgan": "^1.8.1",
     "passport": "^0.3.2",
