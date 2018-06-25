@@ -9,6 +9,8 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+console.log('GOOGLEMAP:', process.env.GOOGLE_MAP_API_KEY);
+
 router.get('/', async (req, res, next) => {
   const page = req.query.page || 1;
   const limit = process.env.POTHOLES_PAGE_SIZE || 25;
