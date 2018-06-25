@@ -1,5 +1,5 @@
 import React from 'react';
-import { PotholeListView, OrderListView, Analytics, OrderListCard } from '../';
+import { PotholeListView, Analytics, OrderListCard } from '../';
 
 const Dashboard = () => {
   return (

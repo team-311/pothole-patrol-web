@@ -41,7 +41,6 @@ class OrderListView extends Component {
       orders = orders.slice(6);
       buttonText = 'View All';
     }
-    console.log('this.props.isDashboardCard', this.props.isDashboardCard);
     return (
       <Table celled padded>
         <Table.Header>
