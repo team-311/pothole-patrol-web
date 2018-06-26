@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const { Order } = require('../db/models')
+const { Order, User, Crew, Pothole} = require('../db/models')
 
 
 router.get('/', async (req, res, next) => {
@@ -27,7 +27,9 @@ router.get('/', async (req, res, next) => {
 
 router.get('/:id', async (req, res, next) => {
   try {
-    const data = await Order.findById(req.params.id)
+    const data = await Order.findById(req.params.id, {
+      include: [User, Crew, Pothole]
+    })
     res.json(data)
   } catch (err) {
     next(err)
