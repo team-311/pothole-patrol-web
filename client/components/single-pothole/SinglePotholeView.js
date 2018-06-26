@@ -40,7 +40,6 @@ class SinglePothole extends Component {
 
   UNSAFE_componentWillReceiveProps(prevProps, nextProps) {
     this.setState({ pothole: prevProps.potholes.pothole });
-    console.log(prevProps, nextProps);
   }
 
   handleChange = (event, { value }) => {
@@ -144,9 +143,9 @@ class SinglePothole extends Component {
           </Container>
           <Container>
             <br />
-            <Header as="h2">Comments</Header>,
+            <Header as="h2">Comments</Header>
             <SinglePotholeComments
-              id={this.props.pothole.id}
+              potholeId={this.props.pothole.id}
               style={{ margin: '0 1rem' }}
             />
           </Container>
