@@ -19,7 +19,7 @@ const getAllComments = allComments => ({ type: ALL_COMMENTS, allComments });
 export const createNewCommentThunk = comment => {
   return async dispatch => {
     try {
-      const { data: newComment } = await axios.post(`/api/comments`, comment);
+      const { data: newComment } = await axios.post(`/api/comments/`, comment);
       dispatch(createNewComment(newComment));
     } catch (error) {
       console.log(error);

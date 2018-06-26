@@ -79,15 +79,18 @@ class SinglePothole extends Component {
                     <div style={{ height: '100vh', width: '100%' }}>
                       <Map
                         google={this.props.google}
-                        center={{
-                          lat: latitude,
-                          lng: longitude,
+                        initialCenter={{
+                          lat: latitude || '‎41.977226',
+                          lng: longitude || '-87.836723',
                         }}
                         zoom={14}
                       >
                         <Marker
                           name={'Pothole'}
-                          position={{ lat: latitude, lng: longitude }}
+                          position={{
+                            lat: latitude || '‎41.977226',
+                            lng: longitude || '-87.836723',
+                          }}
                         />
                       </Map>
                     </div>
