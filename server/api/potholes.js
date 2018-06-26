@@ -2,7 +2,7 @@ const router = require('express').Router();
 const { Pothole } = require('../db/models');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
-const cloudinary = require('cloudinary')
+const cloudinary = require('cloudinary');
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -31,31 +31,18 @@ router.get('/', async (req, res, next) => {
 });
 
 router.get('/nearby', async (req, res, next) => {
-  const latitude = Number(req.query.lat);
-  const longitude = Number(req.query.lon);
-  const latDelt = 0.01;
-  const lonDelt = 0.01;
   try {
-    const potholes = await Pothole.findAll({
-      where: {
-        latitude: {
-          [Op.and]: [
-            { [Op.gte]: latitude - latDelt },
-            { [Op.lte]: latitude + latDelt },
-          ],
-        },
-        longitude: {
-          [Op.and]: [
-            { [Op.gte]: longitude - lonDelt },
-            { [Op.lte]: longitude + lonDelt },
-          ],
-        },
-        status: {
-          [Op.like]: 'Open%',
-        },
-      },
-    });
+    const potholes = await Pothole.findNearby(req.query.lat, req.query.lon)
     res.json(potholes);
+  } catch (err) {
+    next(err);
+  }
+})
+
+router.get('/:id', async (req, res, next) => {
+  try {
+    const data = await Pothole.findById(req.params.id);
+    res.json(data);
   } catch (err) {
     next(err);
   }
@@ -218,8 +205,14 @@ router.get('/allclosed/timetocompletion', async (req, res, next) => {
 
 router.get('/:id', async (req, res, next) => {
   try {
-    const data = await Pothole.findById(req.params.id);
-    res.json(data);
+    let response = await Pothole.update(req.body, {
+      where: { id: req.params.id },
+      returning: true,
+    });
+    res.json({
+      message: 'Updated successfully',
+      pothole: response[1][0],
+    });
   } catch (err) {
     next(err);
   }
@@ -231,27 +224,31 @@ router.post('/', async (req, res, next) => {
     description: req.body.description || '',
     streetAddress: req.body.location.streetAddress,
     zip: req.body.location.zip,
-    latitude: req.body.location.latitude,
-    longitude: req.body.location.longitude,
+    location: {
+      type: 'Point',
+      coordinates: [req.body.longitude, req.body.latitude]
+    },
+    latitude: req.body.latitude,
+    longitude: req.body.longitude,
   };
 
-  if (req.user.id && !req.body.anonymous) pothole.reporterId = req.user.id
+  if (req.user.id && !req.body.anonymous) pothole.reporterId = req.user.id;
 
   if (req.body.imageUrl) {
     cloudinary.v2.uploader.upload(req.body.imageUrl, async (err, photo) => {
       if (err) {
         // the request should not be rejected if the image hosting site is down
-        console.error('Could not upload picture', err)
+        console.error('Could not upload picture', err);
       } else {
-        pothole.imageUrl = photo.url
+        pothole.imageUrl = photo.url;
       }
-      const createdPothole = await Pothole.create(pothole)
-      res.json(createdPothole.id)
-    })
+      const createdPothole = await Pothole.create(pothole);
+      res.json(createdPothole.id);
+    });
   } else {
-    const createdPothole = await Pothole.create(pothole)
-    res.json(createdPothole.id)
+    const createdPothole = await Pothole.create(pothole);
+    res.json(createdPothole.id);
   }
-})
+});
 
 module.exports = router;

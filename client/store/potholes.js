@@ -3,12 +3,16 @@ import axios from 'axios';
 // action types
 const GOT_POTHOLES = 'GOT_POTHOLES';
 const GOT_SINGLE_POTHOLE = 'GOT_SINGLE_POTHOLE';
+<<<<<<< HEAD
 const GET_TIME_COMPLETE = 'GET_TIME_COMPLETE';
 const GET_REPORTED_PER_DAY = 'GET_REPORTED_PER_DAY'
 const GET_ALL_CLOSED = 'GET_ALL_CLOSED'
 const GET_ALL_CLOSED_LAST_MONTH = 'GET_ALL_CLOSED_LAST_MONTH'
 const GET_ALL_OPEN = 'GET_ALL_OPEN'
 const GET_ALL_OPEN_LAST_MONTH = 'GET_ALL_OPEN_LAST_MONTH'
+=======
+const UPDATE_STATUS = 'UPDATE_STATUS';
+>>>>>>> a36054a72382b96a85a73628437ea871aa509e25
 
 // initial state
 const initialState = {
@@ -56,6 +60,10 @@ const getAllOpenLastMonth = potholes => ({
   type: GET_ALL_CLOSED,
   potholes
 })
+const createUpdateStatusAction = pothole => ({
+  type: UPDATE_STATUS,
+  pothole,
+});
 
 // thunk creators
 export const createGetLatestPotholesThunk = page => {
@@ -77,7 +85,6 @@ export const createGotPotholeThunk = potholeId => {
       const { data: singlePothole } = await axios.get(
         `/api/potholes/${potholeId}`
       );
-      console.log(singlePothole);
       dispatch(createGotSinglePotholeAction(singlePothole));
     } catch (error) {
       console.error(error);
@@ -112,6 +119,16 @@ export const getAllOpenThunk = () => {
     dispatch(getReportedPerDay(data))
   }
 }
+export const createUpdateStatusThunk = (pothole, potholeId) => {
+  return async dispatch => {
+    try {
+      const response = await axios.put(`/api/potholes/${potholeId}`, pothole);
+      dispatch(createUpdateStatusAction(response.data));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+};
 
 // reducer
 export default function (state = initialState, action) {
@@ -120,6 +137,11 @@ export default function (state = initialState, action) {
       return action.potholes;
     case GOT_SINGLE_POTHOLE:
       return { ...state, pothole: action.pothole };
+    case UPDATE_STATUS:
+      return {
+        ...state,
+        pothole: action.pothole,
+      };
     default:
       return state;
   }
