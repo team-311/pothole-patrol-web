@@ -117,14 +117,10 @@ router.post('/', async (req, res, next) => {
 });
 
 router.post('/upvote', async (req, res, next) => {
-  //how to extract the data without being bad
-  console.log('hitting the upvote route')
-  console.log('req.body', req.body)
   try {
     const user = await User.findById(req.body.userId)
     const pothole = await Pothole.findById(req.body.potholeId)
-    await user.addPothole(pothole)
-    await pothole.addUser(user)
+    await user.addUpvoted(pothole)
     res.json(pothole)
   } catch (err) {next(err)}
 })
