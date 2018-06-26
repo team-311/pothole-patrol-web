@@ -4,7 +4,7 @@ const Order = require('./order')
 const Comment = require('./comment')
 const Crew = require('./crew')
 
-Pothole.belongsTo(User, {foreignKey: 'reporterId'})
+Pothole.belongsTo(User, {as: 'reporter'})
 User.hasMany(Pothole, {foreignKey: 'reporterId'})
 
 Order.hasMany(Pothole)
@@ -25,8 +25,8 @@ Comment.belongsTo(User)
 Pothole.hasMany(Comment)
 Comment.belongsTo(Pothole)
 
-Pothole.belongsToMany(User, {through: 'upvotes'})
-User.belongsToMany(Pothole, {through: 'upvotes'})
+Pothole.belongsToMany(User, {through: 'upvotes', as: 'upvoters'})
+User.belongsToMany(Pothole, {through: 'upvotes', as: 'upvoted'})
 
 module.exports = {
   User,

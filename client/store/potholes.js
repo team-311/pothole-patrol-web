@@ -3,6 +3,12 @@ import axios from 'axios';
 // action types
 const GOT_POTHOLES = 'GOT_POTHOLES';
 const GOT_SINGLE_POTHOLE = 'GOT_SINGLE_POTHOLE';
+const GET_TIME_COMPLETE = 'GET_TIME_COMPLETE';
+const GET_REPORTED_PER_DAY = 'GET_REPORTED_PER_DAY'
+const GET_ALL_CLOSED = 'GET_ALL_CLOSED'
+const GET_ALL_CLOSED_LAST_MONTH = 'GET_ALL_CLOSED_LAST_MONTH'
+const GET_ALL_OPEN = 'GET_ALL_OPEN'
+const GET_ALL_OPEN_LAST_MONTH = 'GET_ALL_OPEN_LAST_MONTH'
 
 // initial state
 const initialState = {
@@ -20,6 +26,36 @@ const createGotSinglePotholeAction = pothole => ({
   type: GOT_SINGLE_POTHOLE,
   pothole,
 });
+
+const getTimeComplete = potholes => ({
+  type: GET_TIME_COMPLETE,
+  potholes
+})
+
+const getReportedPerDay = potholes => ({
+  type: GET_REPORTED_PER_DAY,
+  potholes
+})
+
+const getAllClosed = potholes => ({
+  type: GET_ALL_CLOSED,
+  potholes
+})
+
+const getAllClosedLastMonth = potholes => ({
+  type: GET_ALL_CLOSED,
+  potholes
+})
+
+const getAllOpen = potholes => ({
+  type: GET_ALL_CLOSED,
+  potholes
+})
+
+const getAllOpenLastMonth = potholes => ({
+  type: GET_ALL_CLOSED,
+  potholes
+})
 
 // thunk creators
 export const createGetLatestPotholesThunk = page => {
@@ -49,8 +85,36 @@ export const createGotPotholeThunk = potholeId => {
   };
 };
 
+export const getTimeCompleteThunk = () => {
+  return async (dispatch) => {
+    const { data } = await axios.get('/api/potholes/allclosed/timetocompletion')
+    dispatch(getTimeComplete(data))
+  }
+}
+
+export const getReportedPerDayThunk = () => {
+  return async (dispatch) => {
+    const { data } = await axios.get('/api/potholes/lastweek/byday')
+    dispatch(getReportedPerDay(data))
+  }
+}
+
+export const getAllClosedThunk = () => {
+  return async (dispatch) => {
+    const { data } = await axios.get('/api/potholes/allclosed')
+    dispatch(getReportedPerDay(data))
+  }
+}
+
+export const getAllOpenThunk = () => {
+  return async (dispatch) => {
+    const { data } = await axios.get('/api/potholes/allopen')
+    dispatch(getReportedPerDay(data))
+  }
+}
+
 // reducer
-export default function(state = initialState, action) {
+export default function (state = initialState, action) {
   switch (action.type) {
     case GOT_POTHOLES:
       return action.potholes;
@@ -58,5 +122,59 @@ export default function(state = initialState, action) {
       return { ...state, pothole: action.pothole };
     default:
       return state;
+  }
+}
+
+export const timeCompleteReducer = (state = [], action) => {
+  switch (action.type) {
+    case GET_TIME_COMPLETE:
+      return action.potholes
+    default:
+      return state
+  }
+}
+
+export const reportedDayReducer = (state = [], action) => {
+  switch (action.type) {
+    case GET_REPORTED_PER_DAY:
+      return action.potholes
+    default:
+      return state
+  }
+}
+
+export const allOpenReducer = (state = [], action) => {
+  switch (action.type) {
+    case GET_ALL_OPEN:
+      return action.potholes
+    default:
+      return state
+  }
+}
+
+export const allClosedReducer = (state = [], action) => {
+  switch (action.type) {
+    case GET_ALL_CLOSED:
+      return action.potholes
+    default:
+      return state
+  }
+}
+
+export const allOpenLastMonthReducer = (state = [], action) => {
+  switch (action.type) {
+    case GET_ALL_OPEN_LAST_MONTH:
+      return action.potholes
+    default:
+      return state
+  }
+}
+
+export const allClosedLastMonthReducer = (state = [], action) => {
+  switch (action.type) {
+    case GET_ALL_CLOSED_LAST_MONTH:
+      return action.potholes
+    default:
+      return state
   }
 }
