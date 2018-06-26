@@ -20,6 +20,16 @@ const isCrewOrAdmin = (req, res, next) => {
   }
 }
 
+const isCrewMemberOrAdmin = (req, res, next) => {
+  if (req.user && req.user.type === 'admin') {
+    next()
+  } else if (req.user && req.user.type === 'crew' && req.user.crewId === Number(req.params.id)) {
+    next()
+  } else {
+    next(createError('Not Authorized', 401))
+  }
+}
+
 const isAdmin = (req, res, next) => {
   if (req.user && req.user.type === 'admin') {
     next()
@@ -32,4 +42,5 @@ module.exports = {
   isResident,
   isCrewOrAdmin,
   isAdmin,
+  isCrewMemberOrAdmin,
 }
