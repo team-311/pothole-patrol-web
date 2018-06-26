@@ -3,11 +3,18 @@ import createLogger from 'redux-logger';
 import thunkMiddleware from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import user from './user';
-import potholes from './potholes';
-import orders from './orders';
+import potholes, { timeCompleteReducer, reportedDayReducer } from './potholes';
+import orders from './orders'
 import comments from './comments';
 
-const reducer = combineReducers({ user, potholes, orders, comments });
+const reducer = combineReducers({
+  user,
+  potholes,
+  orders,
+  comments,
+  timeComplete: timeCompleteReducer,
+  reportedDay: reportedDayReducer
+});
 const middleware = composeWithDevTools(
   applyMiddleware(thunkMiddleware, createLogger({ collapsed: true }))
 );
