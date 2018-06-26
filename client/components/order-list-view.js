@@ -49,8 +49,8 @@ class OrderListView extends Component {
         {this.props.isDashboardCard ? (
           <div />
         ) : (
-          <Header size="huge">Order List</Header>
-        )}
+            <Header size="huge" textAlign="center">Recent Orders</Header>
+          )}
         <Table celled padded>
           <Table.Header>
             <Table.Row>
