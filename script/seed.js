@@ -53,17 +53,18 @@ async function seed () {
     if (!(index % 56)) orderId = 6
 
     return {
-    createdAt: pothole.creation_date,
-    completionDate: pothole.completion_date,
-    status: pothole.status,
-    serviceNumber: pothole.service_request_number,
-    streetAddress: pothole.street_address,
-    ward: pothole.ward,
-    zip: pothole.zip,
-    latitude: pothole.latitude,
-    longitude: pothole.longitude,
-    mostRecentAction: pothole.most_recent_action,
-    orderId: orderId
+      createdAt: pothole.creation_date,
+      completionDate: pothole.completion_date,
+      status: pothole.status,
+      serviceNumber: pothole.service_request_number,
+      streetAddress: pothole.street_address,
+      ward: pothole.ward,
+      zip: pothole.zip,
+      latitude: pothole.latitude,
+      longitude: pothole.longitude,
+      mostRecentAction: pothole.most_recent_action,
+      orderId: orderId,
+      location: {type: 'Point', coordinates: [pothole.longitude, pothole.latitude]}
   }})
 
   await Pothole.bulkCreate(mappedPotholes)
