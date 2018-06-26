@@ -2,7 +2,8 @@ const router = require('express').Router();
 const { Comment, User } = require('../db/models');
 
 router.get('/:id', async (req, res, next) => {
-  const potholeComments = await Comment.findById(req.params.id, {
+  const potholeComments = await Comment.findAll({
+    where: { potholeId: req.params.id },
     include: [User],
   });
   res.json(potholeComments);
