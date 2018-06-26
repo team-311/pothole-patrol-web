@@ -39,15 +39,6 @@ router.get('/nearby', async (req, res, next) => {
   }
 })
 
-router.get('/:id', async (req, res, next) => {
-  try {
-    const data = await Pothole.findById(req.params.id);
-    res.json(data);
-  } catch (err) {
-    next(err);
-  }
-});
-
 // router.get('/:id', async (req, res, next) => {
 //   try {
 //     const data = await Pothole.findById(req.params.id);
@@ -203,7 +194,7 @@ router.get('/allclosed/timetocompletion', async (req, res, next) => {
   }
 })
 
-router.get('/:id', async (req, res, next) => {
+router.put('/:id', async (req, res, next) => {
   try {
     let response = await Pothole.update(req.body, {
       where: { id: req.params.id },
@@ -226,12 +217,12 @@ router.post('/', async (req, res, next) => {
     zip: req.body.location.zip,
     location: {
       type: 'Point',
-      coordinates: [req.body.longitude, req.body.latitude]
+      coordinates: [req.body.location.longitude, req.body.location.latitude]
     },
-    latitude: req.body.latitude,
-    longitude: req.body.longitude,
+    latitude: req.body.location.latitude,
+    longitude: req.body.location.longitude,
   };
-
+  console.log('req.body.lat', req.body.latitude)
   if (req.user.id && !req.body.anonymous) pothole.reporterId = req.user.id;
 
   if (req.body.imageUrl) {
@@ -248,6 +239,15 @@ router.post('/', async (req, res, next) => {
   } else {
     const createdPothole = await Pothole.create(pothole);
     res.json(createdPothole.id);
+  }
+});
+
+router.get('/:id', async (req, res, next) => {
+  try {
+    const data = await Pothole.findById(req.params.id);
+    res.json(data);
+  } catch (err) {
+    next(err);
   }
 });
 
