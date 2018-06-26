@@ -31,35 +31,13 @@ router.get('/', async (req, res, next) => {
 });
 
 router.get('/nearby', async (req, res, next) => {
-  const latitude = Number(req.query.lat);
-  const longitude = Number(req.query.lon);
-  const latDelt = 0.01;
-  const lonDelt = 0.01;
   try {
-    const potholes = await Pothole.findAll({
-      where: {
-        latitude: {
-          [Op.and]: [
-            { [Op.gte]: latitude - latDelt },
-            { [Op.lte]: latitude + latDelt },
-          ],
-        },
-        longitude: {
-          [Op.and]: [
-            { [Op.gte]: longitude - lonDelt },
-            { [Op.lte]: longitude + lonDelt },
-          ],
-        },
-        status: {
-          [Op.like]: 'Open%',
-        },
-      },
-    });
+    const potholes = await Pothole.findNearby(req.query.lat, req.query.lon)
     res.json(potholes);
   } catch (err) {
     next(err);
   }
-});
+})
 
 router.get('/:id', async (req, res, next) => {
   try {
@@ -91,8 +69,12 @@ router.post('/', async (req, res, next) => {
     description: req.body.description || '',
     streetAddress: req.body.location.streetAddress,
     zip: req.body.location.zip,
-    latitude: req.body.location.latitude,
-    longitude: req.body.location.longitude,
+    location: {
+      type: 'Point',
+      coordinates: [req.body.longitude, req.body.latitude]
+    },
+    latitude: req.body.latitude,
+    longitude: req.body.longitude,
   };
 
   if (req.user.id && !req.body.anonymous) pothole.reporterId = req.user.id;
