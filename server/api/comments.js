@@ -1,5 +1,12 @@
 const router = require('express').Router();
-const { Comment } = require('../db/models');
+const { Comment, User } = require('../db/models');
+
+router.get('/:id', async (req, res, next) => {
+  const potholeComments = await Comment.findById(req.params.id, {
+    include: [User],
+  });
+  res.json(potholeComments);
+});
 
 router.post('/', async (req, res, next) => {
   const comment = req.body;
