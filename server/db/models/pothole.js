@@ -46,6 +46,16 @@ const Pothole = db.define('pothole', {
     type: Sequelize.DATE,
     defaultValue: Sequelize.literal('NOW()'),
   }
+}, {
+  indexes: [
+    {
+      name: 'nearby_potholes',
+      fields: ['status', 'latitude', 'longitude'],
+      where: {
+        status: 'Open'
+      }
+    }
+  ]
 });
 
 

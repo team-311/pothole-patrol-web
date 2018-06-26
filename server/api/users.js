@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const {User} = require('../db/models')
+const {User, Pothole} = require('../db/models')
 module.exports = router
 
 router.get('/', (req, res, next) => {
@@ -11,4 +11,14 @@ router.get('/', (req, res, next) => {
   })
     .then(users => res.json(users))
     .catch(next)
+})
+
+router.get('/:id/potholes', async (req, res, next) => {
+  const potholes = await Pothole.findAll({
+    where: {
+      reporterId: req.params.id,
+    }
+  })
+
+  res.json(potholes)
 })

@@ -30,15 +30,6 @@ router.get('/', async (req, res, next) => {
   });
 });
 
-router.get('/:id', async (req, res, next) => {
-  try {
-    const data = await Pothole.findById(req.params.id);
-    res.json(data);
-  } catch (err) {
-    next(err);
-  }
-});
-
 router.get('/nearby', async (req, res, next) => {
   const latitude = Number(req.query.lat);
   const longitude = Number(req.query.lon);
@@ -46,6 +37,7 @@ router.get('/nearby', async (req, res, next) => {
   const lonDelt = 0.01;
   try {
     const potholes = await Pothole.findAll({
+      attributes: ['id', 'latitude', 'longitude', 'serviceNumber', 'placement'],
       where: {
         latitude: {
           [Op.and]: [
