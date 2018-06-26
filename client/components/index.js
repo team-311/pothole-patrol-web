@@ -14,3 +14,5 @@ export { Analytics } from './analytics';
 export {default as OrderListCard} from './dashboard/order-list-card'
 export {default as OrderRowItem} from './dashboard/order-row-item'
 export {default as OrderListView} from './order-list-view'
+export {default as SingleOrderView} from './single-order/SingleOrderView'
+export {default as PotholeRow} from './single-order/PotholeRow'

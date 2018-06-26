@@ -56,6 +56,16 @@ const Pothole = db.define('pothole', {
       return this.getDataValue('id') / 100
     }
   }
+}, {
+  indexes: [
+    {
+      name: 'nearby_potholes',
+      fields: ['status', 'latitude', 'longitude'],
+      where: {
+        status: 'Open'
+      }
+    }
+  ]
 });
 
 // class methods
