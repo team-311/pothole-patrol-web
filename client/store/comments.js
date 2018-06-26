@@ -19,8 +19,8 @@ const getAllComments = allComments => ({ type: ALL_COMMENTS, allComments });
 export const createNewCommentThunk = comment => {
   return async dispatch => {
     try {
-      const { data: newComment } = await axios.post(`/api/comments/`, comment);
-      dispatch(createNewComment(newComment));
+      const newComment = await axios.post(`/api/comments/`, comment);
+      dispatch(createNewComment(newComment.data));
     } catch (error) {
       console.log(error);
     }
@@ -45,12 +45,12 @@ export default function(state = initialState, action) {
       return {
         ...state,
         comment: action.comment.text,
-        allComments: [action.comment],
+        allComments: [...state.allComments, action.comment],
       };
     case ALL_COMMENTS:
       return {
         ...state,
-        allComments: [action.allComments],
+        allComments: action.allComments,
       };
     default:
       return state;

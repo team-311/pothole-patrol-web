@@ -38,10 +38,6 @@ class SinglePothole extends Component {
     await this.props.getPothole(potholeId);
   }
 
-  UNSAFE_componentWillReceiveProps(prevProps, nextProps) {
-    this.setState({ pothole: prevProps.potholes.pothole });
-  }
-
   handleChange = (event, { value }) => {
     event.preventDefault();
     const pothole = {
@@ -80,16 +76,16 @@ class SinglePothole extends Component {
                       <Map
                         google={this.props.google}
                         initialCenter={{
-                          lat: latitude || '‎41.977226',
-                          lng: longitude || '-87.836723',
+                          lat: latitude,
+                          lng: longitude,
                         }}
                         zoom={14}
                       >
                         <Marker
                           name={'Pothole'}
                           position={{
-                            lat: latitude || '‎41.977226',
-                            lng: longitude || '-87.836723',
+                            lat: latitude,
+                            lng: longitude,
                           }}
                         />
                       </Map>
