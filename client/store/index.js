@@ -5,11 +5,13 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import user from './user';
 import potholes, { timeCompleteReducer, reportedDayReducer } from './potholes';
 import orders from './orders'
+import comments from './comments';
 
 const reducer = combineReducers({
   user,
   potholes,
   orders,
+  comments,
   timeComplete: timeCompleteReducer,
   reportedDay: reportedDayReducer
 });
@@ -21,4 +23,5 @@ const store = createStore(reducer, middleware);
 export default store;
 export * from './user';
 export * from './potholes';
-export * from './orders'
+export * from './orders';
+export * from './comments';
