@@ -14,7 +14,7 @@ class AllPotholeView extends Component {
 
   componentDidMount() {
     this.props.getLatestPotholes(1);
-    console.log('here')
+
   }
 
   handleClick = () => {
@@ -32,7 +32,6 @@ class AllPotholeView extends Component {
 
   render() {
     const { requests, lastPage } = this.props.potholes;
-    console.log(lastPage)
     return (
       <Container>
         <Header size="huge" textAlign="center">All Potholes</Header>

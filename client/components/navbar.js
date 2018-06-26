@@ -21,13 +21,13 @@ const Navbar = ({ handleClick, isLoggedIn }) => (
             as={Link}
             name="allpotholes"
             to="/allpotholes"
-            content="All-Potholes"
+            content="All Potholes"
           />
           <Menu.Item
             as={Link}
             name="allorders"
             to="/orders"
-            content="All-Orders"
+            content="All Orders"
           />
           <Menu.Item
             as={Link}
