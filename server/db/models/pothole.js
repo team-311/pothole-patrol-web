@@ -86,7 +86,7 @@ Pothole.getNext = function (lat = '41.895266', lon = '-87.639035', radius = proc
   const distance = Sequelize.fn('ST_Distance_Sphere', Sequelize.col('location'), location)
 
   return Pothole.findAll({
-    attributes: ['id', 'priority', 'placement', 'latitude', 'longitude', 'streetAddress', 'status', 'serviceNumber', [distance, 'distance']],
+    attributes: ['id', 'priority', 'placement', 'latitude', 'longitude', 'streetAddress', 'status', 'serviceNumber', 'completionDate', [distance, 'distance']],
     order: [[distance, 'ASC']],
     where: [{status: 'Open', reporterId: null}, Sequelize.where(distance, { [Op.lte]: radius })],
     limit: 25,
@@ -102,7 +102,7 @@ Pothole.getClosest = function (lat = '41.895266', lon = '-87.639035') {
   const distance = Sequelize.fn('ST_Distance_Sphere', Sequelize.col('location'), location)
 
   return Pothole.findAll({
-    attributes: ['id', 'priority', 'placement', 'latitude', 'longitude', 'status', 'streetAddress', 'serviceNumber', [distance, 'distance']],
+    attributes: ['id', 'priority', 'placement', 'latitude', 'longitude', 'status', 'streetAddress', 'serviceNumber', 'completionDate', [distance, 'distance']],
     order: [[distance, 'ASC']],
     where: {
       status: 'Open',

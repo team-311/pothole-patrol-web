@@ -21,6 +21,7 @@
   "author": "Fullstack Academy of Code",
   "license": "MIT",
   "dependencies": {
+    "@mapbox/polyline": "^1.0.0",
     "axios": "^0.15.3",
     "body-parser": "^1.16.1",
     "cloudinary": "^1.11.0",
@@ -47,6 +48,7 @@
     "redux": "^3.6.0",
     "redux-logger": "^2.8.1",
     "redux-thunk": "^2.2.0",
+    "sanitize-html": "^1.18.2",
     "semantic-ui-react": "^0.81.1",
     "sequelize": "^4.3.1",
     "socket.io": "^2.0.3",
