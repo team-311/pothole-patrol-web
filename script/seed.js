@@ -45,12 +45,12 @@ async function seed () {
 
   const mappedPotholes = potholes.map((pothole, index) => {
     let orderId
-    if (!(index % 3)) orderId = 1
-    if (!(index % 16)) orderId = 2
-    if (!(index % 5)) orderId = 3
-    if (!(index % 27)) orderId = 4
-    if (!(index % 100)) orderId = 5
-    if (!(index % 56)) orderId = 6
+    if (!(index % 1000)) orderId = 1
+    if (!(index % 1501)) orderId = 2
+    if (!(index % 2002)) orderId = 3
+    if (!(index % 3003)) orderId = 4
+    if (!(index % 4004)) orderId = 5
+    if (!(index % 4005)) orderId = 6
 
     return {
       createdAt: pothole.creation_date,
