@@ -9,29 +9,13 @@ import {
   Image,
   Dropdown,
 } from 'semantic-ui-react';
-import GoogleMapReact from 'google-map-react';
+import SinglePotholeComments from './SinglePotholeComments';
 import { createGotPotholeThunk, createUpdateStatusThunk } from '../../store';
 import { connect } from 'react-redux';
+import { Map, Marker, GoogleApiWrapper } from 'google-maps-react';
 
 const accessToken = 'AIzaSyAd3YEc_nthBh2bFt5l-elcqgGc9KiMm2A';
 
-const AnyReactComponent = ({ text }) => (
-  <div
-    style={{
-      color: 'white',
-      background: 'grey',
-      padding: '15px 10px',
-      display: 'inline-flex',
-      textAlign: 'center',
-      alignItems: 'center',
-      justifyContent: 'center',
-      borderRadius: '100%',
-      transform: 'translate(-50%, -50%)',
-    }}
-  >
-    {text}
-  </div>
-);
 const options = [
   { key: 'open', text: 'Open', value: 'Open' },
   { key: 'in-progress', text: 'In-progress', value: 'In-progess' },
@@ -39,17 +23,23 @@ const options = [
 ];
 
 class SinglePothole extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       value: 'Open',
+      pothole: this.props.pothole,
     };
     this.handleChange = this.handleChange.bind(this);
   }
 
   async componentDidMount() {
     const potholeId = this.props.match.params.id;
+
     await this.props.getPothole(potholeId);
+  }
+
+  UNSAFE_componentWillReceiveProps(prevProps, nextProps) {
+    this.setState({ pothole: prevProps.potholes.pothole });
   }
 
   handleChange = (event, { value }) => {
@@ -62,8 +52,7 @@ class SinglePothole extends Component {
   };
 
   render() {
-    const pothole = this.props.pothole;
-
+    const pothole = this.state.pothole;
     if (!pothole) {
       return (
         <div>
@@ -77,14 +66,8 @@ class SinglePothole extends Component {
       );
     } else {
       const { value } = this.state.value;
-      const latitude = pothole.latitude;
-      const longitude = pothole.longitude;
-      const defaultCenter = {
-        center: {
-          lat: parseFloat(pothole.latitude),
-          lng: parseFloat(pothole.longitude),
-        },
-      };
+      const latitude = +pothole.latitude;
+      const longitude = +pothole.longitude;
 
       return (
         <div>
@@ -94,17 +77,19 @@ class SinglePothole extends Component {
                 <Grid.Row columns={2}>
                   <Grid.Column width={12} style={{ padding: 0 }}>
                     <div style={{ height: '100vh', width: '100%' }}>
-                      <GoogleMapReact
-                        bootstrapURLKeys={{ key: accessToken }}
-                        defaultZoom={15}
-                        center={defaultCenter.center}
+                      <Map
+                        google={this.props.google}
+                        center={{
+                          lat: latitude,
+                          lng: longitude,
+                        }}
+                        zoom={14}
                       >
-                        <AnyReactComponent
-                          lat={latitude}
-                          lng={longitude}
-                          text={'Pothole'}
+                        <Marker
+                          name={'Pothole'}
+                          position={{ lat: latitude, lng: longitude }}
                         />
-                      </GoogleMapReact>
+                      </Map>
                     </div>
                   </Grid.Column>
 
@@ -126,7 +111,8 @@ class SinglePothole extends Component {
                       Address:{' '}
                     </Header>
                     <Header as="h5" style={{ margin: '0 1rem' }}>
-                      {pothole.streetAddress} {pothole.zip}
+                      {this.props.pothole.streetAddress}{' '}
+                      {this.props.pothole.zip}
                     </Header>
                     <br />
                     <Header as="h4" style={{ margin: '0 1rem' }}>
@@ -155,6 +141,14 @@ class SinglePothole extends Component {
               </Grid>
             </Segment>
           </Container>
+          <Container>
+            <br />
+            <Header as="h2">Comments</Header>
+            <SinglePotholeComments
+              potholeId={this.props.pothole.id}
+              style={{ margin: '0 1rem' }}
+            />
+          </Container>
         </div>
       );
     }
@@ -176,7 +170,11 @@ const mapDispatch = dispatch => {
   };
 };
 
+const WrappedContainer = GoogleApiWrapper({
+  apiKey: accessToken,
+})(SinglePothole);
+
 export default connect(
   mapToProps,
   mapDispatch
-)(SinglePothole);
+)(WrappedContainer);

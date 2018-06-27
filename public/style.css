@@ -20,8 +20,18 @@ form div {
   display: inline-block;
 }
 
+.chartContainer {
+  max-width: 500px;
+  padding: 1rem;
+}
+
+.cardContainer {
+  max-width: 25%;
+  padding: 1rem;
+}
+
 .analyticsContainer {
-  max-width: 80%;
+  max-width: 70%;
   padding: 1rem;
   margin-bottom: 1rem;
   display: flex;

@@ -9,7 +9,9 @@ import {
   Dashboard,
   SinglePothole,
   Analytics,
-  OrderListView
+  OrderListView,
+  SingleOrderView,
+  AllPotholeView
 } from './components';
 import { me } from './store';
 
@@ -36,7 +38,9 @@ class Routes extends Component {
             <Route path="/dashboard" component={Dashboard} />
             <Route exact path="/singlepothole/:id" component={SinglePothole} />
             <Route path="/analytics" component={Analytics} />
-            <Route path="/orders" component={OrderListView} />
+            <Route path="/allpotholes" component={AllPotholeView} />
+            <Route exact path="/orders/:id" component={SingleOrderView} />
+            <Route exact path="/orders" component={OrderListView} />
           </Switch>
         )}
 

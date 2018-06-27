@@ -1,31 +1,68 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {connect} from 'react-redux'
-import {Link} from 'react-router-dom'
-import {logout} from '../store'
+import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
+import { logout } from '../store'
+import { Menu } from 'semantic-ui-react'
 
 const Navbar = ({ handleClick, isLoggedIn }) => (
   <div>
-    <h1>BOILERMAKER</h1>
-    <nav>
+    <Menu borderless inverted>
+      <Menu.Item
+        as={Link}
+        name="dashboard"
+        to="/dashboard"
+        content="Dashboard"
+      />
       {isLoggedIn ? (
-        <div>
+        <Menu.Menu position="right">
           {/* The navbar will show these links after you log in */}
-          <Link to="/home">Home</Link>
-          <a href="#" onClick={handleClick}>
-            Logout
-          </a>
-        </div>
+          <Menu.Item
+            as={Link}
+            name="allpotholes"
+            to="/allpotholes"
+            content="All Potholes"
+          />
+          <Menu.Item
+            as={Link}
+            name="allorders"
+            to="/orders"
+            content="All Orders"
+          />
+          <Menu.Item
+            as={Link}
+            name="analytics"
+            to="/analytics"
+            content="Analytics"
+          />
+          <Menu.Item
+            as={Link}
+            name="logout"
+            to="/"
+            content="Logout"
+            onClick={handleClick}
+          />
+        </Menu.Menu>
+
       ) : (
-        <div>
-          {/* The navbar will show these links before you log in */}
-          <Link to="/login">Login</Link>
-          <Link to="/signup">Sign Up</Link>
-        </div>
-      )}
-    </nav>
-    <hr />
-  </div>
+          <Menu.Menu>
+            {/* The navbar will show these links before you log in */}
+            < Menu.Item
+              as={Link}
+              name="login"
+              to="/login"
+              content="Login"
+            />
+            <Menu.Item
+              as={Link}
+              name="signup"
+              to="/signup"
+              content="Signup"
+            />
+          </Menu.Menu>
+        )}
+    </Menu>
+  </div >
 )
 
 /**
