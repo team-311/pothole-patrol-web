@@ -16,7 +16,7 @@ router.get('/', async (req, res, next) => {
   const offset = (page - 1) * limit;
 
   const { count, rows: requests } = await Pothole.findAndCountAll({
-    order: [['createdAt', 'DESC']],
+    order: [['createdAt', 'DESC'], ['id', 'ASC']],
     offset,
     limit,
   });
@@ -29,15 +29,6 @@ router.get('/', async (req, res, next) => {
     currentPage: offset,
     lastPage,
   });
-});
-
-router.get('/:id', async (req, res, next) => {
-  try {
-    const data = await Pothole.findById(req.params.id);
-    res.json(data);
-  } catch (err) {
-    next(err);
-  }
 });
 
 router.get('/nearby', async (req, res, next) => {
@@ -212,6 +203,15 @@ router.get('/allclosed/timetocompletion', async (req, res, next) => {
   }
 });
 
+router.get('/:id', async (req, res, next) => {
+  try {
+    const data = await Pothole.findById(req.params.id, { include: 'upvoters' });
+    res.json(data);
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.put('/:id', async (req, res, next) => {
   try {
     let response = await Pothole.update(req.body, {
@@ -240,7 +240,6 @@ router.post('/', async (req, res, next) => {
     latitude: req.body.location.latitude,
     longitude: req.body.location.longitude,
   };
-  console.log('req.body.lat', req.body.latitude);
   if (req.user.id && !req.body.anonymous) pothole.reporterId = req.user.id;
 
   if (req.body.imageUrl) {

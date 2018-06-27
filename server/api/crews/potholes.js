@@ -1,17 +1,20 @@
-const router = require('express').Router()
-const { Pothole } = require('../../db/models')
+const router = require('express').Router({ mergeParams: true })
+const Sequelize = require('sequelize')
+const { Order, Pothole } = require('../../db/models')
 module.exports = router
 
-router.get('/next', async (req, res, next) => {
-  const { lat, lon } = req.query
-
-  // Look for the highest priority item that is within x radius
-  const highestPriority = await Pothole.getNext(lat, lon)
-  if (highestPriority.length === 1) {
-    res.json(highestPriority)
-  } else {
-    // If nothing is found, find the next closest pothole (distance)
-    const closestPothole = await Pothole.getClosest(lat, lon)
-    res.json(closestPothole)
+router.put('/:potholeId/complete', async (req, res, next) => {
+  const updates = {
+    status: 'Completed',
+    completionDate: new Date()
   }
+  const [numRows, pothole] = await Pothole.update(updates, {
+    where: {
+      id: req.params.potholeId
+    },
+    returning: true,
+    attributes: ['id', 'imageUrl', 'description', 'placement', 'status', 'completionDate', 'latitude', 'longitude', 'streetAddress', 'zip'],
+  })
+
+  res.json(pothole[0])
 })
