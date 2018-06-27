@@ -9,15 +9,13 @@ router.get('/', async (req, res, next) => {
   const offset = (page - 1) * limit
 
   const orders = await Order.findAll({
-    order: [['createdAt', 'DESC']],
+    order: [['createdAt', 'DESC'], ['id', 'ASC']],
     offset,
     limit,
     where: {
       crewId: req.params.id,
     },
-    attributes: { include: [[Sequelize.fn('COUNT', Sequelize.col('potholes.id')), 'numPotholes']]},
-    include: [{model: Pothole, attributes: [], duplicating: false, required: false}],
-    group: ['order.id'],
+    include: [{model: Pothole, attributes: ['id', 'streetAddress']}],
   })
   const count = orders.length
   const lastPage = Math.ceil(count / limit)
@@ -25,7 +23,7 @@ router.get('/', async (req, res, next) => {
   res.json({
     count,
     orders,
-    currentPage: offset,
+    currentPage: offset + 1,
     lastPage,
   })
 })

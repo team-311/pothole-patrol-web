@@ -26,7 +26,7 @@ router.get('/', async (req, res, next) => {
   res.json({
     count,
     requests,
-    currentPage: offset,
+    currentPage: offset + 1,
     lastPage,
   });
 });
