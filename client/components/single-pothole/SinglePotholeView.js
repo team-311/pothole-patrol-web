@@ -47,6 +47,10 @@ class SinglePothole extends Component {
     this.props.updateStatus(pothole, pothole.id);
   };
 
+  UNSAFE_componentWillReceiveProps(prevProps, nextProps) {
+    this.setState({ pothole: prevProps.potholes.pothole });
+  }
+
   render() {
     const pothole = this.state.pothole;
     console.log(pothole);
@@ -103,7 +107,10 @@ class SinglePothole extends Component {
                     </Header>
                     <Image
                       style={{ margin: '1rem' }}
-                      src="https://upload.wikimedia.org/wikipedia/commons/1/10/Newport_Whitepit_Lane_pot_hole.JPG"
+                      src={
+                        this.props.pothole.imageUrl ||
+                        'https://upload.wikimedia.org/wikipedia/commons/1/10/Newport_Whitepit_Lane_pot_hole.JPG'
+                      }
                       size="small"
                     />
                     <Header as="h4" style={{ margin: '0 1rem' }}>

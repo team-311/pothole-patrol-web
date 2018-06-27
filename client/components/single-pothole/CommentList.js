@@ -5,33 +5,42 @@ import { connect } from 'react-redux';
 class CommentList extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    var today = new Date(),
+      date =
+        today.getFullYear() +
+        '-' +
+        (today.getMonth() + 1) +
+        '-' +
+        today.getDate();
+
+    this.state = {
+      date: date,
+    };
   }
 
   render() {
-    if (this.props.allComments.length) {
-      return this.props.allComments.map(comment => {
-        return (
-          <Comment.Group key={comment.id}>
-            <Comment>
-              <Comment.Avatar
-                as="a"
-                src="https://www.cxservice360.com/wp-content/uploads/2017/09/Avatar.png"
-              />
-              <Comment.Content>
-                <Comment.Author>{comment.user.firstName}</Comment.Author>
-                <Comment.Metadata>
-                  <div>2 days ago</div>
-                </Comment.Metadata>
-                <Comment.Text>{comment.text}</Comment.Text>
-              </Comment.Content>
-            </Comment>
-          </Comment.Group>
-        );
-      });
-    } else {
-      return <div />;
-    }
+    return this.props.allComments.map(comment => {
+      return (
+        <Comment.Group key={comment.id}>
+          <Comment>
+            <Comment.Avatar
+              as="a"
+              src={
+                comment.user.profilePicture ||
+                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpD6egrPWQJs-dfiOc0Uotoi-dthRwfE5scYvS09d_WHHd1k86'
+              }
+            />
+            <Comment.Content>
+              <Comment.Author>{comment.user.firstName}</Comment.Author>
+              <Comment.Metadata>
+                <div>{this.state.date}</div>
+              </Comment.Metadata>
+              <Comment.Text>{comment.text}</Comment.Text>
+            </Comment.Content>
+          </Comment>
+        </Comment.Group>
+      );
+    });
   }
 }
 
