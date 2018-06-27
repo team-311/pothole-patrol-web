@@ -244,7 +244,6 @@ router.post('/', async (req, res, next) => {
 });
 
 router.post('/upvote', async (req, res, next) => {
-  console.log('req.body', req.body)
   try {
     const user = await User.findById(req.body.userId)
     const pothole = await Pothole.findById(req.body.potholeId, {include: 'upvoters'})
