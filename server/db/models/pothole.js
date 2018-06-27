@@ -64,9 +64,9 @@ const Pothole = db.define(
     },
     priority: {
       type: Sequelize.VIRTUAL,
-      get() {
-        return this.getDataValue('id') / 100;
-      },
+      // get() {
+      //   return this.getDataValue('id') / 100;
+      // },
     },
   },
   {
@@ -185,29 +185,54 @@ Pothole.getClosest = function(lat = '41.895266', lon = '-87.639035') {
   });
 };
 
-Pothole.prototype.incrementUpvotes = function(){
-  return this.increment(['upVotes'], {by: 1})
-}
-
-Pothole.createOrders = async function (lat = '41.895266', lon = '-87.639035') {
-  const crews = await Crew.findAll()
-  const crewNumber = crews.length
-  const location = Sequelize.literal(`ST_GeomFromText('POINT(${lon} ${lat})')`)
-  const distance = Sequelize.fn('ST_Distance_Sphere', Sequelize.col('location'), location)
+Pothole.createOrders = async function(lat = '41.895266', lon = '-87.639035') {
+  const crews = await Crew.findAll();
+  const crewNumber = crews.length;
+  const location = Sequelize.literal(`ST_GeomFromText('POINT(${lon} ${lat})')`);
+  const distance = Sequelize.fn(
+    'ST_Distance_Sphere',
+    Sequelize.col('location'),
+    location
+  );
 
   let nextPotholes = await Pothole.findAll({
-    attributes: ['id', 'priority', 'placement', 'latitude', 'longitude', 'streetAddress', 'status', 'serviceNumber', 'completionDate', [distance, 'distance']],
+    attributes: [
+      'id',
+      'priority',
+      'placement',
+      'latitude',
+      'longitude',
+      'streetAddress',
+      'status',
+      'serviceNumber',
+      'completionDate',
+      [distance, 'distance'],
+    ],
     order: [[distance, 'ASC']],
-    where: [{status: 'Open', reporterId: null}],
+    where: [{ status: 'Open', reporterId: null }],
     limit: crewNumber,
-  })
+  });
 
-  nextPotholes = nextPotholes.sort((a, b) => b.priority - a.priority)
-  for (let i = 0; i < crews.length; i++ ) {
-    const order = await Order.create({status: 'Requested', crewId: crews[i].id, userId: 1})
-    await nextPotholes[i].setOrder(order)
-    nextPotholes[i].save()
+  nextPotholes = nextPotholes.sort((a, b) => b.priority - a.priority);
+  for (let i = 0; i < crews.length; i++) {
+    const order = await Order.create({
+      status: 'Requested',
+      crewId: crews[i].id,
+      userId: 1,
+    });
+    await nextPotholes[i].setOrder(order);
+    nextPotholes[i].save();
   }
-}
+};
 
-module.exports = Pothole
+// instance method
+
+Pothole.prototype.incrementUpvotes = function() {
+  return this.increment(['upVotes'], { by: 1 });
+};
+
+Pothole.prototype.get = function() {
+  console.log('UpVotes and Date====>', this.getDataValue('createdAt'));
+};
+
+module.exports = Pothole;
