@@ -127,8 +127,9 @@ class SinglePothole extends Component {
                       Description:{' '}
                     </Header>
                     <Header as="h5" style={{ margin: '0 1rem' }}>
-                      Lorem Ipsum has been the industry's standard dummy text
-                      ever since the 1500s
+                      {this.props.pothole.description ||
+                        `Lorem Ipsum has been the industry's standard dummy text
+                      ever since the 1500s`}
                     </Header>
                     <br />
                     <Header as="h4" style={{ margin: '0 1rem' }}>
