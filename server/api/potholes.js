@@ -188,7 +188,7 @@ router.get('/allclosed/timetocompletion', async (req, res, next) => {
 
 router.get('/:id', async (req, res, next) => {
   try {
-    const data = await Pothole.findById(req.params.id);
+    const data = await Pothole.findById(req.params.id, {include: 'upvoters'});
     res.json(data);
   } catch (err) {
     next(err);
@@ -223,7 +223,7 @@ router.post('/', async (req, res, next) => {
     latitude: req.body.location.latitude,
     longitude: req.body.location.longitude,
   };
-  console.log('req.body.lat', req.body.latitude)
+
   if (req.user.id && !req.body.anonymous) pothole.reporterId = req.user.id;
 
   if (req.body.imageUrl) {
@@ -244,6 +244,7 @@ router.post('/', async (req, res, next) => {
 });
 
 router.post('/upvote', async (req, res, next) => {
+  console.log('req.body', req.body)
   try {
     const user = await User.findById(req.body.userId)
     const pothole = await Pothole.findById(req.body.potholeId, {include: 'upvoters'})
