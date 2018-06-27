@@ -37,11 +37,7 @@ router.get('/nearby', async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-<<<<<<< HEAD
 });
-=======
-})
->>>>>>> 45bcce5c1e1ecff14dd4b18124f6e307e54a918f
 
 // router.get('/:id', async (req, res, next) => {
 //   try {
@@ -238,16 +234,12 @@ router.post('/', async (req, res, next) => {
     zip: req.body.location.zip,
     location: {
       type: 'Point',
-<<<<<<< HEAD
-      coordinates: [req.body.longitude, req.body.latitude],
-=======
-      coordinates: [req.body.location.longitude, req.body.location.latitude]
->>>>>>> 45bcce5c1e1ecff14dd4b18124f6e307e54a918f
+      coordinates: [req.body.location.longitude, req.body.location.latitude],
     },
     latitude: req.body.location.latitude,
     longitude: req.body.location.longitude,
   };
-  console.log('req.body.lat', req.body.latitude)
+  console.log('req.body.lat', req.body.latitude);
   if (req.user.id && !req.body.anonymous) pothole.reporterId = req.user.id;
 
   if (req.body.imageUrl) {
