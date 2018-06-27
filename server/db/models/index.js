@@ -26,6 +26,7 @@ Pothole.hasMany(Comment);
 Comment.belongsTo(Pothole);
 
 Pothole.belongsToMany(User, { through: 'upvotes', as: 'upvoters' });
+
 User.belongsToMany(Pothole, { through: 'upvotes', as: 'upvoted' });
 
 module.exports = {

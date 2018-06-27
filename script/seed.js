@@ -70,6 +70,8 @@ async function seed () {
   await Pothole.bulkCreate(mappedPotholes)
   const numPotholes = await Pothole.count()
 
+
+
   console.log(`seeded ${users.length} users`)
   console.log(`seeded ${crew.length} crews`)
   console.log(`seeded ${numPotholes} potholes`)

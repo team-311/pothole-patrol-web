@@ -1,8 +1,9 @@
 const router = require('express').Router();
-const { Pothole } = require('../db/models');
+const { Pothole, User } = require('../db/models');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 const cloudinary = require('cloudinary');
+
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -30,6 +31,15 @@ router.get('/', async (req, res, next) => {
   });
 });
 
+router.get('/:id', async (req, res, next) => {
+  try {
+    const data = await Pothole.findById(req.params.id);
+    res.json(data);
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.get('/nearby', async (req, res, next) => {
   try {
     const potholes = await Pothole.findNearby(req.query.lat, req.query.lon)
@@ -38,15 +48,6 @@ router.get('/nearby', async (req, res, next) => {
     next(err);
   }
 })
-
-// router.get('/:id', async (req, res, next) => {
-//   try {
-//     const data = await Pothole.findById(req.params.id);
-//     res.json(data);
-//   } catch (err) {
-//     next(err);
-//   }
-// });
 
 router.get('/allopen', async (req, res, next) => {
   try {
@@ -69,7 +70,7 @@ router.get('/allclosed', async (req, res, next) => {
       where: {
         status: 'Closed'
       }
-    })
+    }, {include: 'upvoters'})
     res.json(data)
   } catch (err) {
     next(err)
@@ -242,13 +243,14 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-router.get('/:id', async (req, res, next) => {
+router.post('/upvote', async (req, res, next) => {
   try {
-    const data = await Pothole.findById(req.params.id);
-    res.json(data);
-  } catch (err) {
-    next(err);
-  }
-});
+    const user = await User.findById(req.body.userId)
+    const pothole = await Pothole.findById(req.body.potholeId, {include: 'upvoters'})
+    await user.addUpvoted(pothole)
+    const upvoters = await pothole.getUpvoters()
+    res.json({pothole, upvoters})
+  } catch (err) {next(err)}
+})
 
 module.exports = router;
