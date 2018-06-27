@@ -36,7 +36,7 @@ router.get('/today', async (req, res, next) => {
         [Op.or]: ['Requested', 'In Progress']
       },
     },
-    order: [['createdAt', 'ASC']],
+    order: [['id', 'ASC']],
     include: [{model: Pothole, attributes: ['id', 'imageUrl', 'description', 'placement', 'status', 'completionDate', 'latitude', 'longitude', 'streetAddress', 'zip']}],
   })
 
@@ -64,6 +64,26 @@ router.get('/:orderId', async (req, res, next) => {
 
 })
 
+router.put('/:orderId', async (req, res, next) => {
+  try {
+    const options = {
+      status: req.body.status
+    }
+    if (options.status === 'Completed') options.dateCompleted = new Date()
+    const [numUpdated, order] = await Order.update(options, {
+      where: {
+        id: req.params.orderId
+      },
+      returning: true,
+      plain: true,
+    })
+
+    res.json(order)
+  } catch (error) {
+    next(error)
+  }
+})
+
 router.put('/:orderId/next', async (req, res, next) => {
   const { lat, lon } = req.body
   const order = await Order.findById(req.params.orderId)
@@ -80,4 +100,3 @@ router.put('/:orderId/next', async (req, res, next) => {
     res.json(nextPothole)
   }
 })
-
