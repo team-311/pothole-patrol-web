@@ -27,7 +27,6 @@ class SinglePothole extends Component {
     super(props);
     this.state = {
       value: 'Open',
-      pothole: this.props.pothole,
     };
     this.handleChange = this.handleChange.bind(this);
   }
@@ -47,14 +46,9 @@ class SinglePothole extends Component {
     this.props.updateStatus(pothole, pothole.id);
   };
 
-  UNSAFE_componentWillReceiveProps(prevProps, nextProps) {
-    this.setState({ pothole: prevProps.potholes.pothole });
-  }
-
   render() {
-    const pothole = this.state.pothole;
-    console.log(pothole);
-    if (!pothole) {
+    const pothole = this.props.pothole;
+    if (!pothole || !pothole.id) {
       return (
         <div>
           {' '}
@@ -152,10 +146,7 @@ class SinglePothole extends Component {
           <Container>
             <br />
             <Header as="h2">Comments</Header>
-            <SinglePotholeComments
-              potholeId={this.props.pothole.id}
-              style={{ margin: '0 1rem' }}
-            />
+            <SinglePotholeComments style={{ margin: '0 1rem' }} />
           </Container>
         </div>
       );
