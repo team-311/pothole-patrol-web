@@ -1,5 +1,5 @@
 const router = require('express').Router({ mergeParams: true })
-const Sequelize = require('sequelize')
+const Op = require('sequelize').Op
 const { Order, Pothole } = require('../../db/models')
 module.exports = router
 
@@ -28,7 +28,25 @@ router.get('/', async (req, res, next) => {
   })
 })
 
-// single order
+router.get('/today', async (req, res, next) => {
+  const order = await Order.findOne({
+    where: {
+      crewId: req.params.id,
+      status: {
+        [Op.or]: ['Requested', 'In Progress']
+      },
+    },
+    order: [['createdAt', 'ASC']],
+    include: [{model: Pothole, attributes: ['id', 'imageUrl', 'description', 'placement', 'status', 'completionDate', 'latitude', 'longitude', 'streetAddress', 'zip']}],
+  })
+
+  if (!order) {
+    next()
+  } else {
+    res.json(order)
+  }
+})
+
 router.get('/:orderId', async (req, res, next) => {
   const order = await Order.findOne({
     where: {
