@@ -23,7 +23,7 @@ async function seed () {
     Crew.create({name: 'Schuyler Shandies'}),
     Crew.create({name: 'Rough Riders'}),
     Crew.create({name: 'French People'}),
-    Crew.create({name: 'French People'}),
+    Crew.create({name: 'The Baristas'}),
   ])
 
   const newDate = new Date()
