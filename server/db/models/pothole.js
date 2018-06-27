@@ -185,4 +185,8 @@ Pothole.getClosest = function(lat = '41.895266', lon = '-87.639035') {
   });
 };
 
+Pothole.prototype.incrementUpvotes = function(){
+  return this.increment(['upVotes'], {by: 1})
+}
+
 module.exports = Pothole;
