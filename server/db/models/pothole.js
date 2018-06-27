@@ -116,6 +116,8 @@ Pothole.getClosest = function (lat = '41.895266', lon = '-87.639035') {
 }
 
 Pothole.createOrders = async function (lat = '41.895266', lon = '-87.639035') {
+  const crews = await Crew.findAll()
+  const crewNumber = crews.length
   const location = Sequelize.literal(`ST_GeomFromText('POINT(${lon} ${lat})')`)
   const distance = Sequelize.fn('ST_Distance_Sphere', Sequelize.col('location'), location)
 
@@ -123,11 +125,10 @@ Pothole.createOrders = async function (lat = '41.895266', lon = '-87.639035') {
     attributes: ['id', 'priority', 'placement', 'latitude', 'longitude', 'streetAddress', 'status', 'serviceNumber', 'completionDate', [distance, 'distance']],
     order: [[distance, 'ASC']],
     where: [{status: 'Open', reporterId: null}],
-    limit: 25,
+    limit: crewNumber,
   })
 
   nextPotholes = nextPotholes.sort((a, b) => b.priority - a.priority)
-  const crews = await Crew.findAll()
   for (let i = 0; i < crews.length; i++ ) {
     const order = await Order.create({status: 'Requested', crewId: crews[i].id, userId: 1})
     await nextPotholes[i].setOrder(order)
