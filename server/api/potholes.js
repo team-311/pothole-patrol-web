@@ -16,7 +16,7 @@ router.get('/', async (req, res, next) => {
   const offset = (page - 1) * limit;
 
   const { count, rows: requests } = await Pothole.findAndCountAll({
-    order: [['createdAt', 'DESC']],
+    order: [['createdAt', 'DESC'], ['id', 'ASC']],
     offset,
     limit,
   });
