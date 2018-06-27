@@ -37,7 +37,7 @@ router.get('/:orderId', async (req, res, next) => {
       id: req.params.orderId,
       crewId: req.params.id,
     },
-    include: [{model: Pothole, attributes: ['id', 'imageUrl', 'description', 'placement', 'status', 'latitude', 'longitude', 'streetAddress', 'zip']}],
+    include: [{model: Pothole, attributes: ['id', 'imageUrl', 'description', 'placement', 'status', 'completionDate', 'latitude', 'longitude', 'streetAddress', 'zip']}],
   })
 
   if (!order) {
@@ -46,5 +46,22 @@ router.get('/:orderId', async (req, res, next) => {
     res.json(order)
   }
 
+})
+
+router.put('/:orderId/next', async (req, res, next) => {
+  const { lat, lon } = req.body
+  const order = await Order.findById(req.params.orderId)
+  if (!order) {
+    next() // go to 404
+  } else {
+    // Look for the highest priority item that is within x radius
+    let nextPothole = await Pothole.getNext(lat, lon)
+    if (!nextPothole.id) {
+      // If nothing is found, find the next closest pothole (distance)
+      nextPothole = await Pothole.getClosest(lat, lon)
+    }
+    nextPothole = await nextPothole.setOrder(order)
+    res.json(nextPothole)
+  }
 })
 
