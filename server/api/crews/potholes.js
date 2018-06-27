@@ -8,7 +8,7 @@ router.put('/:potholeId/complete', async (req, res, next) => {
     status: 'Completed',
     completionDate: new Date()
   }
-  const pothole = await Pothole.update(updates, {
+  const [numRows, pothole] = await Pothole.update(updates, {
     where: {
       id: req.params.potholeId
     },
@@ -16,5 +16,5 @@ router.put('/:potholeId/complete', async (req, res, next) => {
     attributes: ['id', 'imageUrl', 'description', 'placement', 'status', 'completionDate', 'latitude', 'longitude', 'streetAddress', 'zip'],
   })
 
-  res.json(pothole)
+  res.json(pothole[0])
 })

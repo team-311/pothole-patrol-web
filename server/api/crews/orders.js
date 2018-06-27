@@ -56,7 +56,7 @@ router.put('/:orderId/next', async (req, res, next) => {
   } else {
     // Look for the highest priority item that is within x radius
     let nextPothole = await Pothole.getNext(lat, lon)
-    if (!nextPothole.id) {
+    if (!nextPothole) {
       // If nothing is found, find the next closest pothole (distance)
       nextPothole = await Pothole.getClosest(lat, lon)
     }
