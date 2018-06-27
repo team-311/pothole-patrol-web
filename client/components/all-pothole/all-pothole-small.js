@@ -4,7 +4,7 @@ import { createGetLatestPotholesThunk } from '../../store';
 import { Link } from 'react-router-dom';
 import { Header, Container, Table, Button } from 'semantic-ui-react'
 
-class AllPotholeView extends Component {
+class AllPotholeViewSmall extends Component {
   constructor() {
     super();
     this.state = {
@@ -14,7 +14,6 @@ class AllPotholeView extends Component {
 
   componentDidMount() {
     this.props.getLatestPotholes(1);
-
   }
 
   handleClick = () => {
@@ -34,26 +33,21 @@ class AllPotholeView extends Component {
     const { requests, lastPage } = this.props.potholes;
     return (
       <Container>
-        <Header size="huge" textAlign="center">All Potholes</Header>
+        <Header size="huge" textAlign="center">Recent Potholes</Header>
         <Table celled>
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell textAlign="center">ID</Table.HeaderCell>
               <Table.HeaderCell textAlign="center">STATUS</Table.HeaderCell>
               <Table.HeaderCell textAlign="center">ADDRESS</Table.HeaderCell>
-              <Table.HeaderCell textAlign="center">PRIORITY</Table.HeaderCell>
-              <Table.HeaderCell
-                textAlign="center"> UPDATED AT</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           <Table.Body>
             {requests.map(request => (
               <Table.Row key={request.id}>
-                <Table.Cell textAlign="center" selectable><Link to={`./singlepothole/${request.id}`}>{request.id}</Link></Table.Cell>
+                <Table.Cell textAlign="center"><Link to={`./singlepothole/${request.id}`}>{request.id}</Link></Table.Cell>
                 <Table.Cell textAlign="center">{request.status}</Table.Cell>
                 <Table.Cell textAlign="center">{request.streetAddress}</Table.Cell>
-                <Table.Cell textAlign="center">{request.priority}</Table.Cell>
-                <Table.Cell textAlign="center">{request.updatedAt}</Table.Cell>
               </Table.Row>
             ))}
           </Table.Body>
@@ -79,4 +73,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(AllPotholeView);
+)(AllPotholeViewSmall);
