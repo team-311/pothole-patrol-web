@@ -202,6 +202,7 @@ router.put('/upvote', async (req, res, next) => {
     await user.addUpvoted(pothole)
     const upvoters = await pothole.getUpvoters()
     pothole.incrementUpvotes()
+
     res.json({pothole, upvoters})
   } catch (err) {next(err)}
 })
