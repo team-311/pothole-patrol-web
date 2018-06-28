@@ -3,6 +3,7 @@ const { Comment, User } = require('../db/models');
 
 router.get('/:id', async (req, res, next) => {
   try {
+    console.log('in comments route')
     const potholeComments = await Comment.findAll({
       where: { potholeId: req.params.id },
       include: [User],
