@@ -65,13 +65,13 @@ class SinglePothole extends Component {
       const longitude = +pothole.longitude || -87.619392;
 
       return (
-        <div>
+        <Container>
           <Container>
-            <Segment>
+            <Segment style={{ margin: '2rem' }}>
               <Grid divided="vertically">
                 <Grid.Row columns={2}>
                   <Grid.Column width={12} style={{ padding: 0 }}>
-                    <div style={{ height: '100vh', width: '100%' }}>
+                    <div style={{ height: '75vh', width: '100%' }}>
                       <Map
                         google={this.props.google}
                         initialCenter={{
@@ -90,7 +90,6 @@ class SinglePothole extends Component {
                       </Map>
                     </div>
                   </Grid.Column>
-
                   <Grid.Column
                     width={4}
                     color="blue"
@@ -126,7 +125,7 @@ class SinglePothole extends Component {
                       ever since the 1500s`}
                     </Header>
                     <br />
-                    <Header as="h4" style={{ margin: '0 1rem' }}>
+                    <Header as="h4" style={{ margin: '0 2rem' }}>
                       {' '}
                       Status:{' '}
                     </Header>
@@ -143,12 +142,13 @@ class SinglePothole extends Component {
               </Grid>
             </Segment>
           </Container>
-          <Container>
-            <br />
-            <Header as="h2">Comments</Header>
-            <SinglePotholeComments style={{ margin: '0 1rem' }} />
+          <Container style={{ margin: '0 1rem' }}>
+            <Header as="h2" dividing>
+              Comments
+            </Header>
+            <SinglePotholeComments style={{ margin: '1rem 1rem' }} />
           </Container>
-        </div>
+        </Container>
       );
     }
   }
