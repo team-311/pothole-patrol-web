@@ -1,8 +1,8 @@
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 const db = require('../db');
-const Crew = require('./crew')
-const Order = require('./order')
+const Crew = require('./crew');
+const Order = require('./order');
 
 const Pothole = db.define(
   'pothole',
@@ -68,11 +68,14 @@ const Pothole = db.define(
       type: Sequelize.VIRTUAL,
       get() {
         let today = new Date().getTime();
+
+        // console.log(this.getDataValue('createdAt'));
         let miliseconds = today - this.getDataValue('createdAt').getTime();
         let totalSeconds = parseInt(Math.floor(miliseconds / 1000));
         let totalMinutes = parseInt(Math.floor(totalSeconds / 60));
         let totalHours = parseInt(Math.floor(totalMinutes / 60));
         let days = parseInt(Math.floor(totalHours / 24));
+
         return this.upVotes / days;
       },
     },
