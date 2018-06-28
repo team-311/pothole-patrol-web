@@ -168,33 +168,45 @@ router.get('/allclosed/timetocompletion', async (req, res, next) => {
     let dataObj3 = { time: 3, count: 0 };
     let dataObj4 = { time: 4, count: 0 };
     let dataObj5 = { time: 5, count: 0 };
-    let returnArr = [dataObj1, dataObj2, dataObj3, dataObj4, dataObj5];
+    let dataObj6 = { time: 6, count: 0 };
+    let dataObj7 = { time: 7, count: 0 };
+    let returnArr = [dataObj1, dataObj2, dataObj3, dataObj4, dataObj5, dataObj6, dataObj7];
     const data = await Pothole.findAll({
       where: {
-        status: 'Closed',
+        status: 'Completed',
       },
     });
 
     for (let i = 0; i < data.length; i++) {
-      if (data[i].updatedAt - data[i].createdAt < 3 * 24 * 60 * 60 * 1000) {
+      if (data[i].completionDate - data[i].createdAt < 1 * 24 * 60 * 60 * 1000) {
         dataObj1.count++;
       } else if (
-        data[i].updatedAt - data[i].createdAt <
-        4 * 24 * 60 * 60 * 1000
+        data[i].completionDate - data[i].createdAt <
+        2 * 24 * 60 * 60 * 1000
       ) {
         dataObj2.count++;
       } else if (
-        data[i].updatedAt - data[i].createdAt <
-        5 * 24 * 60 * 60 * 1000
+        data[i].completionDate - data[i].createdAt <
+        3 * 24 * 60 * 60 * 1000
       ) {
         dataObj3.count++;
       } else if (
-        data[i].updatedAt - data[i].createdAt <
-        6 * 24 * 60 * 60 * 1000
+        data[i].completionDate - data[i].createdAt <
+        4 * 24 * 60 * 60 * 1000
       ) {
         dataObj4.count++;
-      } else {
+      } else if (
+        data[i].completionDate - data[i].createdAt <
+        5 * 24 * 60 * 60 * 1000
+      ) {
         dataObj5.count++;
+      } else if (
+        data[i].completionDate - data[i].createdAt <
+        6 * 24 * 60 * 60 * 1000
+      ) {
+        dataObj6.count++;
+      } else {
+        dataObj7.count++;
       }
     }
     res.json(returnArr);
