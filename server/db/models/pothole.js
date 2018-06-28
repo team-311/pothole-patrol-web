@@ -64,9 +64,15 @@ const Pothole = db.define(
     },
     priority: {
       type: Sequelize.VIRTUAL,
-      // get() {
-      //   return this.getDataValue('id') / 100;
-      // },
+      get() {
+        let today = new Date().getTime();
+        let miliseconds = today - this.getDataValue('createdAt').getTime();
+        let totalSeconds = parseInt(Math.floor(miliseconds / 1000));
+        let totalMinutes = parseInt(Math.floor(totalSeconds / 60));
+        let totalHours = parseInt(Math.floor(totalMinutes / 60));
+        let days = parseInt(Math.floor(totalHours / 24));
+        return days / this.upVotes;
+      },
     },
   },
   {
@@ -229,10 +235,6 @@ Pothole.createOrders = async function(lat = '41.895266', lon = '-87.639035') {
 
 Pothole.prototype.incrementUpvotes = function() {
   return this.increment(['upVotes'], { by: 1 });
-};
-
-Pothole.prototype.get = function() {
-  console.log('UpVotes and Date====>', this.getDataValue('createdAt'));
 };
 
 module.exports = Pothole;
