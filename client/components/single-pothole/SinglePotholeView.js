@@ -27,7 +27,6 @@ class SinglePothole extends Component {
     super(props);
     this.state = {
       value: 'Open',
-      pothole: this.props.pothole,
     };
     this.handleChange = this.handleChange.bind(this);
   }
@@ -36,10 +35,6 @@ class SinglePothole extends Component {
     const potholeId = this.props.match.params.id;
 
     await this.props.getPothole(potholeId);
-  }
-
-  UNSAFE_componentWillReceiveProps(prevProps, nextProps) {
-    this.setState({ pothole: prevProps.potholes.pothole });
   }
 
   handleChange = (event, { value }) => {
@@ -52,8 +47,8 @@ class SinglePothole extends Component {
   };
 
   render() {
-    const pothole = this.state.pothole;
-    if (!pothole) {
+    const pothole = this.props.pothole;
+    if (!pothole || !pothole.id) {
       return (
         <div>
           {' '}
@@ -66,8 +61,8 @@ class SinglePothole extends Component {
       );
     } else {
       const { value } = this.state.value;
-      const latitude = +pothole.latitude;
-      const longitude = +pothole.longitude;
+      const latitude = +pothole.latitude || 41.882702;
+      const longitude = +pothole.longitude || -87.619392;
 
       return (
         <div>
@@ -79,7 +74,7 @@ class SinglePothole extends Component {
                     <div style={{ height: '100vh', width: '100%' }}>
                       <Map
                         google={this.props.google}
-                        center={{
+                        initialCenter={{
                           lat: latitude,
                           lng: longitude,
                         }}
@@ -87,7 +82,10 @@ class SinglePothole extends Component {
                       >
                         <Marker
                           name={'Pothole'}
-                          position={{ lat: latitude, lng: longitude }}
+                          position={{
+                            lat: latitude,
+                            lng: longitude,
+                          }}
                         />
                       </Map>
                     </div>
@@ -103,7 +101,10 @@ class SinglePothole extends Component {
                     </Header>
                     <Image
                       style={{ margin: '1rem' }}
-                      src="https://upload.wikimedia.org/wikipedia/commons/1/10/Newport_Whitepit_Lane_pot_hole.JPG"
+                      src={
+                        this.props.pothole.imageUrl ||
+                        'https://upload.wikimedia.org/wikipedia/commons/1/10/Newport_Whitepit_Lane_pot_hole.JPG'
+                      }
                       size="small"
                     />
                     <Header as="h4" style={{ margin: '0 1rem' }}>
@@ -120,8 +121,9 @@ class SinglePothole extends Component {
                       Description:{' '}
                     </Header>
                     <Header as="h5" style={{ margin: '0 1rem' }}>
-                      Lorem Ipsum has been the industry's standard dummy text
-                      ever since the 1500s
+                      {this.props.pothole.description ||
+                        `Lorem Ipsum has been the industry's standard dummy text
+                      ever since the 1500s`}
                     </Header>
                     <br />
                     <Header as="h4" style={{ margin: '0 1rem' }}>
@@ -144,10 +146,7 @@ class SinglePothole extends Component {
           <Container>
             <br />
             <Header as="h2">Comments</Header>
-            <SinglePotholeComments
-              potholeId={this.props.pothole.id}
-              style={{ margin: '0 1rem' }}
-            />
+            <SinglePotholeComments style={{ margin: '0 1rem' }} />
           </Container>
         </div>
       );
