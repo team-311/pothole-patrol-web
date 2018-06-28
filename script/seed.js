@@ -111,7 +111,7 @@ async function seed() {
 
   const randomUpvote = () => {
     return Math.floor(Math.random() * 20) + 1
-   }
+  }
 
   const mappedPotholes = potholes.map((pothole, index) => {
     let orderId;
@@ -121,6 +121,21 @@ async function seed() {
     if (!(index % 3003)) orderId = 4;
     if (!(index % 4004)) orderId = 5;
     if (!(index % 4005)) orderId = 6;
+
+    if (!(index % 51)) pothole.status = 'Completed'
+    if (!(index % 28)) pothole.status = 'Completed'
+
+    if (!(index % 102)) pothole.creation_date = new Date(new Date() - 1 * 24 * 60 * 60 * 1000)
+    if (!(index % 203)) pothole.creation_date = new Date(new Date() - 2 * 24 * 60 * 60 * 1000)
+    if (!(index % 330)) pothole.creation_date = new Date(new Date() - 3 * 24 * 60 * 60 * 1000)
+    if (!(index % 440)) pothole.creation_date = new Date(new Date() - 4 * 24 * 60 * 60 * 1000)
+    if (!(index % 505)) pothole.creation_date = new Date(new Date() - 5 * 24 * 60 * 60 * 1000)
+    if (!(index % 606)) pothole.creation_date = new Date(new Date() - 6 * 24 * 60 * 60 * 1000)
+    if (!(index % 770)) pothole.creation_date = new Date(new Date() - 7 * 24 * 60 * 60 * 1000)
+    if (!(index % 880)) pothole.creation_date = new Date(new Date() - 60 * 60 * 1000)
+
+    if (!(index % 240)) pothole.completion_date = new Date(new Date() - 4 * 24 * 60 * 60 * 1000)
+    if (!(index % 472)) pothole.completion_date = new Date(new Date() - 2 * 24 * 60 * 60 * 1000)
 
     return {
       createdAt: pothole.creation_date,
