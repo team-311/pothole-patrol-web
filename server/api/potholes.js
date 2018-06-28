@@ -201,10 +201,11 @@ router.put('/upvote', async (req, res, next) => {
     const pothole = await Pothole.findById(req.body.potholeId, {include: 'upvoters'})
     await user.addUpvoted(pothole)
     const upvoters = await pothole.getUpvoters()
+    pothole.incrementUpvotes()
+
     res.json({pothole, upvoters})
   } catch (err) {next(err)}
 })
-
 
 router.put('/:id', async (req, res, next) => {
   try {
