@@ -71,7 +71,7 @@ const Pothole = db.define(
         let totalMinutes = parseInt(Math.floor(totalSeconds / 60));
         let totalHours = parseInt(Math.floor(totalMinutes / 60));
         let days = parseInt(Math.floor(totalHours / 24));
-        return days / this.upVotes;
+        return this.upVotes / days;
       },
     },
   },
