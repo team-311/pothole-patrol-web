@@ -64,7 +64,7 @@ async function seed() {
     if (!(index % 770)) pothole.creation_date = new Date(new Date() - 7 * 24 * 60 * 60 * 1000)
     if (!(index % 880)) pothole.creation_date = new Date(new Date() - 60 * 60 * 1000)
 
-    if (!(index % 240)) pothole.completion_date = new Date(new Date() - 1 * 24 * 60 * 60 * 1000)
+    if (!(index % 240)) pothole.completion_date = new Date(new Date() - 4 * 24 * 60 * 60 * 1000)
     if (!(index % 472)) pothole.completion_date = new Date(new Date() - 2 * 24 * 60 * 60 * 1000)
     // if (!(index % 253)) pothole.completion_date = new Date(new Date() - 3 * 24 * 60 * 60 * 1000)
     // if (!(index % 691)) pothole.completion_date = new Date(new Date() - 4 * 24 * 60 * 60 * 1000)
