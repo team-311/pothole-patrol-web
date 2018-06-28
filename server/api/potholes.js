@@ -283,14 +283,4 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-router.post('/upvote', async (req, res, next) => {
-  try {
-    const user = await User.findById(req.body.userId)
-    const pothole = await Pothole.findById(req.body.potholeId, { include: 'upvoters' })
-    await user.addUpvoted(pothole)
-    const upvoters = await pothole.getUpvoters()
-    res.json({ pothole, upvoters })
-  } catch (err) { next(err) }
-})
-
 module.exports = router;
