@@ -14,6 +14,7 @@ router.get('/', async (req, res, next) => {
     limit,
     where: {
       crewId: req.params.id,
+      status: 'Completed'
     },
     include: [{model: Pothole, attributes: ['id', 'streetAddress']}],
   })
@@ -29,21 +30,25 @@ router.get('/', async (req, res, next) => {
 })
 
 router.get('/today', async (req, res, next) => {
-  const order = await Order.findOne({
-    where: {
-      crewId: req.params.id,
-      status: {
-        [Op.or]: ['Requested', 'In Progress']
+  try {
+    const order = await Order.findOne({
+      where: {
+        crewId: req.params.id,
+        status: {
+          [Op.or]: ['Requested', 'In Progress']
+        },
       },
-    },
-    order: [['id', 'ASC']],
-    include: [{model: Pothole, attributes: ['id', 'imageUrl', 'description', 'placement', 'status', 'completionDate', 'latitude', 'longitude', 'streetAddress', 'zip']}],
-  })
+      order: [['id', 'ASC']],
+      include: [{model: Pothole, attributes: ['id', 'imageUrl', 'description', 'placement', 'status', 'completionDate', 'latitude', 'longitude', 'streetAddress', 'zip']}],
+    })
 
-  if (!order) {
-    next()
-  } else {
-    res.json(order)
+    if (!order) {
+      res.json({})
+    } else {
+      res.json(order)
+    }
+  } catch (error) {
+    next(error)
   }
 })
 
