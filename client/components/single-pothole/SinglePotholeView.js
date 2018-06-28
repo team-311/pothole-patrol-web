@@ -18,16 +18,17 @@ const accessToken = 'AIzaSyAd3YEc_nthBh2bFt5l-elcqgGc9KiMm2A';
 
 const options = [
   { key: 'open', text: 'Open', value: 'Open' },
+  { key: 'open - dup', text: 'Open - Dup', value: 'Open - Dup' },
   { key: 'in-progress', text: 'In-progress', value: 'In-progess' },
+  { key: 'completed', text: 'Completed', value: 'Completed' },
+  { key: 'completed - dup', text: 'Completed - Dup', value: 'Completed - Dup' },
   { key: 'closed', text: 'Closed', value: 'Closed' },
 ];
 
 class SinglePothole extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      value: 'Open',
-    };
+    this.state = {};
     this.handleChange = this.handleChange.bind(this);
   }
 
@@ -60,7 +61,8 @@ class SinglePothole extends Component {
         </div>
       );
     } else {
-      const { value } = this.state.value;
+      console.log(pothole.status);
+      const value = pothole.status;
       const latitude = +pothole.latitude || 41.882702;
       const longitude = +pothole.longitude || -87.619392;
 
@@ -78,13 +80,17 @@ class SinglePothole extends Component {
                           lat: latitude,
                           lng: longitude,
                         }}
-                        zoom={14}
+                        className={'map'}
+                        zoom={17}
                       >
                         <Marker
                           name={'Pothole'}
                           position={{
                             lat: latitude,
                             lng: longitude,
+                          }}
+                          icon={{
+                            url: 'http://localhost:8080/icon.png',
                           }}
                         />
                       </Map>
@@ -132,7 +138,6 @@ class SinglePothole extends Component {
                     <Dropdown
                       style={{ margin: '0 1rem' }}
                       options={options}
-                      placeholder="Choose an option"
                       selection
                       value={value}
                       onChange={this.handleChange}
