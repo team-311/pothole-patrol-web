@@ -69,14 +69,13 @@ const Pothole = db.define(
       get() {
         let today = new Date().getTime();
 
-        // console.log(this.getDataValue('createdAt'));
         let miliseconds = today - this.getDataValue('createdAt').getTime();
         let totalSeconds = parseInt(Math.floor(miliseconds / 1000));
         let totalMinutes = parseInt(Math.floor(totalSeconds / 60));
         let totalHours = parseInt(Math.floor(totalMinutes / 60));
         let days = parseInt(Math.floor(totalHours / 24));
 
-        return this.upVotes / days;
+        return days / this.upVotes;
       },
     },
   },
