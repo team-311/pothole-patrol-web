@@ -26,19 +26,19 @@ router.get('/', async (req, res, next) => {
   res.json({
     count,
     requests,
-    currentPage: offset,
+    currentPage: offset + 1,
     lastPage,
   });
 });
 
 router.get('/nearby', async (req, res, next) => {
   try {
-    const potholes = await Pothole.findNearby(req.query.lat, req.query.lon)
+    const potholes = await Pothole.findNearby(req.query.lat, req.query.lon);
     res.json(potholes);
   } catch (err) {
     next(err);
   }
-})
+});
 
 router.get('/allopen', async (req, res, next) => {
   try {
@@ -46,14 +46,14 @@ router.get('/allopen', async (req, res, next) => {
       where: {
         status: {
           [Op.like]: 'Open%',
-        }
-      }
-    })
-    res.json(data)
+        },
+      },
+    });
+    res.json(data);
   } catch (err) {
-    next(err)
+    next(err);
   }
-})
+});
 
 router.get('/allclosed', async (req, res, next) => {
   try {
@@ -61,134 +61,163 @@ router.get('/allclosed', async (req, res, next) => {
       where: {
         status: 'Closed'
       }
-    }, {include: 'upvoters'})
+    }, { include: 'upvoters' })
     res.json(data)
   } catch (err) {
-    next(err)
+    next(err);
   }
-})
+});
 
 router.get('/lastweek/byday', async (req, res, next) => {
   try {
-    let dataObj1 = { time: 1, count: 0 }
-    let dataObj2 = { time: 2, count: 0 }
-    let dataObj3 = { time: 3, count: 0 }
-    let dataObj4 = { time: 4, count: 0 }
-    let dataObj5 = { time: 5, count: 0 }
-    let dataObj6 = { time: 6, count: 0 }
-    let dataObj7 = { time: 7, count: 0 }
-    let returnArr = [dataObj1, dataObj2, dataObj3, dataObj4, dataObj5, dataObj6, dataObj7]
+    let dataObj1 = { time: 1, count: 0 };
+    let dataObj2 = { time: 2, count: 0 };
+    let dataObj3 = { time: 3, count: 0 };
+    let dataObj4 = { time: 4, count: 0 };
+    let dataObj5 = { time: 5, count: 0 };
+    let dataObj6 = { time: 6, count: 0 };
+    let dataObj7 = { time: 7, count: 0 };
+    let returnArr = [
+      dataObj1,
+      dataObj2,
+      dataObj3,
+      dataObj4,
+      dataObj5,
+      dataObj6,
+      dataObj7,
+    ];
     const data = await Pothole.findAll({
       where: {
         createdAt: {
-          [Op.gt]: new Date(new Date() - (7 * 24 * 60 * 60 * 1000))
-        }
-      }
-    })
+          [Op.gt]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000),
+        },
+      },
+    });
     for (let i = 0; i < data.length; i++) {
-      if ((new Date() - data[i].createdAt) < (1 * 24 * 60 * 60 * 1000)) {
-        dataObj1.count++
-      } else if ((new Date() - data[i].createdAt) < (2 * 24 * 60 * 60 * 1000)) {
-        dataObj2.count++
-      } else if ((new Date() - data[i].createdAt) < (3 * 24 * 60 * 60 * 1000)) {
-        dataObj3.count++
-      } else if ((new Date() - data[i].createdAt) < (4 * 24 * 60 * 60 * 1000)) {
-        dataObj4.count++
-      } else if ((new Date() - data[i].createdAt) < (5 * 24 * 60 * 60 * 1000)) {
-        dataObj5.count++
-      } else if ((new Date() - data[i].createdAt) < (6 * 24 * 60 * 60 * 1000)) {
-        dataObj6.count++
+      if (new Date() - data[i].createdAt < 1 * 24 * 60 * 60 * 1000) {
+        dataObj1.count++;
+      } else if (new Date() - data[i].createdAt < 2 * 24 * 60 * 60 * 1000) {
+        dataObj2.count++;
+      } else if (new Date() - data[i].createdAt < 3 * 24 * 60 * 60 * 1000) {
+        dataObj3.count++;
+      } else if (new Date() - data[i].createdAt < 4 * 24 * 60 * 60 * 1000) {
+        dataObj4.count++;
+      } else if (new Date() - data[i].createdAt < 5 * 24 * 60 * 60 * 1000) {
+        dataObj5.count++;
+      } else if (new Date() - data[i].createdAt < 6 * 24 * 60 * 60 * 1000) {
+        dataObj6.count++;
       } else {
-        dataObj7.count++
+        dataObj7.count++;
       }
     }
-    res.json(returnArr)
+    res.json(returnArr);
   } catch (err) {
-    next(err)
+    next(err);
   }
-})
+});
 
 router.get('/lastweek', async (req, res, next) => {
   try {
     const data = await Pothole.findAll({
       where: {
         createdAt: {
-          [Op.gt]: new Date(new Date() - (7 * 24 * 60 * 60 * 1000))
-        }
-      }
-    })
-    res.json(data)
+          [Op.gt]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000),
+        },
+      },
+    });
+    res.json(data);
   } catch (err) {
-    next(err)
+    next(err);
   }
-})
+});
 
 router.get('/lastmonth', async (req, res, next) => {
   try {
     const data = await Pothole.findAll({
       where: {
         createdAt: {
-          [Op.gt]: new Date(new Date() - (30 * 24 * 60 * 60 * 1000)),
-        }
-      }
-    })
-    res.json(data)
+          [Op.gt]: new Date(new Date() - 30 * 24 * 60 * 60 * 1000),
+        },
+      },
+    });
+    res.json(data);
   } catch (err) {
-    next(err)
+    next(err);
   }
-})
+});
 
 router.get('/lastmonth/byday', async (req, res, next) => {
   try {
     const data = await Pothole.findAll({
       where: {
         createdAt: {
-          [Op.gt]: new Date(new Date() - (30 * 24 * 60 * 60 * 1000)),
-        }
-      }
-    })
-    res.json(data)
+          [Op.gt]: new Date(new Date() - 30 * 24 * 60 * 60 * 1000),
+        },
+      },
+    });
+    res.json(data);
   } catch (err) {
-    next(err)
+    next(err);
   }
-})
+});
 
 router.get('/allclosed/timetocompletion', async (req, res, next) => {
   try {
-    let dataObj1 = { time: 1, count: 0 }
-    let dataObj2 = { time: 2, count: 0 }
-    let dataObj3 = { time: 3, count: 0 }
-    let dataObj4 = { time: 4, count: 0 }
-    let dataObj5 = { time: 5, count: 0 }
-    let returnArr = [dataObj1, dataObj2, dataObj3, dataObj4, dataObj5]
+    let dataObj1 = { time: 1, count: 0 };
+    let dataObj2 = { time: 2, count: 0 };
+    let dataObj3 = { time: 3, count: 0 };
+    let dataObj4 = { time: 4, count: 0 };
+    let dataObj5 = { time: 5, count: 0 };
+    let dataObj6 = { time: 6, count: 0 };
+    let dataObj7 = { time: 7, count: 0 };
+    let returnArr = [dataObj1, dataObj2, dataObj3, dataObj4, dataObj5, dataObj6, dataObj7];
     const data = await Pothole.findAll({
       where: {
-        status: 'Closed'
-      }
-    })
+        status: 'Completed',
+      },
+    });
 
     for (let i = 0; i < data.length; i++) {
-      if ((data[i].updatedAt - data[i].createdAt) < (3 * 24 * 60 * 60 * 1000)) {
-        dataObj1.count++
-      } else if ((data[i].updatedAt - data[i].createdAt) < (4 * 24 * 60 * 60 * 1000)) {
-        dataObj2.count++
-      } else if ((data[i].updatedAt - data[i].createdAt) < (5 * 24 * 60 * 60 * 1000)) {
-        dataObj3.count++
-      } else if ((data[i].updatedAt - data[i].createdAt) < (6 * 24 * 60 * 60 * 1000)) {
-        dataObj4.count++
+      if (data[i].completionDate - data[i].createdAt < 1 * 24 * 60 * 60 * 1000) {
+        dataObj1.count++;
+      } else if (
+        data[i].completionDate - data[i].createdAt <
+        2 * 24 * 60 * 60 * 1000
+      ) {
+        dataObj2.count++;
+      } else if (
+        data[i].completionDate - data[i].createdAt <
+        3 * 24 * 60 * 60 * 1000
+      ) {
+        dataObj3.count++;
+      } else if (
+        data[i].completionDate - data[i].createdAt <
+        4 * 24 * 60 * 60 * 1000
+      ) {
+        dataObj4.count++;
+      } else if (
+        data[i].completionDate - data[i].createdAt <
+        5 * 24 * 60 * 60 * 1000
+      ) {
+        dataObj5.count++;
+      } else if (
+        data[i].completionDate - data[i].createdAt <
+        6 * 24 * 60 * 60 * 1000
+      ) {
+        dataObj6.count++;
       } else {
-        dataObj5.count++
+        dataObj7.count++;
       }
     }
-    res.json(returnArr)
+    res.json(returnArr);
   } catch (err) {
-    next(err)
+    next(err);
   }
-})
+});
 
 router.get('/:id', async (req, res, next) => {
   try {
-    const data = await Pothole.findById(req.params.id, {include: 'upvoters'});
+    const data = await Pothole.findById(req.params.id, { include: 'upvoters' });
     res.json(data);
   } catch (err) {
     next(err);
@@ -198,13 +227,13 @@ router.get('/:id', async (req, res, next) => {
 router.put('/upvote', async (req, res, next) => {
   try {
     const user = await User.findById(req.body.userId)
-    const pothole = await Pothole.findById(req.body.potholeId, {include: 'upvoters'})
+    const pothole = await Pothole.findById(req.body.potholeId, { include: 'upvoters' })
     await user.addUpvoted(pothole)
     const upvoters = await pothole.getUpvoters()
     pothole.incrementUpvotes()
 
-    res.json({pothole, upvoters})
-  } catch (err) {next(err)}
+    res.json({ pothole, upvoters })
+  } catch (err) { next(err) }
 })
 
 router.put('/:id', async (req, res, next) => {
@@ -230,12 +259,11 @@ router.post('/', async (req, res, next) => {
     zip: req.body.location.zip,
     location: {
       type: 'Point',
-      coordinates: [req.body.location.longitude, req.body.location.latitude]
+      coordinates: [req.body.location.longitude, req.body.location.latitude],
     },
     latitude: req.body.location.latitude,
     longitude: req.body.location.longitude,
   };
-
   if (req.user.id && !req.body.anonymous) pothole.reporterId = req.user.id;
 
   if (req.body.imageUrl) {

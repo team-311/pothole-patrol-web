@@ -1,6 +1,8 @@
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 const db = require('../db');
+const Crew = require('./crew')
+const Order = require('./order')
 
 const Pothole = db.define(
   'pothole',

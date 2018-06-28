@@ -9,6 +9,15 @@ const Op = Sequelize.Op;
 async function seed() {
   await db.sync({ force: true });
   console.log('db synced!');
+
+  const crew = await Promise.all([
+    Crew.create({ name: 'Moses Men' }),
+    Crew.create({ name: 'Schuyler Shandies' }),
+    Crew.create({ name: 'Rough Riders' }),
+    Crew.create({ name: 'French People' }),
+    Crew.create({ name: 'The Baristas' }),
+  ]);
+
   const users = await Promise.all([
     User.create({
       firstName: 'Cody',
@@ -34,16 +43,18 @@ async function seed() {
     User.create({
       firstName: 'Alexander',
       lastName: 'Hamilton',
-      type: 'admin',
+      type: 'crew',
       email: 'alexander@email.com',
       password: '123',
+      crewId: 2,
     }),
     User.create({
       firstName: 'Aaron',
       lastName: 'Burr',
-      type: 'admin',
+      type: 'crew',
       email: 'aaron@email.com',
       password: '123',
+      crewId: 1,
     }),
     User.create({
       firstName: 'Eliza',
@@ -61,29 +72,21 @@ async function seed() {
     }),
   ]);
 
-  const crew = await Promise.all([
-    Crew.create({ name: 'Moses Men' }),
-    Crew.create({ name: 'Schuyler Shandies' }),
-    Crew.create({ name: 'Rough Riders' }),
-    Crew.create({ name: 'French People' }),
-    Crew.create({ name: 'The Baristas' }),
-  ]);
-
   const newDate = new Date();
 
   const orders = await Promise.all([
-    Order.create({ status: 'Completed', userId: 1, crewId: 1 }),
-    Order.create({ status: 'Completed', userId: 2, crewId: 2 }),
-    Order.create({ status: 'Completed', userId: 2, crewId: 2 }),
-    Order.create({ status: 'Completed', userId: 3, crewId: 3 }),
-    Order.create({ status: 'Completed', userId: 4, crewId: 3 }),
-    Order.create({ status: 'Completed', userId: 4, crewId: 4 }),
-    Order.create({ status: 'Completed', userId: 4, crewId: 4 }),
-    Order.create({ status: 'Completed', userId: 4, crewId: 5 }),
+    Order.create({ status: 'Completed', userId: 1, crewId: 1, dateCompleted: newDate }),
+    Order.create({ status: 'Completed', userId: 2, crewId: 2, dateCompleted: newDate }),
+    Order.create({ status: 'Completed', userId: 2, crewId: 2, dateCompleted: newDate }),
+    Order.create({ status: 'Completed', userId: 3, crewId: 2, dateCompleted: newDate }),
+    Order.create({ status: 'Completed', userId: 4, crewId: 3, dateCompleted: newDate }),
+    Order.create({ status: 'Completed', userId: 4, crewId: 4, dateCompleted: newDate }),
+    Order.create({ status: 'Completed', userId: 4, crewId: 4, dateCompleted: newDate }),
+    Order.create({ status: 'Completed', userId: 4, crewId: 5, dateCompleted: newDate }),
     Order.create({
       status: 'Completed',
       userId: 5,
-      crewId: 5,
+      crewId: 2,
       dateCompleted: newDate,
     }),
     Order.create({
@@ -108,7 +111,7 @@ async function seed() {
 
   const randomUpvote = () => {
     return Math.floor(Math.random() * 20) + 1
-   }
+  }
 
   const mappedPotholes = potholes.map((pothole, index) => {
     let orderId;
@@ -118,6 +121,21 @@ async function seed() {
     if (!(index % 3003)) orderId = 4;
     if (!(index % 4004)) orderId = 5;
     if (!(index % 4005)) orderId = 6;
+
+    if (!(index % 51)) pothole.status = 'Completed'
+    if (!(index % 28)) pothole.status = 'Completed'
+
+    if (!(index % 102)) pothole.creation_date = new Date(new Date() - 1 * 24 * 60 * 60 * 1000)
+    if (!(index % 203)) pothole.creation_date = new Date(new Date() - 2 * 24 * 60 * 60 * 1000)
+    if (!(index % 330)) pothole.creation_date = new Date(new Date() - 3 * 24 * 60 * 60 * 1000)
+    if (!(index % 440)) pothole.creation_date = new Date(new Date() - 4 * 24 * 60 * 60 * 1000)
+    if (!(index % 505)) pothole.creation_date = new Date(new Date() - 5 * 24 * 60 * 60 * 1000)
+    if (!(index % 606)) pothole.creation_date = new Date(new Date() - 6 * 24 * 60 * 60 * 1000)
+    if (!(index % 770)) pothole.creation_date = new Date(new Date() - 7 * 24 * 60 * 60 * 1000)
+    if (!(index % 880)) pothole.creation_date = new Date(new Date() - 60 * 60 * 1000)
+
+    if (!(index % 240)) pothole.completion_date = new Date(new Date() - 4 * 24 * 60 * 60 * 1000)
+    if (!(index % 472)) pothole.completion_date = new Date(new Date() - 2 * 24 * 60 * 60 * 1000)
 
     return {
       createdAt: pothole.creation_date,
@@ -141,6 +159,8 @@ async function seed() {
 
   await Pothole.bulkCreate(mappedPotholes);
   const numPotholes = await Pothole.count();
+
+  await Pothole.createOrders()
 
   console.log(`seeded ${users.length} users`);
   console.log(`seeded ${crew.length} crews`);

@@ -1,5 +1,5 @@
 const router = require('express').Router({ mergeParams: true })
-const Sequelize = require('sequelize')
+const Op = require('sequelize').Op
 const { Order, Pothole } = require('../../db/models')
 module.exports = router
 
@@ -9,15 +9,14 @@ router.get('/', async (req, res, next) => {
   const offset = (page - 1) * limit
 
   const orders = await Order.findAll({
-    order: [['createdAt', 'DESC']],
+    order: [['createdAt', 'DESC'], ['id', 'ASC']],
     offset,
     limit,
     where: {
       crewId: req.params.id,
+      status: 'Completed'
     },
-    attributes: { include: [[Sequelize.fn('COUNT', Sequelize.col('potholes.id')), 'numPotholes']]},
-    include: [{model: Pothole, attributes: [], duplicating: false, required: false}],
-    group: ['order.id'],
+    include: [{model: Pothole, attributes: ['id', 'streetAddress']}],
   })
   const count = orders.length
   const lastPage = Math.ceil(count / limit)
@@ -25,12 +24,34 @@ router.get('/', async (req, res, next) => {
   res.json({
     count,
     orders,
-    currentPage: offset,
+    currentPage: offset + 1,
     lastPage,
   })
 })
 
-// single order
+router.get('/today', async (req, res, next) => {
+  try {
+    const order = await Order.findOne({
+      where: {
+        crewId: req.params.id,
+        status: {
+          [Op.or]: ['Requested', 'In Progress']
+        },
+      },
+      order: [['id', 'ASC']],
+      include: [{model: Pothole, attributes: ['id', 'imageUrl', 'description', 'placement', 'status', 'completionDate', 'latitude', 'longitude', 'streetAddress', 'zip']}],
+    })
+
+    if (!order) {
+      res.json({})
+    } else {
+      res.json(order)
+    }
+  } catch (error) {
+    next(error)
+  }
+})
+
 router.get('/:orderId', async (req, res, next) => {
   const order = await Order.findOne({
     where: {
@@ -46,6 +67,28 @@ router.get('/:orderId', async (req, res, next) => {
     res.json(order)
   }
 
+})
+
+router.put('/:orderId', async (req, res, next) => {
+  try {
+    const options = {
+      status: req.body.status
+    }
+    if (options.status === 'Completed') options.dateCompleted = new Date()
+    await Order.update(options, {
+      where: {
+        id: req.params.orderId
+      }
+    })
+
+    const order = await Order.findById(req.params.orderId, {
+      include: [{model: Pothole, attributes: ['id', 'imageUrl', 'description', 'placement', 'status', 'completionDate', 'latitude', 'longitude', 'streetAddress', 'zip']}],
+    })
+
+    res.json(order)
+  } catch (error) {
+    next(error)
+  }
 })
 
 router.put('/:orderId/next', async (req, res, next) => {
@@ -64,4 +107,3 @@ router.put('/:orderId/next', async (req, res, next) => {
     res.json(nextPothole)
   }
 })
-
