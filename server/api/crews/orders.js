@@ -75,12 +75,14 @@ router.put('/:orderId', async (req, res, next) => {
       status: req.body.status
     }
     if (options.status === 'Completed') options.dateCompleted = new Date()
-    const [numUpdated, order] = await Order.update(options, {
+    await Order.update(options, {
       where: {
         id: req.params.orderId
-      },
-      returning: true,
-      plain: true,
+      }
+    })
+
+    const order = await Order.findById(req.params.orderId, {
+      include: [{model: Pothole, attributes: ['id', 'imageUrl', 'description', 'placement', 'status', 'completionDate', 'latitude', 'longitude', 'streetAddress', 'zip']}],
     })
 
     res.json(order)
