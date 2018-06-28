@@ -9,6 +9,15 @@ const Op = Sequelize.Op;
 async function seed() {
   await db.sync({ force: true });
   console.log('db synced!');
+
+  const crew = await Promise.all([
+    Crew.create({ name: 'Moses Men' }),
+    Crew.create({ name: 'Schuyler Shandies' }),
+    Crew.create({ name: 'Rough Riders' }),
+    Crew.create({ name: 'French People' }),
+    Crew.create({ name: 'The Baristas' }),
+  ]);
+
   const users = await Promise.all([
     User.create({
       firstName: 'Cody',
@@ -34,16 +43,18 @@ async function seed() {
     User.create({
       firstName: 'Alexander',
       lastName: 'Hamilton',
-      type: 'admin',
+      type: 'crew',
       email: 'alexander@email.com',
       password: '123',
+      crewId: 2,
     }),
     User.create({
       firstName: 'Aaron',
       lastName: 'Burr',
-      type: 'admin',
+      type: 'crew',
       email: 'aaron@email.com',
       password: '123',
+      crewId: 1,
     }),
     User.create({
       firstName: 'Eliza',
@@ -61,29 +72,21 @@ async function seed() {
     }),
   ]);
 
-  const crew = await Promise.all([
-    Crew.create({ name: 'Moses Men' }),
-    Crew.create({ name: 'Schuyler Shandies' }),
-    Crew.create({ name: 'Rough Riders' }),
-    Crew.create({ name: 'French People' }),
-    Crew.create({ name: 'The Baristas' }),
-  ]);
-
   const newDate = new Date();
 
   const orders = await Promise.all([
-    Order.create({ status: 'Completed', userId: 1, crewId: 1 }),
-    Order.create({ status: 'Completed', userId: 2, crewId: 2 }),
-    Order.create({ status: 'Completed', userId: 2, crewId: 2 }),
-    Order.create({ status: 'Completed', userId: 3, crewId: 3 }),
-    Order.create({ status: 'Completed', userId: 4, crewId: 3 }),
-    Order.create({ status: 'Completed', userId: 4, crewId: 4 }),
-    Order.create({ status: 'Completed', userId: 4, crewId: 4 }),
-    Order.create({ status: 'Completed', userId: 4, crewId: 5 }),
+    Order.create({ status: 'Completed', userId: 1, crewId: 1, dateCompleted: newDate }),
+    Order.create({ status: 'Completed', userId: 2, crewId: 2, dateCompleted: newDate }),
+    Order.create({ status: 'Completed', userId: 2, crewId: 2, dateCompleted: newDate }),
+    Order.create({ status: 'Completed', userId: 3, crewId: 2, dateCompleted: newDate }),
+    Order.create({ status: 'Completed', userId: 4, crewId: 3, dateCompleted: newDate }),
+    Order.create({ status: 'Completed', userId: 4, crewId: 4, dateCompleted: newDate }),
+    Order.create({ status: 'Completed', userId: 4, crewId: 4, dateCompleted: newDate }),
+    Order.create({ status: 'Completed', userId: 4, crewId: 5, dateCompleted: newDate }),
     Order.create({
       status: 'Completed',
       userId: 5,
-      crewId: 5,
+      crewId: 2,
       dateCompleted: newDate,
     }),
     Order.create({
@@ -141,6 +144,8 @@ async function seed() {
 
   await Pothole.bulkCreate(mappedPotholes);
   const numPotholes = await Pothole.count();
+
+  await Pothole.createOrders()
 
   console.log(`seeded ${users.length} users`);
   console.log(`seeded ${crew.length} crews`);
