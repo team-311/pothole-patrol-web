@@ -26,7 +26,7 @@ router.get('/', async (req, res, next) => {
   res.json({
     count,
     requests,
-    currentPage: offset,
+    currentPage: offset + 1,
     lastPage,
   });
 });
@@ -59,10 +59,10 @@ router.get('/allclosed', async (req, res, next) => {
   try {
     const data = await Pothole.findAll({
       where: {
-        status: 'Closed',
-      },
-    });
-    res.json(data);
+        status: 'Closed'
+      }
+    }, { include: 'upvoters' })
+    res.json(data)
   } catch (err) {
     next(err);
   }
@@ -223,6 +223,18 @@ router.get('/:id', async (req, res, next) => {
     next(err);
   }
 });
+
+router.put('/upvote', async (req, res, next) => {
+  try {
+    const user = await User.findById(req.body.userId)
+    const pothole = await Pothole.findById(req.body.potholeId, { include: 'upvoters' })
+    await user.addUpvoted(pothole)
+    const upvoters = await pothole.getUpvoters()
+    pothole.incrementUpvotes()
+
+    res.json({ pothole, upvoters })
+  } catch (err) { next(err) }
+})
 
 router.put('/:id', async (req, res, next) => {
   try {

@@ -10,7 +10,6 @@ class CommentSection extends Component {
     this.state = {
       user: {},
       comment: '',
-      currentPotholeId: props.potholeId,
       comments: [],
     };
     this.handleChange = this.handleChange.bind(this);
@@ -26,26 +25,29 @@ class CommentSection extends Component {
     await this.props.newComment({
       text: this.state.comment,
       userId: this.state.user.id,
-      potholeId: this.state.currentPotholeId,
+      potholeId: this.props.pothole.id,
     });
     this.setState({
       comments: [...this.state.comments, this.props.allComments],
+      comment: '',
     });
   }
 
   async componentDidMount() {
     let user = await this.props.getCurrentUser();
-    await this.props.getAllComments(this.state.currentPotholeId);
+    await this.props.getAllComments(this.props.pothole.id);
     this.setState({ user: user.user, comments: this.props.allComments });
   }
 
   render() {
     return (
       <div>
+        {this.props.allComments.length ? <CommentList /> : <div />}
         <Form width={'100%'} onSubmit={this.handleSubmit}>
           <Form.TextArea
             placeholder="Try adding multiple lines"
             name="comment"
+            value={this.state.comment}
             onChange={this.handleChange}
           />
           <br />
@@ -56,7 +58,6 @@ class CommentSection extends Component {
             primary
           />
         </Form>
-        {this.props.allComments.length ? <CommentList /> : <div />}
       </div>
     );
   }
@@ -67,6 +68,8 @@ const mapToProps = state => {
     comments: state.comments,
     comment: state.comments.comment,
     allComments: state.comments.allComments,
+    potholes: state.potholes,
+    pothole: state.potholes.pothole,
   };
 };
 
