@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Form } from 'semantic-ui-react';
+import { Button, Form, Container } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { me, createNewCommentThunk, createGetCommentsThunk } from '../../store';
 import CommentList from './CommentList';
@@ -43,21 +43,23 @@ class CommentSection extends Component {
     return (
       <div>
         {this.props.allComments.length ? <CommentList /> : <div />}
-        <Form width={'100%'} onSubmit={this.handleSubmit}>
-          <Form.TextArea
-            placeholder="Try adding multiple lines"
-            name="comment"
-            value={this.state.comment}
-            onChange={this.handleChange}
-          />
-          <br />
-          <Button
-            content="Add Comment"
-            labelPosition="left"
-            icon="edit"
-            primary
-          />
-        </Form>
+        <Container>
+          <Form onSubmit={this.handleSubmit}>
+            <Form.TextArea
+              placeholder="Try adding multiple lines"
+              name="comment"
+              value={this.state.comment}
+              onChange={this.handleChange}
+            />
+            <br />
+            <Button
+              content="Add Comment"
+              labelPosition="left"
+              icon="edit"
+              primary
+            />
+          </Form>
+        </Container>
       </div>
     );
   }

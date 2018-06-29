@@ -24,6 +24,10 @@ router.post('/', async (req, res, next) => {
     const directions = {
       coords,
       steps: sanitizedSteps,
+      startAddress: response.routes[0].legs[0].start_address.split(',')[0],
+      endAddress: response.routes[0].legs[0].end_address.split(',')[0],
+      distance: response.routes[0].legs[0].distance.text,
+      duration: response.routes[0].legs[0].duration.text,
     }
     res.json(directions)
   } else {
