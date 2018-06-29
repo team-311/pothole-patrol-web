@@ -29,6 +29,26 @@ Pothole.belongsToMany(User, { through: 'upvotes', as: 'upvoters' });
 
 User.belongsToMany(Pothole, { through: 'upvotes', as: 'upvoted' });
 
+// class methods
+Order.createOrderForCrew = async function(crewId) {
+  const openPotholes = await Pothole.findAll({
+    attributes: [
+      'id',
+      'priority',
+    ],
+    where: [{ status: 'Open', orderId: null }],
+    limit: 500,
+  });
+
+  openPotholes.sort((a, b) => b.priority - a.priority)
+  const order = await this.create({
+    status: 'Requested',
+    crewId,
+  })
+
+  return order.addPothole(openPotholes[0])
+}
+
 module.exports = {
   User,
   Pothole,

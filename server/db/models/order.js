@@ -10,7 +10,11 @@ const Order = db.define('order', {
   },
   googleRoute: {
     type: Sequelize.STRING
-  }
+  },
+  contactNumber: {
+    type: Sequelize.STRING,
+    defaultValue: '555-123-5432'
+  },
 });
 
 module.exports = Order
