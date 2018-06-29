@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createGetLatestPotholesThunk } from '../../store';
 import { Link } from 'react-router-dom';
-import { Header, Container, Table, Button } from 'semantic-ui-react'
+import { Header, Container, Table, Button } from 'semantic-ui-react';
 
 class AllPotholeView extends Component {
   constructor() {
@@ -10,11 +10,11 @@ class AllPotholeView extends Component {
     this.state = {
       page: 1,
     };
+    this.getPriority = this.getPriority.bind(this);
   }
 
   componentDidMount() {
     this.props.getLatestPotholes(1);
-
   }
 
   handleClick = () => {
@@ -30,11 +30,23 @@ class AllPotholeView extends Component {
     );
   };
 
+  getPriority(num) {
+    if (num <= 10) {
+      return 'Low';
+    } else if (num >= 20) {
+      return 'Medium';
+    } else {
+      return 'High';
+    }
+  }
+
   render() {
     const { requests, lastPage } = this.props.potholes;
     return (
       <Container>
-        <Header size="huge" textAlign="center">All Potholes</Header>
+        <Header size="huge" textAlign="center">
+          All Potholes
+        </Header>
         <Table celled>
           <Table.Header>
             <Table.Row>
@@ -42,23 +54,33 @@ class AllPotholeView extends Component {
               <Table.HeaderCell textAlign="center">STATUS</Table.HeaderCell>
               <Table.HeaderCell textAlign="center">ADDRESS</Table.HeaderCell>
               <Table.HeaderCell textAlign="center">PRIORITY</Table.HeaderCell>
-              <Table.HeaderCell
-                textAlign="center"> UPDATED AT</Table.HeaderCell>
+              <Table.HeaderCell textAlign="center">
+                {' '}
+                UPDATED AT
+              </Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           <Table.Body>
             {requests.map(request => (
               <Table.Row key={request.id}>
-                <Table.Cell textAlign="center" selectable><Link to={`./singlepothole/${request.id}`}>{request.id}</Link></Table.Cell>
+                <Table.Cell textAlign="center" selectable>
+                  <Link to={`./singlepothole/${request.id}`}>{request.id}</Link>
+                </Table.Cell>
                 <Table.Cell textAlign="center">{request.status}</Table.Cell>
-                <Table.Cell textAlign="center">{request.streetAddress}</Table.Cell>
-                <Table.Cell textAlign="center">{request.priority}</Table.Cell>
+                <Table.Cell textAlign="center">
+                  {request.streetAddress}
+                </Table.Cell>
+                <Table.Cell textAlign="center">
+                  {this.getPriority(request.priority)}
+                </Table.Cell>
                 <Table.Cell textAlign="center">{request.updatedAt}</Table.Cell>
               </Table.Row>
             ))}
           </Table.Body>
         </Table>
-        <Button onClick={this.handleClick} type="button">Next Page >></Button>
+        <Button onClick={this.handleClick} type="button">
+          Next Page >>
+        </Button>
       </Container>
     );
   }

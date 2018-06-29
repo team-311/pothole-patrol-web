@@ -69,15 +69,20 @@ const Pothole = db.define(
       get() {
         let todaysDate = new Date().getTime();
         let potholeCreatedDate = this.getDataValue('createdAt');
+        let status = this.getDataValue('status');
+
+        const dateDifference = (today, prevDate) =>
+          ((today - prevDate) / (1000 * 60 * 60 * 24)) * 10;
 
         if (potholeCreatedDate) {
-          const dateDifference = (today, prevDate) =>
-            Math.floor((today - prevDate) / (1000 * 60 * 60 * 24));
-
-          return (
-            dateDifference(todaysDate, potholeCreatedDate.getTime()) /
-            this.upVotes
-          );
+          if (status === 'Open') {
+            return (
+              dateDifference(todaysDate, potholeCreatedDate.getTime()) /
+              this.upVotes
+            );
+          } else {
+            return 0;
+          }
         }
       },
     },
