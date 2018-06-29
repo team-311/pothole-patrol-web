@@ -6,9 +6,14 @@ const GOT_SINGLE_POTHOLE = 'GOT_SINGLE_POTHOLE';
 const GET_TIME_COMPLETE = 'GET_TIME_COMPLETE';
 const GET_REPORTED_PER_DAY = 'GET_REPORTED_PER_DAY'
 const GET_ALL_CLOSED = 'GET_ALL_CLOSED'
+const GET_ALL_CLOSED_LAST_WEEK = 'GET_ALL_CLOSED_LAST_WEEK'
+const GET_ALL_CLOSED_LAST_WEEK_NUM = 'GET_ALL_CLOSED_LAST_WEEK_NUM'
 const GET_ALL_CLOSED_LAST_MONTH = 'GET_ALL_CLOSED_LAST_MONTH'
 const GET_ALL_OPEN = 'GET_ALL_OPEN'
 const GET_ALL_OPEN_LAST_MONTH = 'GET_ALL_OPEN_LAST_MONTH'
+const GET_ALL_IN_PROGRESS = 'GET_ALL_IN_PROGRESS'
+const GET_BY_WARD = 'GET_BY_WARD'
+const GET_BY_WARD2 = 'GET_BY_WARD2'
 const UPDATE_STATUS = 'UPDATE_STATUS';
 
 // initial state
@@ -43,20 +48,46 @@ const getAllClosed = potholes => ({
   potholes
 })
 
+const getAllClosedLastWeek = potholes => ({
+  type: GET_ALL_CLOSED_LAST_WEEK,
+  potholes
+})
+
+const getAllClosedLastWeekNum = potholes => ({
+  type: GET_ALL_CLOSED_LAST_WEEK_NUM,
+  potholes
+})
+
 const getAllClosedLastMonth = potholes => ({
-  type: GET_ALL_CLOSED,
+  type: GET_ALL_CLOSED_LAST_MONTH,
   potholes
 })
 
 const getAllOpen = potholes => ({
-  type: GET_ALL_CLOSED,
+  type: GET_ALL_OPEN,
   potholes
 })
 
 const getAllOpenLastMonth = potholes => ({
-  type: GET_ALL_CLOSED,
+  type: GET_ALL_OPEN_LAST_MONTH,
   potholes
 })
+
+const getAllInProgress = potholes => ({
+  type: GET_ALL_IN_PROGRESS,
+  potholes
+})
+
+const getByWard = potholes => ({
+  type: GET_BY_WARD,
+  potholes
+})
+
+const getByWard2 = potholes => ({
+  type: GET_BY_WARD2,
+  potholes
+})
+
 const createUpdateStatusAction = pothole => ({
   type: UPDATE_STATUS,
   pothole,
@@ -106,16 +137,59 @@ export const getReportedPerDayThunk = () => {
 export const getAllClosedThunk = () => {
   return async (dispatch) => {
     const { data } = await axios.get('/api/potholes/allclosed')
-    dispatch(getReportedPerDay(data))
+    dispatch(getAllClosed(data))
+  }
+}
+
+export const getAllClosedLastWeekThunk = () => {
+  return async (dispatch) => {
+    const { data } = await axios.get('/api/potholes/allclosed/lastweek')
+    dispatch(getAllClosedLastWeek(data))
+  }
+}
+
+export const getAllClosedLastWeekNumThunk = () => {
+  return async (dispatch) => {
+    const { data } = await axios.get('/api/potholes/allclosed/lastweeknum')
+    dispatch(getAllClosedLastWeekNum(data))
+  }
+}
+
+export const getAllClosedLastMonthThunk = () => {
+  return async (dispatch) => {
+    const { data } = await axios.get('/api/potholes/allclosed/lastmonth')
+    dispatch(getAllClosedLastMonth(data))
   }
 }
 
 export const getAllOpenThunk = () => {
   return async (dispatch) => {
     const { data } = await axios.get('/api/potholes/allopen')
-    dispatch(getReportedPerDay(data))
+    dispatch(getAllOpen(data))
   }
 }
+
+export const getAllInProgressThunk = () => {
+  return async (dispatch) => {
+    const { data } = await axios.get('/api/potholes/allinprogress')
+    dispatch(getAllInProgress(data))
+  }
+}
+
+export const getByWardThunk = (id) => {
+  return async (dispatch) => {
+    const { data } = await axios.get(`/api/potholes/byward/${id}`)
+    dispatch(getByWard(data))
+  }
+}
+
+export const getByWardThunk2 = (id) => {
+  return async (dispatch) => {
+    const { data } = await axios.get(`/api/potholes/byward/${id}`)
+    dispatch(getByWard2(data))
+  }
+}
+
 export const createUpdateStatusThunk = (pothole, potholeId) => {
   return async dispatch => {
     try {
@@ -176,6 +250,23 @@ export const allClosedReducer = (state = [], action) => {
       return state
   }
 }
+export const allClosedLastWeekReducer = (state = [], action) => {
+  switch (action.type) {
+    case GET_ALL_CLOSED_LAST_WEEK:
+      return action.potholes
+    default:
+      return state
+  }
+}
+
+export const allClosedLastWeekNumReducer = (state = [], action) => {
+  switch (action.type) {
+    case GET_ALL_CLOSED_LAST_WEEK_NUM:
+      return action.potholes
+    default:
+      return state
+  }
+}
 
 export const allOpenLastMonthReducer = (state = [], action) => {
   switch (action.type) {
@@ -186,9 +277,36 @@ export const allOpenLastMonthReducer = (state = [], action) => {
   }
 }
 
+export const getByWardReducer = (state = [], action) => {
+  switch (action.type) {
+    case GET_BY_WARD:
+      return action.potholes
+    default:
+      return state
+  }
+}
+
+export const getByWardReducer2 = (state = [], action) => {
+  switch (action.type) {
+    case GET_BY_WARD2:
+      return action.potholes
+    default:
+      return state
+  }
+}
+
 export const allClosedLastMonthReducer = (state = [], action) => {
   switch (action.type) {
     case GET_ALL_CLOSED_LAST_MONTH:
+      return action.potholes
+    default:
+      return state
+  }
+}
+
+export const allInProgressReducer = (state = [], action) => {
+  switch (action.type) {
+    case GET_ALL_IN_PROGRESS:
       return action.potholes
     default:
       return state
