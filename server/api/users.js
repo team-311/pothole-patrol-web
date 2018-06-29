@@ -8,7 +8,7 @@ router.get('/', (req, res, next) => {
     // users' passwords are encrypted, it won't help if we just
     // send everything to anyone who asks!
     attributes: ['id', 'email']
-  }, {include: Pothole})
+  })
     .then(users => res.json(users))
     .catch(next)
 })
@@ -26,7 +26,9 @@ router.get('/:id/potholes', async (req, res, next) => {
 router.get('/:id/upvoted', async (req, res, next) => {
   try {
     const user = await User.findById(req.params.id)
-    const potholes = await user.getUpvoted()
+    let potholes = await user.getUpvoted({
+      attributes: ['id', 'streetAddress', 'status']
+    })
     res.json(potholes)
   } catch (err) {next(err)}
 })
