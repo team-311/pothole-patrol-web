@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Comment } from 'semantic-ui-react';
+import { Comment, Segment } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 
 class CommentList extends Component {
@@ -21,24 +21,26 @@ class CommentList extends Component {
   render() {
     return this.props.allComments.map(comment => {
       return (
-        <Comment.Group key={comment.id}>
-          <Comment>
-            <Comment.Avatar
-              as="a"
-              src={
-                comment.user.profilePicture ||
-                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpD6egrPWQJs-dfiOc0Uotoi-dthRwfE5scYvS09d_WHHd1k86'
-              }
-            />
-            <Comment.Content>
-              <Comment.Author>{comment.user.firstName}</Comment.Author>
-              <Comment.Metadata>
-                <div>{this.state.date}</div>
-              </Comment.Metadata>
-              <Comment.Text>{comment.text}</Comment.Text>
-            </Comment.Content>
-          </Comment>
-        </Comment.Group>
+        <Segment key={comment.id} style={{ margin: '2rem' }}>
+          <Comment.Group>
+            <Comment>
+              <Comment.Avatar
+                as="a"
+                src={
+                  comment.user.profilePicture ||
+                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpD6egrPWQJs-dfiOc0Uotoi-dthRwfE5scYvS09d_WHHd1k86'
+                }
+              />
+              <Comment.Content>
+                <Comment.Author>{comment.user.firstName}</Comment.Author>
+                <Comment.Metadata>
+                  <div>{this.state.date}</div>
+                </Comment.Metadata>
+                <Comment.Text>{comment.text}</Comment.Text>
+              </Comment.Content>
+            </Comment>
+          </Comment.Group>
+        </Segment>
       );
     });
   }
