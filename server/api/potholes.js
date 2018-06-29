@@ -355,7 +355,15 @@ router.put('/:id', async (req, res, next) => {
   }
 });
 
+//helper function for adding upvoters
+const upvotePothole = async (user, pothole) => {
+  if (user) {
+    await user.addUpvoted(pothole)
+  }
+}
+
 router.post('/', async (req, res, next) => {
+  let user
   const pothole = {
     placement: req.body.placement,
     description: req.body.description || '',
@@ -368,7 +376,11 @@ router.post('/', async (req, res, next) => {
     latitude: req.body.location.latitude,
     longitude: req.body.location.longitude,
   };
-  if (req.user.id && !req.body.anonymous) pothole.reporterId = req.user.id;
+  if (req.user.id && !req.body.anonymous) {
+    pothole.reporterId = req.user.id
+    user = await User.findById(req.user.id)
+
+  }
 
   if (req.body.imageUrl) {
     cloudinary.v2.uploader.upload(req.body.imageUrl, async (err, photo) => {
@@ -379,10 +391,12 @@ router.post('/', async (req, res, next) => {
         pothole.imageUrl = photo.url;
       }
       const createdPothole = await Pothole.create(pothole);
+      upvotePothole(user, createdPothole)
       res.json(createdPothole.id);
     });
   } else {
     const createdPothole = await Pothole.create(pothole);
+    upvotePothole(user, createdPothole)
     res.json(createdPothole.id);
   }
 });

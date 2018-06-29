@@ -1,8 +1,8 @@
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 const db = require('../db');
-const Crew = require('./crew')
-const Order = require('./order')
+const Crew = require('./crew');
+const Order = require('./order');
 
 const Pothole = db.define(
   'pothole',
@@ -67,7 +67,23 @@ const Pothole = db.define(
     priority: {
       type: Sequelize.VIRTUAL,
       get() {
-        return this.getDataValue('id') / 100;
+        let todaysDate = new Date().getTime();
+        let potholeCreatedDate = this.getDataValue('createdAt');
+        let status = this.getDataValue('status');
+
+        const dateDifference = (today, prevDate) =>
+          ((today - prevDate) / (1000 * 60 * 60 * 24)) * 10;
+
+        if (potholeCreatedDate) {
+          if (status === 'Open') {
+            return (
+              dateDifference(todaysDate, potholeCreatedDate.getTime()) /
+              this.upVotes
+            );
+          } else {
+            return 0;
+          }
+        }
       },
     },
   },
@@ -97,7 +113,7 @@ Pothole.findNearby = function(
     location
   );
 
-  return Pothole.findAll({
+  return this.findAll({
     attributes: [
       'id',
       'priority',
@@ -130,7 +146,7 @@ Pothole.getNext = function(
     location
   );
 
-  return Pothole.findAll({
+  return this.findAll({
     attributes: [
       'id',
       'priority',
@@ -145,7 +161,7 @@ Pothole.getNext = function(
     ],
     order: [[distance, 'ASC']],
     where: [
-      { status: 'Open', reporterId: null },
+      { status: 'Open', orderId: null },
       Sequelize.where(distance, { [Op.lte]: radius }),
     ],
     limit: 25,
@@ -163,7 +179,7 @@ Pothole.getClosest = function(lat = '41.895266', lon = '-87.639035') {
     location
   );
 
-  return Pothole.findAll({
+  return this.findAll({
     attributes: [
       'id',
       'priority',
@@ -179,7 +195,7 @@ Pothole.getClosest = function(lat = '41.895266', lon = '-87.639035') {
     order: [[distance, 'ASC']],
     where: {
       status: 'Open',
-      reporterId: null,
+      orderId: null,
     },
     limit: 25,
   }).then(potholes => {
@@ -187,29 +203,40 @@ Pothole.getClosest = function(lat = '41.895266', lon = '-87.639035') {
   });
 };
 
-Pothole.prototype.incrementUpvotes = function(){
-  return this.increment(['upVotes'], {by: 1})
-}
-
-Pothole.createOrders = async function (lat = '41.895266', lon = '-87.639035') {
-  const crews = await Crew.findAll()
-  const crewNumber = crews.length
-  const location = Sequelize.literal(`ST_GeomFromText('POINT(${lon} ${lat})')`)
-  const distance = Sequelize.fn('ST_Distance_Sphere', Sequelize.col('location'), location)
+Pothole.createOrders = async function() {
+  const crews = await Crew.findAll();
 
   let nextPotholes = await Pothole.findAll({
-    attributes: ['id', 'priority', 'placement', 'latitude', 'longitude', 'streetAddress', 'status', 'serviceNumber', 'completionDate', [distance, 'distance']],
-    order: [[distance, 'ASC']],
-    where: [{status: 'Open', reporterId: null}],
-    limit: crewNumber,
-  })
+    attributes: [
+      'id',
+      'priority',
+      'placement',
+      'latitude',
+      'longitude',
+      'streetAddress',
+      'status',
+      'serviceNumber',
+      'completionDate',
+    ],
+    where: [{ status: 'Open', orderId: null }],
+    limit: 500,
+  });
 
-  nextPotholes = nextPotholes.sort((a, b) => b.priority - a.priority)
-  for (let i = 0; i < crews.length; i++ ) {
-    const order = await Order.create({status: 'Requested', crewId: crews[i].id, userId: 1})
-    await nextPotholes[i].setOrder(order)
-    nextPotholes[i].save()
+  nextPotholes = nextPotholes.sort((a, b) => b.priority - a.priority);
+  for (let i = 0; i < crews.length; i++) {
+    const order = await Order.create({
+      status: 'Requested',
+      crewId: crews[i].id,
+      userId: 1,
+    });
+    await nextPotholes[i].setOrder(order);
+    nextPotholes[i].save();
   }
-}
+};
 
-module.exports = Pothole
+// instance method
+Pothole.prototype.incrementUpvotes = function() {
+  return this.increment(['upVotes'], { by: 1 });
+};
+
+module.exports = Pothole;
