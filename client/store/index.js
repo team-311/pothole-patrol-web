@@ -3,7 +3,7 @@ import createLogger from 'redux-logger';
 import thunkMiddleware from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import user from './user';
-import potholes, { timeCompleteReducer, reportedDayReducer } from './potholes';
+import potholes, { timeCompleteReducer, reportedDayReducer, allOpenReducer, allClosedReducer, allOpenLastMonthReducer, allClosedLastWeekReducer, allClosedLastMonthReducer, allInProgressReducer, getByWardReducer, getByWardReducer2, allClosedLastWeekNumReducer, allOpenPriorityReducer } from './potholes';
 import orders from './orders'
 import comments from './comments';
 
@@ -13,7 +13,17 @@ const reducer = combineReducers({
   orders,
   comments,
   timeComplete: timeCompleteReducer,
-  reportedDay: reportedDayReducer
+  reportedDay: reportedDayReducer,
+  allOpen: allOpenReducer,
+  allOpenPriority: allOpenPriorityReducer,
+  allClosed: allClosedReducer,
+  allOpenLastMonth: allOpenLastMonthReducer,
+  allClosedLastWeek: allClosedLastWeekReducer,
+  allClosedLastWeekNum: allClosedLastWeekNumReducer,
+  allClosedLastMonth: allClosedLastMonthReducer,
+  allInProgress: allInProgressReducer,
+  wardHoles: getByWardReducer,
+  wardHoles2: getByWardReducer2
 });
 const middleware = composeWithDevTools(
   applyMiddleware(thunkMiddleware, createLogger({ collapsed: true }))

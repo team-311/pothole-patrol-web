@@ -1,7 +1,7 @@
 import React from 'react'
 import { Card } from 'semantic-ui-react'
 import { connect } from 'react-redux'
-import { VictoryChart, VictoryAxis, VictoryBar, VictoryTheme } from 'victory';
+import { VictoryChart, VictoryAxis, VictoryBar, VictoryLabel, VictoryTheme } from 'victory';
 import { getTimeCompleteThunk } from '../../store/potholes'
 
 class AvgTimeComplete extends React.Component {
@@ -17,8 +17,11 @@ class AvgTimeComplete extends React.Component {
           domainPadding={10}
           theme={VictoryTheme.material}
         >
+          <VictoryLabel text="Days To Completion" x={100} y={30} textAnchor="middle" />
           <VictoryAxis
+            style={{ tickLabels: { angle: -45 } }}
             tickValues={["1", "2", "3", "4", "5", "6", "7+"]}
+            tickFormat={(x) => (`Day ${x}`)}
           />
           <VictoryAxis
             dependentAxis
@@ -28,7 +31,7 @@ class AvgTimeComplete extends React.Component {
             data={this.props.potholes}
             x={"time"}
             y={"count"}
-            style={{ data: { fill: "red" } }}
+            style={{ data: { fill: "black" } }}
           />
         </VictoryChart>
       </div>
