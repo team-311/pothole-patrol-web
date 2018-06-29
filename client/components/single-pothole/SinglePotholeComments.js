@@ -41,11 +41,12 @@ class CommentSection extends Component {
 
   render() {
     return (
-      <Container>
+      <div>
         {this.props.allComments.length ? <CommentList /> : <div />}
-        <Container>
-          <Form onSubmit={this.handleSubmit}>
+        <Container style={{ margin: '2rem' }}>
+          <Form onSubmit={this.handleSubmit} style={{ margin: '2rem' }}>
             <Form.TextArea
+              width={10}
               placeholder="Try adding multiple lines"
               name="comment"
               value={this.state.comment}
@@ -60,7 +61,7 @@ class CommentSection extends Component {
             />
           </Form>
         </Container>
-      </Container>
+      </div>
     );
   }
 }
