@@ -68,12 +68,17 @@ const Pothole = db.define(
       type: Sequelize.VIRTUAL,
       get() {
         let todaysDate = new Date().getTime();
-        let potholeCreatedDate = this.getDataValue('createdAt').getTime();
+        let potholeCreatedDate = this.getDataValue('createdAt');
 
-        const dateDifference = (today, prevDate) =>
-          Math.floor((today - prevDate) / (1000 * 60 * 60 * 24));
+        if (potholeCreatedDate) {
+          const dateDifference = (today, prevDate) =>
+            Math.floor((today - prevDate) / (1000 * 60 * 60 * 24));
 
-        return dateDifference(todaysDate, potholeCreatedDate) / this.upVotes;
+          return (
+            dateDifference(todaysDate, potholeCreatedDate.getTime()) /
+            this.upVotes
+          );
+        }
       },
     },
   },
