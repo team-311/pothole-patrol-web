@@ -15,11 +15,14 @@ import { connect } from 'react-redux';
 import { Map, Marker, GoogleApiWrapper } from 'google-maps-react';
 
 const accessToken = 'AIzaSyAd3YEc_nthBh2bFt5l-elcqgGc9KiMm2A';
+const open = 'http://localhost:8080/icon.png';
+const inProgress = 'http://localhost:8080/pending-icon.png';
+const completed = 'http://localhost:8080/completed-icon.png';
 
 const options = [
   { key: 'open', text: 'Open', value: 'Open' },
   { key: 'open - dup', text: 'Open - Dup', value: 'Open - Dup' },
-  { key: 'in-progress', text: 'In-progress', value: 'In-progess' },
+  { key: 'in-progress', text: 'In-progress', value: 'In-progress' },
   { key: 'completed', text: 'Completed', value: 'Completed' },
   { key: 'completed - dup', text: 'Completed - Dup', value: 'Completed - Dup' },
   { key: 'closed', text: 'Closed', value: 'Closed' },
@@ -28,8 +31,8 @@ const options = [
 class SinglePothole extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
     this.handleChange = this.handleChange.bind(this);
+    this.statusIcon = this.statusIcon.bind(this);
   }
 
   async componentDidMount() {
@@ -40,12 +43,23 @@ class SinglePothole extends Component {
 
   handleChange = (event, { value }) => {
     event.preventDefault();
+
     const pothole = {
       ...this.props.potholes.pothole,
       status: value,
     };
     this.props.updateStatus(pothole, pothole.id);
   };
+
+  statusIcon(status) {
+    if (status === 'Open' || status === 'Open - Dup') {
+      return open;
+    } else if (status === 'In-progress') {
+      return inProgress;
+    } else {
+      return completed;
+    }
+  }
 
   render() {
     const pothole = this.props.pothole;
@@ -61,8 +75,9 @@ class SinglePothole extends Component {
         </div>
       );
     } else {
-      console.log(pothole.status);
       const value = pothole.status;
+      const marker = this.statusIcon(value);
+
       const latitude = +pothole.latitude || 41.882702;
       const longitude = +pothole.longitude || -87.619392;
 
@@ -73,7 +88,7 @@ class SinglePothole extends Component {
               <Grid divided="vertically">
                 <Grid.Row columns={2}>
                   <Grid.Column width={12} style={{ padding: 0 }}>
-                    <div style={{ height: '75vh', width: '100%' }}>
+                    <div style={{ height: '65vh', width: '100%' }}>
                       <Map
                         google={this.props.google}
                         initialCenter={{
@@ -90,7 +105,7 @@ class SinglePothole extends Component {
                             lng: longitude,
                           }}
                           icon={{
-                            url: 'http://localhost:8080/icon.png',
+                            url: marker,
                           }}
                         />
                       </Map>
@@ -138,6 +153,7 @@ class SinglePothole extends Component {
                     <Dropdown
                       style={{ margin: '0 1rem' }}
                       options={options}
+                      compact
                       selection
                       value={value}
                       onChange={this.handleChange}
@@ -147,11 +163,11 @@ class SinglePothole extends Component {
               </Grid>
             </Segment>
           </Container>
-          <Container style={{ margin: '0 1rem' }}>
-            <Header as="h2" dividing>
+          <Container style={{ margin: '1rem' }}>
+            <Header as="h2" dividing style={{ margin: '2rem' }}>
               Comments
             </Header>
-            <SinglePotholeComments style={{ margin: '1rem 1rem' }} />
+            <SinglePotholeComments style={{ margin: '2rem' }} />
           </Container>
         </Container>
       );

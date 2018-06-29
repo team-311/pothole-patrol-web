@@ -43,15 +43,17 @@ class CommentSection extends Component {
     return (
       <Container>
         {this.props.allComments.length ? <CommentList /> : <div />}
-        <Form onSubmit={this.handleSubmit}>
+        <Form reply style={{ margin: '2rem' }} onSubmit={this.handleSubmit}>
           <Form.TextArea
             placeholder="Try adding multiple lines"
+            width={16}
+            label="About"
             name="comment"
             value={this.state.comment}
             onChange={this.handleChange}
           />
           <br />
-          <Button
+          <Form.Button
             content="Add Comment"
             labelPosition="left"
             icon="edit"
