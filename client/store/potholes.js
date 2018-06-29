@@ -15,6 +15,7 @@ const GET_ALL_IN_PROGRESS = 'GET_ALL_IN_PROGRESS'
 const GET_BY_WARD = 'GET_BY_WARD'
 const GET_BY_WARD2 = 'GET_BY_WARD2'
 const UPDATE_STATUS = 'UPDATE_STATUS';
+const GET_ALL_OPEN_PRIORITY = 'GET_ALL_OPEN_PRIORITY'
 
 // initial state
 const initialState = {
@@ -65,6 +66,10 @@ const getAllClosedLastMonth = potholes => ({
 
 const getAllOpen = potholes => ({
   type: GET_ALL_OPEN,
+  potholes
+})
+const getAllOpenPriority = potholes => ({
+  type: GET_ALL_OPEN_PRIORITY,
   potholes
 })
 
@@ -169,6 +174,13 @@ export const getAllOpenThunk = () => {
   }
 }
 
+export const getAllOpenPriorityThunk = () => {
+  return async (dispatch) => {
+    const { data } = await axios.get('/api/potholes/allopen/priority')
+    dispatch(getAllOpenPriority(data))
+  }
+}
+
 export const getAllInProgressThunk = () => {
   return async (dispatch) => {
     const { data } = await axios.get('/api/potholes/allinprogress')
@@ -236,6 +248,15 @@ export const reportedDayReducer = (state = [], action) => {
 export const allOpenReducer = (state = [], action) => {
   switch (action.type) {
     case GET_ALL_OPEN:
+      return action.potholes
+    default:
+      return state
+  }
+}
+
+export const allOpenPriorityReducer = (state = [], action) => {
+  switch (action.type) {
+    case GET_ALL_OPEN_PRIORITY:
       return action.potholes
     default:
       return state

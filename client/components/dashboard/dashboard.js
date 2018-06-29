@@ -8,6 +8,7 @@ import ClosedLastWeek from '../analytics/closed-last-week'
 import ClosedLastMonth from '../analytics/closed-last-month'
 import TotalInProgress from '../analytics/total-in-progress'
 import ByWard from '../analytics/by-ward'
+import PriorityPie from '../analytics/priority-pie'
 import { Table, Card, Text, Container } from 'semantic-ui-react';
 
 const Dashboard = () => {
@@ -31,15 +32,12 @@ const Dashboard = () => {
           <ByWard />
         </Card>
       </Card.Group>
-      <Card.Group itemsPerRow={2}>
+      <Card.Group itemsPerRow={3}>
         <Card>
-          <AllPotholeViewSmall />
-        </Card>
-        <Card>
-          <OrderListView />
+          <PriorityPie />
         </Card>
       </Card.Group>
-    </Container >
+    </Container>
   );
 };
 

@@ -55,6 +55,21 @@ router.get('/allopen', async (req, res, next) => {
   }
 });
 
+router.get('/allopen/priority', async (req, res, next) => {
+  try {
+    const data = await Pothole.findAll({
+      where: {
+        status: {
+          [Op.like]: 'Open%',
+        },
+      },
+    });
+    res.json(data);
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.get('/allinprogress', async (req, res, next) => {
   try {
     const data = await Pothole.findAll({
