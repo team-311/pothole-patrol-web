@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createGetLatestPotholesThunk } from '../../store';
-import { Link } from 'react-router-dom';
-import { Header, Container, Table, Button, Icon, Pagination } from 'semantic-ui-react';
+import { Header, Container, Table, Icon, Pagination } from 'semantic-ui-react';
 import moment from 'moment'
 import qs from 'query-string'
 
@@ -31,7 +30,7 @@ class AllPotholeView extends Component {
       this.props.getLatestPotholes(this.state.page);
       this.props.history.push(`${this.props.match.path}?page=${this.state.page}`)
     })
-  };
+  }
 
   getPriority(num) {
     if (num <= 10) {

@@ -19,7 +19,7 @@ router.get('/', async (req, res, next) => {
     res.json({
       count,
       orders,
-      currentPage: offset,
+      currentPage: page,
       lastPage,
     })
   } catch (err) {next(err)}
