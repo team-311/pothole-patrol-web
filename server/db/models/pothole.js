@@ -239,4 +239,17 @@ Pothole.prototype.incrementUpvotes = function() {
   return this.increment(['upVotes'], { by: 1 });
 };
 
+let lastServiceNum = 1880673
+
+function generateServiceNumber(){
+  lastServiceNum += 1
+  let year = new Date()
+  year = year.toDateString().slice(13)
+  return year + '-0' + lastServiceNum
+}
+
+Pothole.beforeValidate((pothole) => {
+  if (!pothole.serviceNumber) pothole.serviceNumber = generateServiceNumber()
+});
+
 module.exports = Pothole;
