@@ -69,15 +69,20 @@ const Pothole = db.define(
       get() {
         let todaysDate = new Date().getTime();
         let potholeCreatedDate = this.getDataValue('createdAt');
+        let status = this.getDataValue('status');
+
+        const dateDifference = (today, prevDate) =>
+          ((today - prevDate) / (1000 * 60 * 60 * 24)) * 10;
 
         if (potholeCreatedDate) {
-          const dateDifference = (today, prevDate) =>
-            Math.floor((today - prevDate) / (1000 * 60 * 60 * 24));
-
-          return (
-            dateDifference(todaysDate, potholeCreatedDate.getTime()) /
-            this.upVotes
-          );
+          if (status === 'Open') {
+            return (
+              dateDifference(todaysDate, potholeCreatedDate.getTime()) /
+              this.upVotes
+            );
+          } else {
+            return 0;
+          }
         }
       },
     },
@@ -108,7 +113,7 @@ Pothole.findNearby = function(
     location
   );
 
-  return Pothole.findAll({
+  return this.findAll({
     attributes: [
       'id',
       'priority',
@@ -141,7 +146,7 @@ Pothole.getNext = function(
     location
   );
 
-  return Pothole.findAll({
+  return this.findAll({
     attributes: [
       'id',
       'priority',
@@ -156,7 +161,7 @@ Pothole.getNext = function(
     ],
     order: [[distance, 'ASC']],
     where: [
-      { status: 'Open', reporterId: null },
+      { status: 'Open', orderId: null },
       Sequelize.where(distance, { [Op.lte]: radius }),
     ],
     limit: 25,
@@ -174,7 +179,7 @@ Pothole.getClosest = function(lat = '41.895266', lon = '-87.639035') {
     location
   );
 
-  return Pothole.findAll({
+  return this.findAll({
     attributes: [
       'id',
       'priority',
@@ -190,7 +195,7 @@ Pothole.getClosest = function(lat = '41.895266', lon = '-87.639035') {
     order: [[distance, 'ASC']],
     where: {
       status: 'Open',
-      reporterId: null,
+      orderId: null,
     },
     limit: 25,
   }).then(potholes => {
@@ -198,15 +203,8 @@ Pothole.getClosest = function(lat = '41.895266', lon = '-87.639035') {
   });
 };
 
-Pothole.createOrders = async function(lat = '41.895266', lon = '-87.639035') {
+Pothole.createOrders = async function() {
   const crews = await Crew.findAll();
-  const crewNumber = crews.length;
-  const location = Sequelize.literal(`ST_GeomFromText('POINT(${lon} ${lat})')`);
-  const distance = Sequelize.fn(
-    'ST_Distance_Sphere',
-    Sequelize.col('location'),
-    location
-  );
 
   let nextPotholes = await Pothole.findAll({
     attributes: [
@@ -219,11 +217,9 @@ Pothole.createOrders = async function(lat = '41.895266', lon = '-87.639035') {
       'status',
       'serviceNumber',
       'completionDate',
-      [distance, 'distance'],
     ],
-    order: [[distance, 'ASC']],
-    where: [{ status: 'Open', reporterId: null }],
-    limit: crewNumber,
+    where: [{ status: 'Open', orderId: null }],
+    limit: 500,
   });
 
   nextPotholes = nextPotholes.sort((a, b) => b.priority - a.priority);
@@ -239,7 +235,6 @@ Pothole.createOrders = async function(lat = '41.895266', lon = '-87.639035') {
 };
 
 // instance method
-
 Pothole.prototype.incrementUpvotes = function() {
   return this.increment(['upVotes'], { by: 1 });
 };

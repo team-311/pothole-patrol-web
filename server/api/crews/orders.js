@@ -29,6 +29,19 @@ router.get('/', async (req, res, next) => {
   });
 });
 
+router.post('/', async (req, res, next) => {
+  try {
+    const newOrder = await Order.createOrderForCrew(req.params.id)
+    const orderWithPothole = await Order.findById(newOrder.id, {
+      include: [{model: Pothole, attributes: ['id', 'imageUrl', 'description', 'placement', 'status', 'completionDate', 'latitude', 'longitude', 'streetAddress', 'zip']}],
+    })
+
+    res.json(orderWithPothole)
+  } catch (error) {
+    next(error)
+  }
+})
+
 router.get('/today', async (req, res, next) => {
   try {
     const order = await Order.findOne({
