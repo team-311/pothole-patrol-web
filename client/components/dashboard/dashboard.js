@@ -21,9 +21,6 @@ const Dashboard = () => {
         <Card>
           <AllPotholeViewSmall />
         </Card>
-        <Card>
-          <OrderListView />
-        </Card>
       </Card.Group>
     </Container >
   );
