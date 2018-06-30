@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { createGetOrderThunk } from '../../store';
+import {
+  createGetOrderThunk,
+  createGetCrewThunk,
+  createUpdateOrderThunk,
+} from '../../store';
 import {
   Grid,
   Card,
@@ -9,7 +13,6 @@ import {
   List,
   Dropdown,
   Container,
-  Menu,
 } from 'semantic-ui-react';
 import PotholeRow from './PotholeRow';
 import moment from 'moment';
@@ -38,10 +41,13 @@ class SingleOrderView extends Component {
     this.props.getOrder(this.id);
   };
 
-  handleClick(event, data) {
+  async handleClick(event, data) {
     event.preventDefault();
-    console.log(event.target);
-    console.log(data);
+    const crewId = data.value;
+    await this.props.getCrew(crewId);
+    const orderToUpdate = { ...this.props.order, crew: this.props.crew };
+
+    await this.props.updateOrder(orderToUpdate, this.props.order.id);
   }
 
   render() {
@@ -60,8 +66,7 @@ class SingleOrderView extends Component {
     const formattedDate = moment(order.createdAt).format('dddd MMMM D Y');
     const [day, month, dayNumber, year] = formattedDate.split(' ');
     const date = [month, ' ', dayNumber, ', ', year].join('');
-    const value = order.crew.name;
-    console.log(value);
+    const value = this.props.crew.name;
     return (
       <Container style={{ margin: '2rem 0' }}>
         <Grid>
@@ -79,12 +84,6 @@ class SingleOrderView extends Component {
                       <List.Icon name="users" />
                       <List.Content>
                         Crew:
-                        {/* <Dropdown
-                          style={{ margin: '0 1rem' }}
-                          options={options}
-                          value={value}
-                          onChange={this.handleChange}
-                        /> */}
                         <Dropdown text={value} style={{ margin: '0 1rem' }}>
                           <Dropdown.Menu>
                             {options.map(crew => {
@@ -165,13 +164,16 @@ class SingleOrderView extends Component {
 const mapStateToProps = state => {
   return {
     order: state.orders.order,
-    crew: state.orders.order.crew,
+    crew: state.orders.crew,
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     getOrder: id => dispatch(createGetOrderThunk(id)),
+    getCrew: id => dispatch(createGetCrewThunk(id)),
+    updateOrder: (order, orderId) =>
+      dispatch(createUpdateOrderThunk(order, orderId)),
   };
 };
 
