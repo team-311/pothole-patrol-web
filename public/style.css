@@ -38,3 +38,7 @@ form div {
   justify-content: center;
   align-items: center;
 }
+
+.pagination-component {
+  text-align: center;
+}
