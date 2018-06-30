@@ -66,8 +66,8 @@ class OrderListView extends Component {
                   id={order.id}
                   status={order.status}
                   date={date}
-                  authorizer={order.userId}
-                  crew={order.crewId}
+                  authorizer={order.user.name}
+                  crew={order.crew.name}
                 />
               );
             })}
