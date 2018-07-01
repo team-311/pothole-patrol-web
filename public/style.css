@@ -60,3 +60,7 @@ form div {
   margin-right: 1em;
 }
 
+.ui.container {
+  width: 80%;
+  padding: 1em;
+}
