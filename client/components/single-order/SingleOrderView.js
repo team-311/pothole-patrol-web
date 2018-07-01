@@ -13,31 +13,9 @@ import {
   List,
   Dropdown,
   Container,
-  Search,
 } from 'semantic-ui-react';
 import PotholeRow from './PotholeRow';
 import moment from 'moment';
-
-const source = [
-  {
-    title: 'ACME Computers',
-    description: 'The Best Machines',
-    image: '',
-    price: '$44.00',
-  },
-  {
-    title: 'IBM',
-    description: 'The Best Machines',
-    image: '',
-    price: '$144.00',
-  },
-  {
-    title: 'Microsoft',
-    description: 'The Best Machines',
-    image: '',
-    price: '$44.00',
-  },
-];
 
 class SingleOrderView extends Component {
   constructor() {
@@ -46,43 +24,10 @@ class SingleOrderView extends Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
-  UNSAFE_componentWillMount = () => {
-    this.resetComponent();
-  };
-
   componentDidMount = () => {
     this.id = this.props.match.params.id;
     this.props.getOrder(this.id);
     this.props.getCrewList();
-    this.props.getAllPotholes();
-  };
-
-  resetComponent = () =>
-    this.setState({ isLoading: false, results: [], value: '' });
-
-  handleResultSelect = (e, { result }) =>
-    this.setState({ value: result.title });
-
-  handleSearchChange = (e, { value }) => {
-    this.setState({ isLoading: true, value });
-
-    setTimeout(() => {
-      if (this.state.value.length < 1) return this.resetComponent();
-
-      const re = new RegExp(this.state.value, 'i');
-      const isMatch = result => re.test(result.zip);
-
-      console.log(this.props.potholes.filter(isMatch));
-      this.setState({
-        isLoading: false,
-        results: this.props.potholes.filter(isMatch).map(ph => {
-          return {
-            title: ph.zip,
-            description: ph.description,
-          };
-        }),
-      });
-    }, 300);
   };
 
   async handleChange(e, { value }) {
@@ -171,18 +116,8 @@ class SingleOrderView extends Component {
             <Table celled>
               <Table.Header>
                 <Table.Row>
-                  <Table.HeaderCell colSpan="3">
+                  <Table.HeaderCell colSpan="6">
                     Order Potholes
-                  </Table.HeaderCell>
-                  <Table.HeaderCell colSpan="3">
-                    <Search
-                      loading={this.state.isLoading}
-                      onResultSelect={this.handleResultSelect}
-                      onSearchChange={this.handleSearchChange}
-                      results={this.state.results}
-                      value={this.state.value}
-                      {...this.props}
-                    />
                   </Table.HeaderCell>
                 </Table.Row>
                 <Table.Row>
@@ -217,7 +152,6 @@ const mapStateToProps = state => {
   return {
     order: state.orders.order,
     crewList: state.orders.crewList,
-    potholes: state.potholes.requests,
   };
 };
 
@@ -227,7 +161,6 @@ const mapDispatchToProps = dispatch => {
     getCrewList: () => dispatch(createGetCrewListThunk()),
     updateOrder: (order, orderId) =>
       dispatch(createUpdateOrderThunk(order, orderId)),
-    getAllPotholes: () => dispatch(createGetLatestPotholesThunk()),
   };
 };
 
