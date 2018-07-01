@@ -27,28 +27,21 @@ class PriorityPie extends React.Component {
       }
     }
 
-    console.log('allOpenPriority ', this.props.allOpenPriority)
-    console.log('high: ', high, 'medium: ', medium, 'low: ', low)
-
     return (
       <div >
-        <VictoryGroup
-          domainPadding={20}
-          theme={VictoryTheme.material}
-        >
-          <VictoryPie
-            // colorScale={["tomato", "navy", "gold"]}
-            data={[
-              { x: "High", y: high }, { x: "Medium", y: medium }, { x: "Low", y: low }
-            ]}
-          />
-          <VictoryLabel
-            textAnchor="middle"
-            style={{ fontSize: 12 }}
-            x={175} y={10}
-            text="Open by Priority:"
-          />
-        </VictoryGroup>
+        <VictoryLabel
+          textAnchor="middle"
+          style={{ fontSize: 12 }}
+          x={10} y={10}
+          text="Open by Priority:"
+        />
+        <VictoryPie
+          colorScale={["red", "orange", "green"]}
+          data={[
+            { x: "High", y: high }, { x: "Medium", y: medium }, { x: "Low", y: low }
+          ]}
+        />
+
       </div>
     )
   }

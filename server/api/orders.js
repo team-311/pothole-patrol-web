@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const { Order, User, Crew, Pothole} = require('../db/models')
+const { Order, User, Crew, Pothole } = require('../db/models')
 
 
 router.get('/', async (req, res, next) => {
@@ -12,6 +12,7 @@ router.get('/', async (req, res, next) => {
       order: [['createdAt', 'DESC'], ['id', 'ASC']],
       offset,
       limit,
+      include: [User, Crew]
     })
 
     const lastPage = Math.ceil(count / limit) // round up to account for additional items
@@ -19,11 +20,24 @@ router.get('/', async (req, res, next) => {
     res.json({
       count,
       orders,
-      currentPage: offset,
+      currentPage: page,
       lastPage,
     })
-  } catch (err) {next(err)}
+  } catch (err) { next(err) }
 })
+
+router.get('/open', async (req, res, next) => {
+  try {
+    const data = await Order.findAll({
+      where: {
+        status: "Requested"
+      }, include: [User, Crew, Pothole]
+    });
+    res.json(data);
+  } catch (err) {
+    next(err);
+  }
+});
 
 router.get('/:id', async (req, res, next) => {
   try {

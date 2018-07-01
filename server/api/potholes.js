@@ -11,7 +11,7 @@ cloudinary.config({
 });
 
 router.get('/', async (req, res, next) => {
-  const page = req.query.page || 1;
+  const page = Number(req.query.page) || 1;
   const limit = process.env.POTHOLES_PAGE_SIZE || 25;
   const offset = (page - 1) * limit;
 
@@ -26,7 +26,7 @@ router.get('/', async (req, res, next) => {
   res.json({
     count,
     requests,
-    currentPage: offset + 1,
+    currentPage: page,
     lastPage,
   });
 });

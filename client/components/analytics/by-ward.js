@@ -1,7 +1,7 @@
 import React from 'react'
 import { Dropdown, Menu } from 'semantic-ui-react'
 import { connect } from 'react-redux'
-import { VictoryChart, VictoryAxis, VictoryBar, VictoryStack, VictoryLabel, VictoryTheme } from 'victory';
+import { VictoryChart, VictoryAxis, VictoryBar, VictoryStack, VictoryGroup, VictoryLabel, VictoryTheme } from 'victory';
 import { getByWardThunk, getByWardThunk2 } from '../../store/potholes'
 
 class ByWard extends React.Component {
@@ -18,6 +18,7 @@ class ByWard extends React.Component {
   }
 
   handleChange(event, data) {
+    console.log("data in handlechange: ", data)
     this.setState({ wardId: data.value }, () => {
       this.props.getByWard(this.state.wardId)
     })
@@ -75,7 +76,8 @@ class ByWard extends React.Component {
           domainPadding={{ x: 30 }}
           theme={VictoryTheme.material}
         >
-          <VictoryLabel text={wardText} x={140} y={30} textAnchor="middle" />
+          <VictoryLabel text={`Comparison by Ward\n(Last 30 Days)`} x={140} y={30} textAnchor="middle" />
+          <VictoryLabel text={`# of Potholes`} angle={-90} x={10} y={180} textAnchor="middle" />
           <VictoryAxis
             style={{ tickLabels: { angle: -45 } }}
             tickValues={["total \nopen", "total \nclosed"]}
@@ -83,32 +85,33 @@ class ByWard extends React.Component {
           />
           <VictoryAxis
             dependentAxis
+            tickValues={[25, 50, 100, 150, 200, 250]}
             tickFormat={(x) => (`${x}`)}
           />
-          <VictoryStack>
+          <VictoryGroup offset={10} style={{ data: { width: 15 } }}>
             <VictoryBar
               data={returnArr}
               x={"status"}
               y={"count"}
-              style={{ data: { fill: "green" } }}
+              style={{ data: { fill: "grey" } }}
             />
             <VictoryBar
               data={returnArr2}
               x={"status"}
               y={"count"}
-              style={{ data: { fill: "black" } }}
+              style={{ data: { fill: "orange" } }}
             />
-          </VictoryStack>
+          </VictoryGroup >
         </VictoryChart>
         <Menu compact>
-          <Dropdown item scrolling text='Select Ward #1' >
-            <Dropdown.Menu >
+          <Dropdown item scrolling placeholder={`Ward #${this.state.wardId} (grey)`} >
+            <Dropdown.Menu>
               {mapArray.map(item => (
                 <Dropdown.Item value={item} onClick={this.handleChange} key={item}>{item}</Dropdown.Item>
               ))}
             </Dropdown.Menu>
           </Dropdown>
-          <Dropdown item scrolling text='Select Ward #2' >
+          <Dropdown item scrolling placeholder={`Ward #${this.state.wardId2} (gold)`} >
             <Dropdown.Menu >
               {mapArray2.map(item => (
                 <Dropdown.Item value={item} onClick={this.handleChange2} key={item}>{item}</Dropdown.Item>

@@ -12,7 +12,7 @@ class ClosedLastMonth extends React.Component {
 
   render() {
     return (
-      <Card>
+      <Card color='blue'>
         <Card.Content>
           <Card.Header>Completed in Last 30 Days:</Card.Header>
           <Card.Description>

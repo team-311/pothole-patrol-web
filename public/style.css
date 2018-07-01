@@ -38,3 +38,12 @@ form div {
   justify-content: center;
   align-items: center;
 }
+
+.pagination-component {
+  text-align: center;
+}
+
+.ui.container {
+  width: 80%;
+  padding: 1em;
+}

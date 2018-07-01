@@ -19,14 +19,15 @@ class ReportedPerDay extends React.Component {
       let date = new Date(new Date() - (i * 24 * 60 * 60 * 1000))
       retArr.push(dayArr[date.getDay()])
     }
-    console.log("closed last week: ", this.props.allClosedLastWeek)
     return (
       <div >
         <VictoryChart
           domainPadding={20}
           theme={VictoryTheme.material}
         >
-          <VictoryLabel text="Reported(Black) and Closed(Green) in Last Week" x={150} y={30} textAnchor="middle" />
+          <VictoryLabel text={`All Potholes Open/Closed\n(Last 7 Days)`} x={150} y={30} textAnchor="middle" />
+          <VictoryLabel text={`Open (Grey) || Closed (Gold)`} x={150} y={340} textAnchor="middle" />
+          <VictoryLabel text={`# of Potholes`} angle={-90} x={10} y={180} textAnchor="middle" />
           <VictoryAxis
             style={{ tickLabels: { angle: -45 } }}
             tickValues={[1, 2, 3, 4, 5, 6, 7]}
@@ -41,13 +42,13 @@ class ReportedPerDay extends React.Component {
               data={this.props.potholes}
               x={"time"}
               y={"count"}
-              style={{ data: { fill: "black" } }}
+              style={{ data: { fill: "grey" } }}
             />
             <VictoryBar
               data={this.props.allClosedLastWeek}
               x={"time"}
               y={"count"}
-              style={{ data: { fill: "green" } }}
+              style={{ data: { fill: "orange" } }}
             />
           </VictoryGroup>
         </VictoryChart>

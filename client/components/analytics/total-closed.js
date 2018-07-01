@@ -12,7 +12,7 @@ class TotalClosed extends React.Component {
 
   render() {
     return (
-      <Card>
+      <Card color="blue">
         <Card.Content>
           <Card.Header>Total Completed:</Card.Header>
           <Card.Description>

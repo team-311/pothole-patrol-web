@@ -45,7 +45,7 @@ class AllPotholeViewSmall extends Component {
           <Table.Body>
             {requests.map(request => (
               <Table.Row key={request.id}>
-                <Table.Cell textAlign="center"><Link to={`./singlepothole/${request.id}`}>{request.id}</Link></Table.Cell>
+                <Table.Cell textAlign="center"><Link to={`./potholes/${request.id}`}>{request.id}</Link></Table.Cell>
                 <Table.Cell textAlign="center">{request.status}</Table.Cell>
                 <Table.Cell textAlign="center">{request.streetAddress}</Table.Cell>
               </Table.Row>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { AllPotholeViewSmall, OrderListView } from '../';
+import OrderListViewSmall from '../order-list-view-small';
 import AverageTimeComplete from '../analytics/avg-time-complete'
 import ReportedPerDay from '../analytics/reported-per-day'
 import TotalOpen from '../analytics/total-open'
@@ -9,11 +9,12 @@ import ClosedLastMonth from '../analytics/closed-last-month'
 import TotalInProgress from '../analytics/total-in-progress'
 import ByWard from '../analytics/by-ward'
 import PriorityPie from '../analytics/priority-pie'
+//import OrderListView from '../order-list-view'
 import { Table, Card, Text, Container } from 'semantic-ui-react';
 
 const Dashboard = () => {
   return (
-    <Container >
+    <Container className="container">
       <Card.Group itemsPerRow={5}>
         <TotalOpen />
         <TotalClosed />
@@ -21,22 +22,21 @@ const Dashboard = () => {
         <ClosedLastMonth />
         <TotalInProgress />
       </Card.Group>
-      <Card.Group itemsPerRow={3}>
-        <Card>
+      <Card.Group itemsPerRow={4}>
+        <Card color="blue">
           <AverageTimeComplete />
         </Card>
-        <Card>
+        <Card color="blue">
           <ReportedPerDay />
         </Card>
-        <Card>
+        <Card color="blue">
           <ByWard />
         </Card>
-      </Card.Group>
-      <Card.Group itemsPerRow={3}>
-        <Card>
+        <Card color="blue">
           <PriorityPie />
         </Card>
       </Card.Group>
+      <OrderListViewSmall />
     </Container>
   );
 };

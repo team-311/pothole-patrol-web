@@ -17,11 +17,12 @@ class AvgTimeComplete extends React.Component {
           domainPadding={10}
           theme={VictoryTheme.material}
         >
-          <VictoryLabel text="Days To Completion" x={100} y={30} textAnchor="middle" />
+          <VictoryLabel text={`Total Days\n(from Open to Completion)`} x={140} y={30} textAnchor="middle" />
+          <VictoryLabel text={`# of Potholes`} angle={-90} x={5} y={180} textAnchor="middle" />
+          <VictoryLabel text={`# of Days`} x={150} y={340} textAnchor="middle" />
           <VictoryAxis
-            style={{ tickLabels: { angle: -45 } }}
             tickValues={["1", "2", "3", "4", "5", "6", "7+"]}
-            tickFormat={(x) => (`Day ${x}`)}
+            tickFormat={(x) => (`${x}`)}
           />
           <VictoryAxis
             dependentAxis
@@ -31,7 +32,7 @@ class AvgTimeComplete extends React.Component {
             data={this.props.potholes}
             x={"time"}
             y={"count"}
-            style={{ data: { fill: "black" } }}
+            style={{ data: { fill: "grey" } }}
           />
         </VictoryChart>
       </div>
