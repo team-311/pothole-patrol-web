@@ -3,7 +3,7 @@ import axios from 'axios';
 // action types
 const GOT_ORDERS = 'GOT_ORDERS';
 const GOT_ORDER = 'GOT_ORDER';
-const GOT_CREW = 'GOT_CREW';
+const GOT_CREWLIST = 'GOT_CREWLIST';
 const UPDATE_ORDER = 'UPDATE_ORDER';
 
 // initial state
@@ -13,7 +13,7 @@ const initialState = {
   currentPage: 1,
   lastPage: 1,
   order: {},
-  crew: {},
+  crewList: [],
 };
 
 // action creators
@@ -21,7 +21,7 @@ const createGotOrdersAction = orders => ({ type: GOT_ORDERS, orders });
 
 const createGotOrderAction = order => ({ type: GOT_ORDER, order });
 
-const createGetCrewAction = crew => ({ type: GOT_CREW, crew });
+const createGetCrewListAction = crewList => ({ type: GOT_CREWLIST, crewList });
 
 const createUpdateOrderAction = order => ({ type: UPDATE_ORDER, order });
 
@@ -50,11 +50,11 @@ export const createGetOrderThunk = id => {
   };
 };
 
-export const createGetCrewThunk = id => {
+export const createGetCrewListThunk = () => {
   return async dispatch => {
     try {
-      const crew = await axios.get(`/api/teams/${id}`);
-      dispatch(createGetCrewAction(crew.data));
+      const crew = await axios.get(`/api/teams`);
+      dispatch(createGetCrewListAction(crew.data));
     } catch (error) {
       console.error(error);
     }
@@ -79,8 +79,8 @@ export default function(state = initialState, action) {
       return { ...state, orders: action.orders };
     case GOT_ORDER:
       return { ...state, order: action.order, crew: action.order.crew };
-    case GOT_CREW:
-      return { ...state, crew: action.crew };
+    case GOT_CREWLIST:
+      return { ...state, crewList: action.crewList };
     case UPDATE_ORDER:
       return { ...state, order: action.order };
     default:

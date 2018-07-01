@@ -2,14 +2,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
   createGetOrderThunk,
-  createGetCrewThunk,
+  createGetCrewListThunk,
   createUpdateOrderThunk,
 } from '../../store';
 import {
   Grid,
   Card,
   Table,
-  Button,
   List,
   Dropdown,
   Container,
@@ -17,35 +16,22 @@ import {
 import PotholeRow from './PotholeRow';
 import moment from 'moment';
 
-const options = [
-  { key: 1, text: 'Moses Men', value: 'Moses Men' },
-  {
-    key: 2,
-    text: 'Schuyler Shandies',
-    value: 'Schuyler Shandies',
-  },
-  { key: 3, text: 'Rough Riders', value: 'Rough Riders' },
-  { key: 4, text: 'French People', value: 'French People' },
-  { key: 5, text: 'The Baristas', value: 'The Baristas' },
-];
-
 class SingleOrderView extends Component {
   constructor() {
     super();
     this.id = null;
-    this.handleClick = this.handleClick.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
   componentDidMount = () => {
     this.id = this.props.match.params.id;
     this.props.getOrder(this.id);
+    this.props.getCrewList();
   };
 
-  async handleClick(event, data) {
-    event.preventDefault();
-    const crewId = data.value;
-    await this.props.getCrew(crewId);
-    const orderToUpdate = { ...this.props.order, crew: this.props.crew };
+  async handleChange(e, { value }) {
+    const crew = this.props.crewList.find(c => c.id === value);
+    const orderToUpdate = { ...this.props.order, crew: crew };
 
     await this.props.updateOrder(orderToUpdate, this.props.order.id);
   }
@@ -66,10 +52,10 @@ class SingleOrderView extends Component {
     const formattedDate = moment(order.createdAt).format('dddd MMMM D Y');
     const [day, month, dayNumber, year] = formattedDate.split(' ');
     const date = [month, ' ', dayNumber, ', ', year].join('');
-    const value = this.props.crew.name;
+    const selectedCrewId = (this.props.order.crew || {}).id;
     return (
       <Container style={{ margin: '2rem 0' }}>
-        <Grid>
+        <Grid stackable>
           <Grid.Column width={4}>
             <Card>
               <Card.Content>
@@ -84,21 +70,18 @@ class SingleOrderView extends Component {
                       <List.Icon name="users" />
                       <List.Content>
                         Crew:
-                        <Dropdown text={value} style={{ margin: '0 1rem' }}>
-                          <Dropdown.Menu>
-                            {options.map(crew => {
-                              return (
-                                <Dropdown.Item
-                                  key={crew.key}
-                                  value={crew.key}
-                                  onClick={this.handleClick}
-                                >
-                                  {crew.value}
-                                </Dropdown.Item>
-                              );
-                            })}
-                          </Dropdown.Menu>
-                        </Dropdown>
+                        <Dropdown
+                          onChange={this.handleChange}
+                          options={this.props.crewList.map(crew => {
+                            return {
+                              key: crew.id,
+                              text: crew.name,
+                              value: crew.id,
+                            };
+                          })}
+                          value={selectedCrewId}
+                          style={{ margin: '0 1rem' }}
+                        />
                       </List.Content>
                     </List.Item>
                     <List.Item>
@@ -117,15 +100,18 @@ class SingleOrderView extends Component {
                 </Card.Content>
                 <Card.Content extra>
                   <div>
-                    <Button basic color="green">
+                    <a
+                      href="tel://9999999999"
+                      className="ui green basic button"
+                    >
                       Contact Crew
-                    </Button>
+                    </a>
                   </div>
                 </Card.Content>
               </Card.Content>
             </Card>
           </Grid.Column>
-          <Grid.Column width={9}>
+          <Grid.Column width={12}>
             <Table celled>
               <Table.Header>
                 <Table.Row>
@@ -164,14 +150,14 @@ class SingleOrderView extends Component {
 const mapStateToProps = state => {
   return {
     order: state.orders.order,
-    crew: state.orders.crew,
+    crewList: state.orders.crewList,
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     getOrder: id => dispatch(createGetOrderThunk(id)),
-    getCrew: id => dispatch(createGetCrewThunk(id)),
+    getCrewList: () => dispatch(createGetCrewListThunk()),
     updateOrder: (order, orderId) =>
       dispatch(createUpdateOrderThunk(order, orderId)),
   };
