@@ -19,8 +19,8 @@ const Navbar = ({ handleClick, isLoggedIn }) => (
           {/* The navbar will show these links after you log in */}
           <Menu.Item
             as={Link}
-            name="allpotholes"
-            to="/allpotholes"
+            name="potholes"
+            to="/potholes"
             content="All Potholes"
           />
           <Menu.Item

@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createGetLatestPotholesThunk } from '../../store';
-import { Link } from 'react-router-dom';
-import { Header, Container, Table, Button } from 'semantic-ui-react';
+import { Header, Container, Table, Icon, Pagination } from 'semantic-ui-react';
+import moment from 'moment'
+import qs from 'query-string'
 
 class AllPotholeView extends Component {
   constructor() {
@@ -14,21 +15,22 @@ class AllPotholeView extends Component {
   }
 
   componentDidMount() {
-    this.props.getLatestPotholes(1);
+    const { page } = qs.parse(this.props.location.search)
+    this.setState({
+      page: Number(page) || 1,
+    }, () => {
+      this.props.getLatestPotholes(this.state.page);
+    })
   }
 
-  handleClick = () => {
-    this.setState(
-      prevState => {
-        return {
-          page: prevState.page + 1,
-        };
-      },
-      () => {
-        this.props.getLatestPotholes(this.state.page);
-      }
-    );
-  };
+  handlePageChange = (e, { activePage }) => {
+    this.setState({
+      page: activePage
+    }, () => {
+      this.props.getLatestPotholes(this.state.page);
+      this.props.history.push(`${this.props.match.path}?page=${this.state.page}`)
+    })
+  }
 
   getPriority(num) {
     if (num <= 10) {
@@ -47,40 +49,47 @@ class AllPotholeView extends Component {
         <Header size="huge" textAlign="center">
           All Potholes
         </Header>
-        <Table celled>
+        <Table
+          celled
+          striped
+          compact="very"
+          selectable
+        >
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell textAlign="center">ID</Table.HeaderCell>
-              <Table.HeaderCell textAlign="center">STATUS</Table.HeaderCell>
+              <Table.HeaderCell textAlign="center">Service Number</Table.HeaderCell>
               <Table.HeaderCell textAlign="center">ADDRESS</Table.HeaderCell>
+              <Table.HeaderCell textAlign="center">STATUS</Table.HeaderCell>
               <Table.HeaderCell textAlign="center">PRIORITY</Table.HeaderCell>
-              <Table.HeaderCell textAlign="center">
-                {' '}
-                UPDATED AT
-              </Table.HeaderCell>
+              <Table.HeaderCell textAlign="center">OPENED</Table.HeaderCell>
+              <Table.HeaderCell textAlign="center">WARD</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           <Table.Body>
             {requests.map(request => (
-              <Table.Row key={request.id}>
-                <Table.Cell textAlign="center" selectable>
-                  <Link to={`./singlepothole/${request.id}`}>{request.id}</Link>
-                </Table.Cell>
-                <Table.Cell textAlign="center">{request.status}</Table.Cell>
-                <Table.Cell textAlign="center">
-                  {request.streetAddress}
-                </Table.Cell>
-                <Table.Cell textAlign="center">
-                  {this.getPriority(request.priority)}
-                </Table.Cell>
-                <Table.Cell textAlign="center">{request.updatedAt}</Table.Cell>
+              <Table.Row key={request.id} onClick={() => this.props.history.push(`/potholes/${request.id}`)}>
+                <Table.Cell textAlign="center" collapsing>{request.serviceNumber}</Table.Cell>
+                <Table.Cell textAlign="left">{request.streetAddress}</Table.Cell>
+                <Table.Cell textAlign="left">{request.status}</Table.Cell>
+                <Table.Cell textAlign="center">{this.getPriority(request.priority)}</Table.Cell>
+                <Table.Cell textAlign="left">{moment(request.createdAt).format('MM/DD/YYYY')}</Table.Cell>
+                <Table.Cell textAlign="center">{request.ward}</Table.Cell>
               </Table.Row>
             ))}
           </Table.Body>
         </Table>
-        <Button onClick={this.handleClick} type="button">
-          Next Page >>
-        </Button>
+        <div className="pagination-component">
+          <Pagination
+            activePage={this.state.page}
+            ellipsisItem={{ content: <Icon name='ellipsis horizontal' />, icon: true }}
+            firstItem={{ content: <Icon name='angle double left' />, icon: true }}
+            lastItem={{ content: <Icon name='angle double right' />, icon: true }}
+            prevItem={{ content: <Icon name='angle left' />, icon: true }}
+            nextItem={{ content: <Icon name='angle right' />, icon: true }}
+            totalPages={lastPage}
+            onPageChange={this.handlePageChange}
+          />
+        </div>
       </Container>
     );
   }

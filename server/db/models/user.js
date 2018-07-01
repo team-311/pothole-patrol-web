@@ -42,6 +42,12 @@ const User = db.define('user', {
     get () {
       return () => this.getDataValue('salt')
     }
+  },
+  name: {
+    type: Sequelize.VIRTUAL,
+    get () {
+      return `${this.getDataValue('firstName')} ${this.getDataValue('lastName')}`
+    }
   }
 })
 
