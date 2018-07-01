@@ -7,7 +7,7 @@ import { Menu } from 'semantic-ui-react'
 
 const Navbar = ({ handleClick, isLoggedIn }) => (
   <div>
-    <Menu borderless inverted>
+    <Menu borderless inverted id="navbar">
       <Menu.Item
         as={Link}
         name="dashboard"

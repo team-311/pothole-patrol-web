@@ -11,16 +11,30 @@ cloudinary.config({
 });
 
 router.get('/', async (req, res, next) => {
+  // pagination
   const page = Number(req.query.page) || 1;
   const limit = process.env.POTHOLES_PAGE_SIZE || 25;
   const offset = (page - 1) * limit;
-
-  const { count, rows: requests } = await Pothole.findAndCountAll({
+  const options = {
     order: [['createdAt', 'DESC'], ['id', 'ASC']],
     offset,
     limit,
-  });
+    where: {},
+  }
 
+  // filters
+  if (req.query.status) options.where.status = { [Op.iLike]: `${req.query.status}%` }
+  if (req.query.ward) options.where.ward = req.query.ward
+
+  // sorting
+  if (req.query.sort) {
+    const [criteria, direction] = req.query.sort.split('.')
+    if (criteria.toLowerCase() === 'opened') {
+      options.order = [['createdAt', direction || 'DESC'], ['id', 'ASC']] // including ID to break ties
+    }
+  }
+
+  const { count, rows: requests } = await Pothole.findAndCountAll(options);
   const lastPage = Math.ceil(count / limit); // round up to account for additional items
 
   res.json({

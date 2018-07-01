@@ -112,6 +112,26 @@ export const createGetLatestPotholesThunk = page => {
   };
 };
 
+export const createGetPotholesThunk = (query, page) => {
+  return async dispatch => {
+    try {
+      const queryParts = []
+      if (query) queryParts.push(query)
+      if (typeof page === 'number') queryParts.push(`page=${page}`)
+
+      let path = `/api/potholes`
+      if (queryParts.length > 0) {
+        path += `?` + queryParts.join('&')
+      }
+
+      const { data: potholes } = await axios.get(path)
+      dispatch(createGotPotholesAction(potholes))
+    } catch (error) {
+      console.error(error)
+    }
+  }
+}
+
 export const createGotPotholeThunk = potholeId => {
   return async dispatch => {
     try {
