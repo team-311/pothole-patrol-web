@@ -15,9 +15,10 @@ install:
   - npm i -g npm # delete once default travis npm supports `ci` command
   - npm ci       # faster, goes only from package-lock
 before_script:
-  only:
-  -master
   - psql -c 'create database "capstone";' -U postgres # remember to change this name if you change it elsewhere (e.g. package.json)
+branches:
+  only:
+    -master
 
 before_deploy:
   - npm run build-client # make the bundle
