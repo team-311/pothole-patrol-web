@@ -18,7 +18,7 @@ before_script:
   - psql -c 'create database "capstone";' -U postgres # remember to change this name if you change it elsewhere (e.g. package.json)
 branches:
   only:
-    -master
+    - master
 
 before_deploy:
   - npm run build-client # make the bundle
