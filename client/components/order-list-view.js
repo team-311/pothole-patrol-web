@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createGetLatestOrdersThunk } from '../store';
-import { Table, Button, Container, Header } from 'semantic-ui-react';
+import { Table, Button, Container, Header, Icon, Pagination } from 'semantic-ui-react';
 import { OrderRowItem } from './';
 import history from '../history';
 import moment from 'moment';
+import qs from 'query-string'
 
 class OrderListView extends Component {
   constructor() {
@@ -15,42 +16,28 @@ class OrderListView extends Component {
   }
 
   componentDidMount() {
-    this.props.getLatestOrders(1);
+    const { page } = qs.parse(this.props.location.search)
+    this.setState({
+      page: Number(page) || 1
+    }, () => {
+      this.props.getLatestOrders(this.state.page)
+    })
   }
 
-  handleClick = () => {
-    if (this.props.isDashboardCard) history.push('/orders');
-    else {
-      this.setState(
-        prevState => {
-          return {
-            page: prevState.page + 1,
-          };
-        },
-        () => {
-          this.props.getLatestOrders(this.state.page);
-        }
-      );
-    }
-  };
+  handlePageChange = (_, { activePage }) => {
+    this.setState({
+      page: activePage
+    }, () => {
+      this.props.getLatestOrders(this.state.page);
+      this.props.history.push(`${this.props.match.path}?page=${this.state.page}`)
+    })
+  }
 
   render() {
-    let orders = this.props.orders;
-    let buttonText =
-      this.state.page !== this.props.lastPage
-        ? 'View More'
-        : 'Viewing Last Page';
-    if (this.props.isDashboardCard) {
-      orders = orders.slice(6);
-      buttonText = 'View All';
-    }
+    const { orders, lastPage } = this.props;
     return (
       <Container>
-        {this.props.isDashboardCard ? (
-          <div />
-        ) : (
-            <Header size="huge" textAlign="center">Recent Orders</Header>
-          )}
+        <Header size="huge" textAlign="center">Recent Orders</Header>
         <Table celled padded>
           <Table.Header>
             <Table.Row>
@@ -79,20 +66,25 @@ class OrderListView extends Component {
                   id={order.id}
                   status={order.status}
                   date={date}
-                  authorizer={order.userId}
-                  crew={order.crewId}
+                  authorizer={order.user.name}
+                  crew={order.crew.name}
                 />
               );
             })}
           </Table.Body>
         </Table>
-        <Button
-          primary
-          onClick={this.handleClick}
-          disabled={this.state.page === 1 && !this.props.isDashboardCard}
-        >
-          {buttonText}
-        </Button>
+        <div className="pagination-component">
+          <Pagination
+            activePage={this.state.page}
+            ellipsisItem={{ content: <Icon name='ellipsis horizontal' />, icon: true }}
+            firstItem={{ content: <Icon name='angle double left' />, icon: true }}
+            lastItem={{ content: <Icon name='angle double right' />, icon: true }}
+            prevItem={{ content: <Icon name='angle left' />, icon: true }}
+            nextItem={{ content: <Icon name='angle right' />, icon: true }}
+            totalPages={lastPage}
+            onPageChange={this.handlePageChange}
+          />
+        </div>
       </Container>
     );
   }

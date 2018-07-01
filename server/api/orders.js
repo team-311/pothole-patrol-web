@@ -11,14 +11,15 @@ router.get('/', async (req, res, next) => {
       order: [['createdAt', 'DESC'], ['id', 'ASC']],
       offset,
       limit,
-    });
+      include: [User, Crew]
+    })
 
     const lastPage = Math.ceil(count / limit); // round up to account for additional items
 
     res.json({
       count,
       orders,
-      currentPage: offset,
+      currentPage: page,
       lastPage,
     });
   } catch (err) {
