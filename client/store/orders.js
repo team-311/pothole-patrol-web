@@ -25,7 +25,7 @@ export const createGetLatestOrdersThunk = (page) => {
       let pageQuery = ''
       if (typeof page === 'number') pageQuery = `?page=${page}`
       const orderData = await axios.get(`/api/orders${pageQuery}`)
-      dispatch(createGotOrdersAction(orderData.data.orders))
+      dispatch(createGotOrdersAction(orderData.data))
     } catch (error) {
       console.error(error)
     }
@@ -47,7 +47,13 @@ export const createGetOrderThunk = (id) => {
 export default function (state = initialState, action) {
   switch (action.type) {
     case GOT_ORDERS:
-      return {...state, orders: action.orders}
+      return {
+        ...state,
+        orders: action.orders.orders,
+        count: action.orders.count,
+        currentPage: action.orders.currentPage,
+        lastPage: action.orders.lastPage,
+      }
     case GOT_ORDER:
       return {...state, order: action.order}
     default:

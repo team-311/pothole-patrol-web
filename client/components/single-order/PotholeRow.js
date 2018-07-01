@@ -11,7 +11,7 @@ const PotholeRow = props => {
 
   return (
     <Table.Row>
-      <Table.Cell selectable><Link to={`/singlepothole/${pothole.id}`}>{pothole.serviceNumber}</Link></Table.Cell>
+      <Table.Cell selectable><Link to={`/potholes/${pothole.id}`}>{pothole.serviceNumber}</Link></Table.Cell>
       <Table.Cell>{pothole.status}</Table.Cell>
       <Table.Cell>{date}</Table.Cell>
       <Table.Cell>{pothole.mostRecentAction || 'No Recent Actions'}</Table.Cell>
