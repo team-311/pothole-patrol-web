@@ -14,7 +14,6 @@ import {
   List,
   Dropdown,
   Container,
-  Search,
 } from 'semantic-ui-react';
 import PotholeRow from './PotholeRow';
 import moment from 'moment';
@@ -28,6 +27,14 @@ class SingleOrderView extends Component {
     this.id = null;
     this.handleChange = this.handleChange.bind(this);
   }
+
+
+  componentDidMount = () => {
+    this.id = this.props.match.params.id;
+    this.props.getOrder(this.id);
+    this.props.getCrewList();
+    this.props.getAllPotholes();
+  };
 
   UNSAFE_componentWillMount = () => {
     this.resetComponent();
@@ -64,22 +71,15 @@ class SingleOrderView extends Component {
           };
         }),
       });
-    }, 300);
+    }, 300)
   };
 
 
-  async handleChange(e, { value }) {
+  handleChange = (e, { value }) => {
     const crew = this.props.crewList.find(c => c.id === value);
     const orderToUpdate = { ...this.props.order, crew: crew };
 
-    await this.props.updateOrder(orderToUpdate, this.props.order.id);
-  }
-
-  componentDidMount = () => {
-    this.id = this.props.match.params.id;
-    this.props.getOrder(this.id);
-    this.props.getCrewList();
-    this.props.getAllPotholes();
+    this.props.updateOrder(orderToUpdate, this.props.order.id);
   };
 
   render() {
@@ -161,18 +161,8 @@ class SingleOrderView extends Component {
             <Table celled>
               <Table.Header>
                 <Table.Row>
-                  <Table.HeaderCell colSpan="3">
+                  <Table.HeaderCell colSpan="6">
                     Order Potholes
-                  </Table.HeaderCell>
-                  <Table.HeaderCell colSpan="3">
-                    <Search
-                      loading={this.state.isLoading}
-                      onResultSelect={this.handleResultSelect}
-                      onSearchChange={this.handleSearchChange}
-                      results={this.state.results}
-                      value={this.state.value}
-                      {...this.props}
-                    />
                   </Table.HeaderCell>
                 </Table.Row>
                 <Table.Row>
@@ -207,7 +197,6 @@ const mapStateToProps = state => {
   return {
     order: state.orders.order,
     crewList: state.orders.crewList,
-    potholes: state.potholes.requests,
   };
 };
 

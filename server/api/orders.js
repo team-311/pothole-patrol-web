@@ -22,9 +22,17 @@ router.get('/', async (req, res, next) => {
       orders,
       currentPage: page,
       lastPage,
+<<<<<<< HEAD
     })
   } catch (err) { next(err) }
 })
+=======
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+>>>>>>> 2cc2ae8a082cb3584eedad383196f7a48399c377
 
 router.get('/open', async (req, res, next) => {
   try {
