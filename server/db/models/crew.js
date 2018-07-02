@@ -1,8 +1,16 @@
-const Sequelize = require('sequelize')
-const db = require('../db')
+const Sequelize = require('sequelize');
+const db = require('../db');
 
 const Crew = db.define('crew', {
-  name: Sequelize.STRING
-})
+  name: {
+    type: Sequelize.STRING,
+  },
+  contactNumber: {
+    type: Sequelize.STRING,
+    validate: {
+      isNumeric: true,
+    },
+  },
+});
 
-module.exports = Crew
+module.exports = Crew;
