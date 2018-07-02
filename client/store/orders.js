@@ -6,6 +6,7 @@ const UPDATE_ORDER = 'UPDATE_ORDER';
 const GOT_ORDERS = 'GOT_ORDERS'
 const GOT_ORDER = 'GOT_ORDER'
 const GET_OPEN_ORDERS = 'GET_OPEN_ORDERS'
+const GOT_CREWLIST = 'GOT_CREWLIST'
 
 // initial state
 const initialState = {
@@ -67,6 +68,7 @@ export const createGetCrewListThunk = () => {
 };
 
 export const createUpdateOrderThunk = (order, orderId) => {
+  console.log(order)
   return async dispatch => {
     try {
       const response = await axios.put(`/api/orders/${orderId}`, order);

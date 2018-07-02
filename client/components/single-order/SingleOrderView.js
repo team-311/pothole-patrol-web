@@ -5,6 +5,7 @@ import {
   createGetCrewListThunk,
   createUpdateOrderThunk,
   createGetLatestPotholesThunk,
+  createUpdateStatusThunk,
 } from '../../store';
 import {
   Grid,
@@ -18,30 +19,12 @@ import {
 import PotholeRow from './PotholeRow';
 import moment from 'moment';
 
-const source = [
-  {
-    title: 'ACME Computers',
-    description: 'The Best Machines',
-    image: '',
-    price: '$44.00',
-  },
-  {
-    title: 'IBM',
-    description: 'The Best Machines',
-    image: '',
-    price: '$144.00',
-  },
-  {
-    title: 'Microsoft',
-    description: 'The Best Machines',
-    image: '',
-    price: '$44.00',
-  },
-];
-
 class SingleOrderView extends Component {
   constructor() {
     super();
+    this.state = {
+      potholes: []
+    }
     this.id = null;
     this.handleChange = this.handleChange.bind(this);
   }
@@ -50,18 +33,17 @@ class SingleOrderView extends Component {
     this.resetComponent();
   };
 
-  componentDidMount = () => {
-    this.id = this.props.match.params.id;
-    this.props.getOrder(this.id);
-    this.props.getCrewList();
-    this.props.getAllPotholes();
-  };
 
   resetComponent = () =>
     this.setState({ isLoading: false, results: [], value: '' });
 
-  handleResultSelect = (e, { result }) =>
+  handleResultSelect = (e, { result }) => {
     this.setState({ value: result.title });
+    const pothole = this.props.potholes.find(ph => ph.id === result.id)
+    this.props.updatePotholeOrder({ ...pothole, orderId: this.id }, pothole.id)
+
+    this.setState({ potholes: [...this.state.potholes, this.props.potholes] })
+  }
 
   handleSearchChange = (e, { value }) => {
     this.setState({ isLoading: true, value });
@@ -70,20 +52,21 @@ class SingleOrderView extends Component {
       if (this.state.value.length < 1) return this.resetComponent();
 
       const re = new RegExp(this.state.value, 'i');
-      const isMatch = result => re.test(result.zip);
+      const isMatch = result => re.test(result.streetAddress);
 
-      console.log(this.props.potholes.filter(isMatch));
       this.setState({
         isLoading: false,
         results: this.props.potholes.filter(isMatch).map(ph => {
           return {
-            title: ph.zip,
-            description: ph.description,
+            id: ph.id,
+            title: ph.streetAddress,
+            description: ph.status,
           };
         }),
       });
     }, 300);
   };
+
 
   async handleChange(e, { value }) {
     const crew = this.props.crewList.find(c => c.id === value);
@@ -92,18 +75,25 @@ class SingleOrderView extends Component {
     await this.props.updateOrder(orderToUpdate, this.props.order.id);
   }
 
+  componentDidMount = () => {
+    this.id = this.props.match.params.id;
+    this.props.getOrder(this.id);
+    this.props.getCrewList();
+    this.props.getAllPotholes();
+  };
+
   render() {
     const order = this.props.order.potholes
       ? this.props.order
       : {
-          crew: { name: '' },
-          status: '',
-          user: { firstName: '', lastName: '' },
-        };
-    const potholes = order.potholes
-      ? order.potholes.filter(pothole => {
-          return !pothole.status.endsWith('Dup');
-        })
+        crew: { name: '' },
+        status: '',
+        user: { firstName: '', lastName: '' },
+      };
+    const potholes = this.props.order.potholes
+      ? this.props.order.potholes.filter(pothole => {
+        return !pothole.status.endsWith('Dup');
+      })
       : [];
     const formattedDate = moment(order.createdAt).format('dddd MMMM D Y');
     const [day, month, dayNumber, year] = formattedDate.split(' ');
@@ -146,9 +136,9 @@ class SingleOrderView extends Component {
                         Commissioner:
                         {order.user.firstName
                           ? ' ' +
-                            order.user.firstName +
-                            ' ' +
-                            order.user.lastName
+                          order.user.firstName +
+                          ' ' +
+                          order.user.lastName
                           : 'Unknown authorizer'}{' '}
                       </List.Content>
                     </List.Item>
@@ -200,10 +190,10 @@ class SingleOrderView extends Component {
                     return <PotholeRow key={pothole.id} pothole={pothole} />;
                   })
                 ) : (
-                  <Table.Row colSpan="6">
-                    <Table.Cell>No potholes to view (yet)</Table.Cell>
-                  </Table.Row>
-                )}
+                    <Table.Row colSpan="6">
+                      <Table.Cell>No potholes to view (yet)</Table.Cell>
+                    </Table.Row>
+                  )}
               </Table.Body>
             </Table>
           </Grid.Column>
@@ -228,6 +218,7 @@ const mapDispatchToProps = dispatch => {
     updateOrder: (order, orderId) =>
       dispatch(createUpdateOrderThunk(order, orderId)),
     getAllPotholes: () => dispatch(createGetLatestPotholesThunk()),
+    updatePotholeOrder: (pothole, potholeId) => dispatch(createUpdateStatusThunk(pothole, potholeId))
   };
 };
 
