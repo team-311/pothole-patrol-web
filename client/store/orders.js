@@ -6,8 +6,6 @@ const GOT_ORDERS = 'GOT_ORDERS';
 const GOT_ORDER = 'GOT_ORDER';
 const GOT_CREWLIST = 'GOT_CREWLIST';
 const UPDATE_ORDER = 'UPDATE_ORDER';
-const GOT_ORDERS = 'GOT_ORDERS'
-const GOT_ORDER = 'GOT_ORDER'
 const GET_OPEN_ORDERS = 'GET_OPEN_ORDERS'
 
 
@@ -22,10 +20,6 @@ const initialState = {
 };
 
 // action creators
-
-const createGotOrdersAction = orders => ({ type: GOT_ORDERS, orders });
-
-const createGotOrderAction = order => ({ type: GOT_ORDER, order });
 
 const createGetCrewListAction = crewList => ({ type: GOT_CREWLIST, crewList });
 
@@ -97,7 +91,7 @@ export const getOpenOrdersThunk = () => {
 }
 
 // reducer
-export default function(state = initialState, action) {
+export default function (state = initialState, action) {
   switch (action.type) {
     case GOT_ORDERS:
       return {
