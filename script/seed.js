@@ -2,9 +2,10 @@
 
 const db = require('../server/db');
 const { User, Pothole, Crew, Order } = require('../server/db/models');
-const { potholes } = require('../script/potholes.json');
+const { potholes } = require('../script/potholes_2018.json');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
+const moment = require('moment');
 
 async function seed() {
   await db.sync({ force: true });
@@ -73,69 +74,28 @@ async function seed() {
   ]);
 
   const newDate = new Date();
+  const orderData = [
+    { status: 'Completed', userId: 1, crewId: 1, dateCompleted: newDate },
+    { status: 'Completed', userId: 2, crewId: 2, dateCompleted: newDate },
+    { status: 'Completed', userId: 2, crewId: 2, dateCompleted: newDate },
+    { status: 'Completed', userId: 3, crewId: 2, dateCompleted: newDate },
+    { status: 'Completed', userId: 4, crewId: 3, dateCompleted: newDate },
+    { status: 'Completed', userId: 4, crewId: 4, dateCompleted: newDate },
+    { status: 'Completed', userId: 4, crewId: 4, dateCompleted: newDate },
+    { status: 'Completed', userId: 4, crewId: 5, dateCompleted: newDate },
+    { status: 'Completed', userId: 5, crewId: 2, dateCompleted: newDate },
+    { status: 'Completed', userId: 6, crewId: 5, dateCompleted: newDate },
+    { status: 'Completed', userId: 7, crewId: 5, dateCompleted: newDate },
+    { status: 'Completed', userId: 7, crewId: 5, dateCompleted: newDate },
+  ]
 
-  const orders = await Promise.all([
-    Order.create({ status: 'Completed', userId: 1, crewId: 1, dateCompleted: newDate }),
-    Order.create({ status: 'Completed', userId: 2, crewId: 2, dateCompleted: newDate }),
-    Order.create({ status: 'Completed', userId: 2, crewId: 2, dateCompleted: newDate }),
-    Order.create({ status: 'Completed', userId: 3, crewId: 2, dateCompleted: newDate }),
-    Order.create({ status: 'Completed', userId: 4, crewId: 3, dateCompleted: newDate }),
-    Order.create({ status: 'Completed', userId: 4, crewId: 4, dateCompleted: newDate }),
-    Order.create({ status: 'Completed', userId: 4, crewId: 4, dateCompleted: newDate }),
-    Order.create({ status: 'Completed', userId: 4, crewId: 5, dateCompleted: newDate }),
-    Order.create({
-      status: 'Completed',
-      userId: 5,
-      crewId: 2,
-      dateCompleted: newDate,
-    }),
-    Order.create({
-      status: 'Completed',
-      userId: 6,
-      crewId: 5,
-      dateCompleted: newDate,
-    }),
-    Order.create({
-      status: 'Completed',
-      userId: 7,
-      crewId: 5,
-      dateCompleted: newDate,
-    }),
-    Order.create({
-      status: 'Completed',
-      userId: 7,
-      crewId: 5,
-      dateCompleted: newDate,
-    }),
-  ]);
+  const orders = await Promise.all(orderData.map(data => Order.create(data)))
 
   const randomUpvote = () => {
     return Math.floor(Math.random() * 20) + 1
   }
 
   const mappedPotholes = potholes.map((pothole, index) => {
-    let orderId;
-    if (!(index % 1000)) orderId = 1;
-    if (!(index % 1501)) orderId = 2;
-    if (!(index % 2002)) orderId = 3;
-    if (!(index % 3003)) orderId = 4;
-    if (!(index % 4004)) orderId = 5;
-    if (!(index % 4005)) orderId = 6;
-
-    if (!(index % 51)) pothole.status = 'Completed'
-    if (!(index % 28)) pothole.status = 'Completed'
-
-    if (!(index % 102)) pothole.creation_date = new Date(new Date() - 1 * 24 * 60 * 60 * 1000)
-    if (!(index % 203)) pothole.creation_date = new Date(new Date() - 2 * 24 * 60 * 60 * 1000)
-    if (!(index % 330)) pothole.creation_date = new Date(new Date() - 3 * 24 * 60 * 60 * 1000)
-    if (!(index % 440)) pothole.creation_date = new Date(new Date() - 4 * 24 * 60 * 60 * 1000)
-    if (!(index % 505)) pothole.creation_date = new Date(new Date() - 5 * 24 * 60 * 60 * 1000)
-    if (!(index % 606)) pothole.creation_date = new Date(new Date() - 6 * 24 * 60 * 60 * 1000)
-    if (!(index % 770)) pothole.creation_date = new Date(new Date() - 7 * 24 * 60 * 60 * 1000)
-    if (!(index % 880)) pothole.creation_date = new Date(new Date() - 60 * 60 * 1000)
-
-    if (!(index % 240)) pothole.completion_date = new Date(new Date() - 4 * 24 * 60 * 60 * 1000)
-    if (!(index % 472)) pothole.completion_date = new Date(new Date() - 2 * 24 * 60 * 60 * 1000)
 
     return {
       createdAt: pothole.creation_date,
@@ -143,24 +103,60 @@ async function seed() {
       status: pothole.status,
       serviceNumber: pothole.service_request_number,
       streetAddress: pothole.street_address,
-      ward: pothole.ward,
+      ward: pothole.ward > 0 ? pothole.ward : null,
       zip: pothole.zip,
       latitude: pothole.latitude,
       longitude: pothole.longitude,
       mostRecentAction: pothole.most_recent_action,
-      orderId: orderId,
       upVotes: randomUpvote(),
-      location: {
-        type: 'Point',
-        coordinates: [pothole.longitude, pothole.latitude],
-      },
+      location: pothole.location,
     };
   });
 
   await Pothole.bulkCreate(mappedPotholes);
   const numPotholes = await Pothole.count();
 
+  const completedPotholes = await Pothole.findAll(
+    {
+      where: {
+        status: 'Completed'
+      },
+      limit: 100,
+    }
+  )
+
+  let orderId = 1
+  const potholeOrders = completedPotholes.map((pothole) => {
+    if (orderId > orderData.length ) orderId = 1
+    pothole.orderId = orderId
+    orderId++
+    return pothole.save()
+  })
+
+  await Promise.all(potholeOrders)
   await Pothole.createOrders()
+
+  // demonstration purposes
+  const fullstackPothole = {
+    createdAt: moment().day(-2),
+    status: 'Open',
+    serviceNumber: '18-01982794',
+    imageUrl: "http://res.cloudinary.com/pothole-patrol/image/upload/q_25/v1530488413/IMG_20180620_065259.jpg",
+    latitude: 41.895526,
+    longitude: -87.639775,
+    location: {
+      type: 'POINT',
+      coordinates: [-87.639775, 41.895526]
+    },
+    upVotes: 4,
+    zip: 60654,
+    streetAddress: '400 W Superior St',
+    description: 'This is a really dangerous pothole near the pedestrian path. I almost tripped in it!',
+    placement: 'Curb Lane',
+    ward: 42,
+  }
+
+  await Pothole.create(fullstackPothole)
 
   console.log(`seeded ${users.length} users`);
   console.log(`seeded ${crew.length} crews`);
