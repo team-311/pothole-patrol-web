@@ -88,7 +88,7 @@ router.get('/allinprogress', async (req, res, next) => {
   try {
     const data = await Pothole.findAll({
       where: {
-        status: 'In-progess'
+        status: 'In-progress'
       },
     });
     res.json(data);

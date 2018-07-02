@@ -70,8 +70,6 @@ export default function (state = initialState, action) {
       }
     case GOT_ORDER:
       return { ...state, order: action.order }
-    case GET_OPEN_ORDERS:
-      return action.orders
     default:
       return state
   }
