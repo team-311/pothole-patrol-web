@@ -11,16 +11,30 @@ cloudinary.config({
 });
 
 router.get('/', async (req, res, next) => {
+  // pagination
   const page = Number(req.query.page) || 1;
   const limit = process.env.POTHOLES_PAGE_SIZE || 25;
   const offset = (page - 1) * limit;
-
-  const { count, rows: requests } = await Pothole.findAndCountAll({
+  const options = {
     order: [['createdAt', 'DESC'], ['id', 'ASC']],
     offset,
     limit,
-  });
+    where: {},
+  }
 
+  // filters
+  if (req.query.status) options.where.status = { [Op.iLike]: `${req.query.status}%` }
+  if (req.query.ward) options.where.ward = req.query.ward
+
+  // sorting
+  if (req.query.sort) {
+    const [criteria, direction] = req.query.sort.split('.')
+    if (criteria.toLowerCase() === 'opened') {
+      options.order = [['createdAt', direction || 'DESC'], ['id', 'ASC']] // including ID to break ties
+    }
+  }
+
+  const { count, rows: requests } = await Pothole.findAndCountAll(options);
   const lastPage = Math.ceil(count / limit); // round up to account for additional items
 
   res.json({
@@ -55,13 +69,119 @@ router.get('/allopen', async (req, res, next) => {
   }
 });
 
+router.get('/allopen/priority', async (req, res, next) => {
+  try {
+    const data = await Pothole.findAll({
+      where: {
+        status: {
+          [Op.like]: 'Open%',
+        },
+      },
+    });
+    res.json(data);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get('/allinprogress', async (req, res, next) => {
+  try {
+    const data = await Pothole.findAll({
+      where: {
+        status: 'In-progress'
+      },
+    });
+    res.json(data);
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.get('/allclosed', async (req, res, next) => {
   try {
     const data = await Pothole.findAll({
       where: {
-        status: 'Closed'
+        status: 'Completed'
       }
-    }, { include: 'upvoters' })
+    })
+    res.json(data)
+  } catch (err) {
+    next(err);
+  }
+});
+router.get('/allclosed/lastweeknum', async (req, res, next) => {
+  try {
+    const data = await Pothole.findAll({
+      where: {
+        completionDate: {
+          [Op.gt]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000),
+        }
+      }
+    })
+    res.json(data)
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.get('/allclosed/lastweek', async (req, res, next) => {
+  try {
+    const data = await Pothole.findAll({
+      where: {
+        completionDate: {
+          [Op.gt]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000),
+        }
+      }
+    })
+    let dataObj1 = { time: 1, count: 0 };
+    let dataObj2 = { time: 2, count: 0 };
+    let dataObj3 = { time: 3, count: 0 };
+    let dataObj4 = { time: 4, count: 0 };
+    let dataObj5 = { time: 5, count: 0 };
+    let dataObj6 = { time: 6, count: 0 };
+    let dataObj7 = { time: 7, count: 0 };
+    let returnArr = [
+      dataObj1,
+      dataObj2,
+      dataObj3,
+      dataObj4,
+      dataObj5,
+      dataObj6,
+      dataObj7,
+    ];
+    for (let i = 0; i < data.length; i++) {
+      if (new Date() - data[i].completionDate < 1 * 24 * 60 * 60 * 1000) {
+        dataObj1.count++;
+      } else if (new Date() - data[i].completionDate < 2 * 24 * 60 * 60 * 1000) {
+        dataObj2.count++;
+      } else if (new Date() - data[i].completionDate < 3 * 24 * 60 * 60 * 1000) {
+        dataObj3.count++;
+      } else if (new Date() - data[i].completionDate < 4 * 24 * 60 * 60 * 1000) {
+        dataObj4.count++;
+      } else if (new Date() - data[i].completionDate < 5 * 24 * 60 * 60 * 1000) {
+        dataObj5.count++;
+      } else if (new Date() - data[i].completionDate < 6 * 24 * 60 * 60 * 1000) {
+        dataObj6.count++;
+      } else {
+        dataObj7.count++;
+      }
+    }
+    res.json(returnArr);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get('/allclosed/lastmonth', async (req, res, next) => {
+  try {
+    const data = await Pothole.findAll({
+      where: {
+        status: 'Completed',
+        completionDate: {
+          [Op.gt]: new Date(new Date() - 30 * 24 * 60 * 60 * 1000),
+        }
+      }
+    })
     res.json(data)
   } catch (err) {
     next(err);
@@ -210,6 +330,19 @@ router.get('/allclosed/timetocompletion', async (req, res, next) => {
       }
     }
     res.json(returnArr);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get('/byward/:id', async (req, res, next) => {
+  try {
+    const data = await Pothole.findAll({
+      where: {
+        ward: req.params.id
+      },
+    });
+    res.json(data);
   } catch (err) {
     next(err);
   }
