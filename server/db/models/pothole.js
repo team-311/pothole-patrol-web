@@ -9,6 +9,7 @@ const Pothole = db.define(
   {
     imageUrl: {
       type: Sequelize.STRING,
+      defaultValue: 'https://s3.us-east-2.amazonaws.com/soundandcolor/(no+image+available)+(2).png'
     },
     description: {
       type: Sequelize.TEXT,
