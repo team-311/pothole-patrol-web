@@ -2,21 +2,13 @@ import axios from 'axios';
 
 // action types
 
-<<<<<<< HEAD
-=======
 const GOT_ORDERS = 'GOT_ORDERS';
 const GOT_ORDER = 'GOT_ORDER';
 const GOT_CREWLIST = 'GOT_CREWLIST';
->>>>>>> 2cc2ae8a082cb3584eedad383196f7a48399c377
 const UPDATE_ORDER = 'UPDATE_ORDER';
 const GOT_ORDERS = 'GOT_ORDERS'
 const GOT_ORDER = 'GOT_ORDER'
 const GET_OPEN_ORDERS = 'GET_OPEN_ORDERS'
-<<<<<<< HEAD
-const GOT_CREWLIST = 'GOT_CREWLIST'
-=======
-
->>>>>>> 2cc2ae8a082cb3584eedad383196f7a48399c377
 
 // initial state
 const initialState = {
@@ -29,12 +21,6 @@ const initialState = {
 };
 
 // action creators
-<<<<<<< HEAD
-=======
-
-const createGotOrdersAction = orders => ({ type: GOT_ORDERS, orders });
->>>>>>> 2cc2ae8a082cb3584eedad383196f7a48399c377
-
 
 const createGetCrewListAction = crewList => ({ type: GOT_CREWLIST, crewList });
 
@@ -45,10 +31,7 @@ const createGotOrdersAction = (orders) => ({ type: GOT_ORDERS, orders })
 const createGotOrderAction = (order) => ({ type: GOT_ORDER, order })
 
 const getOpenOrders = (orders) => ({ type: GET_OPEN_ORDERS, orders })
-<<<<<<< HEAD
-=======
 
->>>>>>> 2cc2ae8a082cb3584eedad383196f7a48399c377
 
 // thunk creators
 export const createGetLatestOrdersThunk = page => {
@@ -121,19 +104,11 @@ export default function (state = initialState, action) {
         lastPage: action.orders.lastPage,
       };
     case GOT_ORDER:
-<<<<<<< HEAD
-
-=======
->>>>>>> 2cc2ae8a082cb3584eedad383196f7a48399c377
       return { ...state, order: action.order, crew: action.order.crew };
     case GOT_CREWLIST:
       return { ...state, crewList: action.crewList };
     case UPDATE_ORDER:
-<<<<<<< HEAD
       return { ...state, order: action.order }
-=======
-      return { ...state, order: action.order };
->>>>>>> 2cc2ae8a082cb3584eedad383196f7a48399c377
     default:
       return state
   }
