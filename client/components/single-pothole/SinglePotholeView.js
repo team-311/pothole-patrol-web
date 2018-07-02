@@ -15,9 +15,9 @@ import { connect } from 'react-redux';
 import { Map, Marker, GoogleApiWrapper } from 'google-maps-react';
 
 const accessToken = 'AIzaSyAd3YEc_nthBh2bFt5l-elcqgGc9KiMm2A';
-const open = 'http://localhost:8080/icon.png';
-const inProgress = 'http://localhost:8080/pending-icon.png';
-const completed = 'http://localhost:8080/completed-icon.png';
+const open = 'icon.png';
+const inProgress = 'pending-icon.png';
+const completed = 'completed-icon.png';
 
 const options = [
   { key: 'open', text: 'Open', value: 'Open' },
@@ -25,7 +25,6 @@ const options = [
   { key: 'in-progress', text: 'In-progress', value: 'In-progress' },
   { key: 'completed', text: 'Completed', value: 'Completed' },
   { key: 'completed - dup', text: 'Completed - Dup', value: 'Completed - Dup' },
-  { key: 'closed', text: 'Closed', value: 'Closed' },
 ];
 
 class SinglePothole extends Component {
@@ -83,57 +82,72 @@ class SinglePothole extends Component {
 
       return (
         <Container>
-          <Container>
-            <Segment style={{ margin: '2rem' }}>
-              <Grid divided="vertically">
-                <Grid.Row columns={2}>
-                  <Grid.Column width={12} style={{ padding: 0 }}>
-                    <div style={{ height: '65vh', width: '100%' }}>
-                      <Map
-                        google={this.props.google}
-                        initialCenter={{
+          <Segment style={{ margin: '2rem' }}>
+            <Grid divided="vertically">
+              <Grid.Row columns={2}>
+                <Grid.Column width={12} style={{ padding: 0 }}>
+                  <div style={{ height: '50vh', width: '100%' }}>
+                    <Map
+                      google={this.props.google}
+                      initialCenter={{
+                        lat: latitude,
+                        lng: longitude,
+                      }}
+                      className={'map'}
+                      zoom={17}
+                    >
+                      <Marker
+                        name={'Pothole'}
+                        position={{
                           lat: latitude,
                           lng: longitude,
                         }}
-                        className={'map'}
-                        zoom={17}
-                      >
-                        <Marker
-                          name={'Pothole'}
-                          position={{
-                            lat: latitude,
-                            lng: longitude,
-                          }}
-                          icon={{
-                            url: marker,
-                          }}
-                        />
-                      </Map>
-                    </div>
-                  </Grid.Column>
-                  <Grid.Column
-                    width={4}
-                    color="blue"
-                    style={{ margin: '0 0 12px 0', padding: '1rem 0 0 0' }}
-                  >
-                    <Header textAlign="center" as="h2">
-                      Pothole Details
-                    </Header>
+                        icon={{
+                          url: marker,
+                        }}
+                      />
+                    </Map>
+                  </div>
+                </Grid.Column>
+                <Grid.Column
+                  width={4}
+                  style={{ margin: '0 0 12px 0', padding: '1rem 0 0 0', backgroundColor: "#c3ccdb" }}
+                >
+                  <Header textAlign="center" as="h2">
+                    Pothole Details
+                  </Header>
+                  <Container>
                     <Image
-                      style={{ margin: '1rem' }}
+                      style={{ margin: '0 auto' }}
                       src={
                         this.props.pothole.imageUrl ||
                         'https://upload.wikimedia.org/wikipedia/commons/1/10/Newport_Whitepit_Lane_pot_hole.JPG'
                       }
                       size="small"
                     />
-                    <Header as="h4" style={{ margin: '0 1rem' }}>
+
+                    <Header as="h4" style={{ margin: '1rem 1rem 0 1rem' }}>
                       {' '}
                       Address:{' '}
                     </Header>
                     <Header as="h5" style={{ margin: '0 1rem' }}>
                       {this.props.pothole.streetAddress}{' '}
                       {this.props.pothole.zip}
+                    </Header>
+                    <br />
+                    <Header as="h4" style={{ margin: '0 1rem' }}>
+                      {' '}
+                      Service Number:{' '}
+                    </Header>
+                    <Header as="h5" style={{ margin: '0 1rem' }}>
+                      {this.props.pothole.serviceNumber}{' '}
+                    </Header>
+                    <Header as="h4" style={{ margin: '1rem 1rem 0 1rem' }}>
+                      {' '}
+                      Reported Date:{' '}
+                    </Header>
+                    <Header as="h5" style={{ margin: '0 1rem' }}>
+                      {this.props.pothole.createdAt.slice(0, 10)}{' '}
                     </Header>
                     <br />
                     <Header as="h4" style={{ margin: '0 1rem' }}>
@@ -146,29 +160,34 @@ class SinglePothole extends Component {
                       ever since the 1500s`}
                     </Header>
                     <br />
-                    <Header as="h4" style={{ margin: '0 2rem' }}>
+                    <Header as="h4" style={{ margin: '0 1rem' }}>
+                      {' '}
+                      Placement:{' '}
+                    </Header>
+                    <Header as="h5" style={{ margin: '0 1rem' }}>
+                      {this.props.pothole.placement || 'No details given'}{' '}
+                    </Header>
+                    <br />
+                    <Header as="h4" style={{ margin: '0 1rem' }}>
                       {' '}
                       Status:{' '}
                     </Header>
                     <Dropdown
-                      style={{ margin: '0 1rem' }}
+                      style={{ margin: '0 1rem 1rem 1rem' }}
                       options={options}
-                      compact
                       selection
                       value={value}
                       onChange={this.handleChange}
                     />
-                  </Grid.Column>
-                </Grid.Row>
-              </Grid>
-            </Segment>
-          </Container>
-          <Container style={{ margin: '1rem' }}>
-            <Header as="h2" dividing style={{ margin: '2rem' }}>
-              Comments
-            </Header>
-            <SinglePotholeComments style={{ margin: '2rem' }} />
-          </Container>
+                  </Container>
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
+          </Segment>
+          <Header as="h2" dividing style={{ margin: '2rem' }}>
+            Comments
+          </Header>
+          <SinglePotholeComments style={{ margin: '2rem' }} />
         </Container>
       );
     }
