@@ -15,14 +15,17 @@ install:
   - npm i -g npm # delete once default travis npm supports `ci` command
   - npm ci       # faster, goes only from package-lock
 before_script:
-  - psql -c 'create database "boilermaker-test";' -U postgres # remember to change this name if you change it elsewhere (e.g. package.json)
+  - psql -c 'create database "capstone";' -U postgres # remember to change this name if you change it elsewhere (e.g. package.json)
+branches:
+  only:
+    - master
 
-# before_deploy:
-#   - npm run build-client # make the bundle
-#   - rm -rf node_modules # omit from the tarball, since we skip cleanup
-# deploy:
-#   skip_cleanup: true # prevents travis from deleting the build
-#   provider: heroku
-#   app: YOUR-HEROKU-APP-NAME-HERE # see README
-#   api_key:
-#     secure: YOUR-***ENCRYPTED***-API-KEY-HERE # see README
+before_deploy:
+  - npm run build-client # make the bundle
+  - rm -rf node_modules # omit from the tarball, since we skip cleanup
+deploy:
+  skip_cleanup: true # prevents travis from deleting the build
+  provider: heroku
+  app: pothole-patrol-fullstack # see README
+  api_key:
+    secure: 71037304-5829-4806-ac18-678fbc381bfb # see README

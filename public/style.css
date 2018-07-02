@@ -38,3 +38,29 @@ form div {
   justify-content: center;
   align-items: center;
 }
+
+.pagination-component {
+  text-align: center;
+}
+
+#navbar {
+  border-radius: 0;
+}
+
+.data-querying {
+  display: flex;
+  justify-content: space-between;
+}
+
+.data-filtering {
+  display: flex;
+}
+
+.data-filtering div {
+  margin-right: 1em;
+}
+
+.ui.container {
+  width: 80%;
+  padding: 1em;
+}

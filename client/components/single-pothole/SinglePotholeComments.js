@@ -47,7 +47,7 @@ class CommentSection extends Component {
           <Form onSubmit={this.handleSubmit} style={{ margin: '2rem' }}>
             <Form.TextArea
               width={10}
-              placeholder="Try adding multiple lines"
+              placeholder="Add your comment..."
               name="comment"
               value={this.state.comment}
               onChange={this.handleChange}

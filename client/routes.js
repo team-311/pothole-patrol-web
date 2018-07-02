@@ -34,11 +34,11 @@ class Routes extends Component {
         {isLoggedIn && (
           <Switch>
             {/* Routes placed here are only available after logging in */}
-            <Route path="/home" component={UserHome} />
+            <Route exact path="/" component={Dashboard} />
             <Route path="/dashboard" component={Dashboard} />
-            <Route exact path="/singlepothole/:id" component={SinglePothole} />
+            <Route path="/potholes/:id" component={SinglePothole} />
             <Route path="/analytics" component={Analytics} />
-            <Route path="/allpotholes" component={AllPotholeView} />
+            <Route exact path="/potholes" component={AllPotholeView} />
             <Route exact path="/orders/:id" component={SingleOrderView} />
             <Route exact path="/orders" component={OrderListView} />
           </Switch>
