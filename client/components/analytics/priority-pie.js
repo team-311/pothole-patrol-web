@@ -38,7 +38,7 @@ class PriorityPie extends React.Component {
         <VictoryPie
           colorScale={["red", "orange", "green"]}
           data={[
-            { x: "High", y: high }, { x: "Medium", y: medium }, { x: "Low", y: low }
+            { x: `High (${high})`, y: high }, { x: `Medium (${medium})`, y: medium }, { x: `Low (${low})`, y: low }
           ]}
         />
 
