@@ -6,8 +6,6 @@ const GOT_ORDERS = 'GOT_ORDERS';
 const GOT_ORDER = 'GOT_ORDER';
 const GOT_CREWLIST = 'GOT_CREWLIST';
 const UPDATE_ORDER = 'UPDATE_ORDER';
-const GOT_ORDERS = 'GOT_ORDERS'
-const GOT_ORDER = 'GOT_ORDER'
 const GET_OPEN_ORDERS = 'GET_OPEN_ORDERS'
 
 // initial state
