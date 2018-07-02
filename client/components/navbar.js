@@ -7,7 +7,7 @@ import { Menu } from 'semantic-ui-react'
 
 const Navbar = ({ handleClick, isLoggedIn }) => (
   <div>
-    <Menu borderless inverted>
+    <Menu borderless inverted id="navbar">
       <Menu.Item
         as={Link}
         name="dashboard"
@@ -31,12 +31,6 @@ const Navbar = ({ handleClick, isLoggedIn }) => (
           />
           <Menu.Item
             as={Link}
-            name="analytics"
-            to="/analytics"
-            content="Analytics"
-          />
-          <Menu.Item
-            as={Link}
             name="logout"
             to="/"
             content="Logout"
@@ -47,7 +41,7 @@ const Navbar = ({ handleClick, isLoggedIn }) => (
       ) : (
           <Menu.Menu>
             {/* The navbar will show these links before you log in */}
-            < Menu.Item
+            <Menu.Item
               as={Link}
               name="login"
               to="/login"

@@ -1,5 +1,6 @@
-const router = require('express').Router();
-const { Order, User, Crew, Pothole } = require('../db/models');
+const router = require('express').Router()
+const { Order, User, Crew, Pothole } = require('../db/models')
+
 
 router.get('/', async (req, res, next) => {
   try {
@@ -21,7 +22,18 @@ router.get('/', async (req, res, next) => {
       orders,
       currentPage: page,
       lastPage,
+    })
+  } catch (err) { next(err) }
+})
+
+router.get('/open', async (req, res, next) => {
+  try {
+    const data = await Order.findAll({
+      where: {
+        status: "Requested"
+      }, include: [User, Crew, Pothole]
     });
+    res.json(data);
   } catch (err) {
     next(err);
   }
