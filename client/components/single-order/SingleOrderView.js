@@ -170,7 +170,6 @@ class SingleOrderView extends Component {
                       onSearchChange={this.handleSearchChange}
                       results={this.state.results}
                       value={this.state.value}
-                      {...this.props}
                     />
                   </Table.HeaderCell>
                 </Table.Row>

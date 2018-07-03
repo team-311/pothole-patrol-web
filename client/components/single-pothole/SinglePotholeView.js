@@ -83,7 +83,7 @@ class SinglePothole extends Component {
       return (
         <Container>
           <Grid divided="vertically" style={{ marginTop: '1rem' }}>
-            <Grid.Row columns={2} style={{ height: '75vh' }}>
+            <Grid.Row columns={2} style={{ height: '66vh' }}>
               <Grid.Column width={12}>
                 <div>
                   <Map
@@ -123,7 +123,7 @@ class SinglePothole extends Component {
                 <Header textAlign="center" as="h2">
                   Pothole Details
                 </Header>
-                <Container>
+                <Container style={{ maxHeight: '55vh' }}>
                   <Image
                     style={{ margin: '0 auto' }}
                     src={
@@ -190,6 +190,7 @@ class SinglePothole extends Component {
               </Grid.Column>
             </Grid.Row>
           </Grid>
+
           <Header as="h2" dividing style={{ margin: '2rem' }}>
             Comments
           </Header>
