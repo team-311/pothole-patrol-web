@@ -83,7 +83,7 @@ router.post('/', async (req, res, next) => {
   try {
     const newOrder = await Order.createOrderForCrew(req.params.id)
     const orderWithPothole = await Order.findById(newOrder.id, {
-      include: [{model: Pothole, attributes: ['id', 'imageUrl', 'description', 'placement', 'status', 'completionDate', 'latitude', 'longitude', 'streetAddress', 'zip']}],
+      include: [{model: Pothole, attributes: ['id', 'imageUrl', 'description', 'serviceNumber', 'placement', 'status', 'completionDate', 'latitude', 'longitude', 'streetAddress', 'zip']}],
     })
 
     res.json(orderWithPothole)
