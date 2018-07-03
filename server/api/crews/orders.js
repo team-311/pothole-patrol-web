@@ -110,6 +110,7 @@ router.get('/today', async (req, res, next) => {
             'imageUrl',
             'description',
             'placement',
+            'serviceNumber',
             'status',
             'completionDate',
             'latitude',
