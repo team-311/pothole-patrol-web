@@ -83,7 +83,7 @@ router.post('/', async (req, res, next) => {
   try {
     const newOrder = await Order.createOrderForCrew(req.params.id)
     const orderWithPothole = await Order.findById(newOrder.id, {
-      include: [{model: Pothole, attributes: ['id', 'imageUrl', 'description', 'placement', 'status', 'completionDate', 'latitude', 'longitude', 'streetAddress', 'zip']}],
+      include: [{model: Pothole, attributes: ['id', 'imageUrl', 'description', 'serviceNumber', 'placement', 'status', 'completionDate', 'latitude', 'longitude', 'streetAddress', 'zip']}],
     })
 
     res.json(orderWithPothole)
@@ -110,6 +110,7 @@ router.get('/today', async (req, res, next) => {
             'imageUrl',
             'description',
             'placement',
+            'serviceNumber',
             'status',
             'completionDate',
             'latitude',
@@ -144,6 +145,7 @@ router.get('/:orderId', async (req, res, next) => {
           'id',
           'imageUrl',
           'description',
+          'serviceNumber',
           'placement',
           'status',
           'completionDate',
@@ -184,6 +186,7 @@ router.put('/:orderId', async (req, res, next) => {
             'imageUrl',
             'description',
             'placement',
+            'serviceNumber',
             'status',
             'completionDate',
             'latitude',
