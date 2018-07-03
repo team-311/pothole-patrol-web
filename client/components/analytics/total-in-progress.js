@@ -12,7 +12,7 @@ class TotalInProgress extends React.Component {
 
   render() {
     return (
-      <Card color="blue">
+      <Card color="orange">
         <Card.Content>
           <Card.Header>Currently In Progress:</Card.Header>
           <Card.Description>

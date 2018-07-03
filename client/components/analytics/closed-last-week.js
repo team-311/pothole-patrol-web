@@ -12,7 +12,7 @@ class ClosedLastWeek extends React.Component {
 
   render() {
     return (
-      <Card color="blue">
+      <Card color="orange">
         <Card.Content>
           <Card.Header>Completed in Last 7 Days:</Card.Header>
           <Card.Description>

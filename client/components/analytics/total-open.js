@@ -12,7 +12,7 @@ class TotalOpen extends React.Component {
 
   render() {
     return (
-      <Card color="blue">
+      <Card color="orange">
         <Card.Content>
           <Card.Header>Currently Open:</Card.Header>
           <Card.Description>

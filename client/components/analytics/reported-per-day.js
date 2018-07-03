@@ -25,8 +25,8 @@ class ReportedPerDay extends React.Component {
           domainPadding={20}
           theme={VictoryTheme.material}
         >
-          <VictoryLabel text={`All Potholes Open/Closed\n(Last 7 Days)`} x={150} y={30} textAnchor="middle" />
-          <VictoryLabel text={`Open (Grey) || Closed (Gold)`} x={150} y={340} textAnchor="middle" />
+          <VictoryLabel text={`All Potholes Open/Closed\n(Last 7 Days)`} x={180} y={30} textAnchor="middle" />
+          <VictoryLabel text={`Open (Grey) || Closed (Orange)`} x={180} y={340} textAnchor="middle" />
           <VictoryLabel text={`# of Potholes`} angle={-90} x={10} y={180} textAnchor="middle" />
           <VictoryAxis
             style={{ tickLabels: { angle: -45 } }}
@@ -42,13 +42,13 @@ class ReportedPerDay extends React.Component {
               data={this.props.potholes}
               x={"time"}
               y={"count"}
-              style={{ data: { fill: "grey" } }}
+              style={{ data: { fill: "#36454F" } }}
             />
             <VictoryBar
               data={this.props.allClosedLastWeek}
               x={"time"}
               y={"count"}
-              style={{ data: { fill: "orange" } }}
+              style={{ data: { fill: "#FC4C02" } }}
             />
           </VictoryGroup>
         </VictoryChart>
