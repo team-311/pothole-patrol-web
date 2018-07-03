@@ -38,7 +38,10 @@ class OrderListView extends Component {
     return (
       <Container>
         <Header size="huge" textAlign="center">Recent Orders</Header>
-        <Table celled padded>
+        <Table celled
+          striped
+          compact="very"
+          selectable>
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell textAlign="center">Id</Table.HeaderCell>
@@ -68,6 +71,7 @@ class OrderListView extends Component {
                   date={date}
                   authorizer={order.user.name}
                   crew={order.crew.name}
+                  history={this.props.history}
                 />
               );
             })}
