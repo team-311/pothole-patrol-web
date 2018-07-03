@@ -9,6 +9,7 @@ const Pothole = db.define(
   {
     imageUrl: {
       type: Sequelize.STRING,
+      defaultValue: 'https://s3.us-east-2.amazonaws.com/soundandcolor/(no+image+available)+(2).png'
     },
     description: {
       type: Sequelize.TEXT,
@@ -237,6 +238,17 @@ Pothole.createOrders = async function() {
 // instance method
 Pothole.prototype.incrementUpvotes = function() {
   return this.increment(['upVotes'], { by: 1 });
-};
+}
+
+function generateServiceNumber(){
+  process.env.LAST_SERVICE_NUM = Number(process.env.LAST_SERVICE_NUM) + 1
+  let year = new Date()
+  year = year.toDateString().slice(13)
+  return year + '-0' + process.env.LAST_SERVICE_NUM
+}
+
+Pothole.beforeValidate((pothole) => {
+  if (!pothole.serviceNumber) pothole.serviceNumber = generateServiceNumber()
+});
 
 module.exports = Pothole;

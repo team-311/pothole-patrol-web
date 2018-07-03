@@ -1,12 +1,15 @@
 const router = require('express').Router({ mergeParams: true });
 const Op = require('sequelize').Op;
 const { Order, Pothole, Crew } = require('../../db/models');
+const moment = require('moment')
 module.exports = router;
 
 router.get('/', async (req, res, next) => {
   const page = req.query.page || 1;
   const limit = 10;
   const offset = (page - 1) * limit;
+
+  const crew = await Crew.findById(req.params.id)
 
   const orders = await Order.findAll({
     order: [['createdAt', 'DESC'], ['id', 'ASC']],
@@ -16,7 +19,7 @@ router.get('/', async (req, res, next) => {
       crewId: req.params.id,
       status: 'Completed',
     },
-    include: [{ model: Pothole, attributes: ['id', 'streetAddress'] }],
+    include: [{ model: Pothole, attributes: ['id', 'serviceNumber', 'streetAddress', 'zip'] }],
   });
   const count = orders.length;
   const lastPage = Math.ceil(count / limit);
@@ -26,6 +29,53 @@ router.get('/', async (req, res, next) => {
     orders,
     currentPage: offset + 1,
     lastPage,
+    crew: crew.name,
+  });
+});
+
+router.get('/completed', async (req, res, next) => {
+  const limit = 500;
+  const crew = await Crew.findById(req.params.id)
+  const firstDayOfWeek = moment().day(0).toDate()
+
+  const thisWeeksOrdersP = Order.findAll({
+    order: [['dateCompleted', 'DESC'], ['id', 'ASC']],
+    limit,
+    where: {
+      crewId: req.params.id,
+      status: 'Completed',
+      dateCompleted: {
+        [Op.gte]: firstDayOfWeek
+      }
+    },
+    include: [{ model: Pothole, attributes: ['id', 'serviceNumber', 'streetAddress', 'zip'] }],
+  });
+
+  const previousOrdersP = Order.findAll({
+    order: [['dateCompleted', 'DESC'], ['id', 'ASC']],
+    limit,
+    where: {
+      crewId: req.params.id,
+      status: 'Completed',
+      dateCompleted: {
+        [Op.lt]: firstDayOfWeek
+      }
+    },
+    include: [{ model: Pothole, attributes: ['id', 'serviceNumber', 'streetAddress', 'zip'] }],
+  });
+
+  const [thisWeeksOrders, previousOrders] = await Promise.all([thisWeeksOrdersP, previousOrdersP])
+  const sumPotholes = (a, b) => a + b.potholes.length
+  const totalPotholesThisWeek = thisWeeksOrders.reduce(sumPotholes, 0)
+  const totalPotholesPrevious = previousOrders.reduce(sumPotholes, 0)
+
+  res.json({
+    total: thisWeeksOrders.length + previousOrders.length,
+    thisWeeksOrders: thisWeeksOrders || [],
+    totalPotholesThisWeek,
+    previousOrders: previousOrders || [],
+    totalPotholesPrevious,
+    crew: crew.name,
   });
 });
 
@@ -33,7 +83,7 @@ router.post('/', async (req, res, next) => {
   try {
     const newOrder = await Order.createOrderForCrew(req.params.id)
     const orderWithPothole = await Order.findById(newOrder.id, {
-      include: [{model: Pothole, attributes: ['id', 'imageUrl', 'description', 'placement', 'status', 'completionDate', 'latitude', 'longitude', 'streetAddress', 'zip']}],
+      include: [{model: Pothole, attributes: ['id', 'imageUrl', 'description', 'serviceNumber', 'placement', 'status', 'completionDate', 'latitude', 'longitude', 'streetAddress', 'zip']}],
     })
 
     res.json(orderWithPothole)
@@ -60,6 +110,7 @@ router.get('/today', async (req, res, next) => {
             'imageUrl',
             'description',
             'placement',
+            'serviceNumber',
             'status',
             'completionDate',
             'latitude',
@@ -94,6 +145,7 @@ router.get('/:orderId', async (req, res, next) => {
           'id',
           'imageUrl',
           'description',
+          'serviceNumber',
           'placement',
           'status',
           'completionDate',
@@ -134,6 +186,7 @@ router.put('/:orderId', async (req, res, next) => {
             'imageUrl',
             'description',
             'placement',
+            'serviceNumber',
             'status',
             'completionDate',
             'latitude',

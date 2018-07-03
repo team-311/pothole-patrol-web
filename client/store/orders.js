@@ -21,10 +21,6 @@ const initialState = {
 
 // action creators
 
-const createGotOrdersAction = orders => ({ type: GOT_ORDERS, orders });
-
-const createGotOrderAction = order => ({ type: GOT_ORDER, order });
-
 const createGetCrewListAction = crewList => ({ type: GOT_CREWLIST, crewList });
 
 const createUpdateOrderAction = order => ({ type: UPDATE_ORDER, order });
