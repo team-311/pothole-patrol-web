@@ -358,14 +358,12 @@ router.get('/:id', async (req, res, next) => {
 });
 
 router.put('/upvote', async (req, res, next) => {
-  console.log('hitting the upvote route')
   try {
     const user = await User.findById(req.body.userId)
     const pothole = await Pothole.findById(req.body.potholeId, { include: 'upvoters' })
     await user.addUpvoted(pothole)
     const upvoters = await pothole.getUpvoters()
     pothole.incrementUpvotes()
-    console.log('pothole', pothole)
     res.json({ pothole, upvoters })
   } catch (err) { next(err) }
 })
