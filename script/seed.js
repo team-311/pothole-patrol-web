@@ -73,20 +73,19 @@ async function seed() {
     }),
   ]);
 
-  const newDate = new Date();
   const orderData = [
-    { status: 'Completed', userId: 1, crewId: 1, dateCompleted: newDate },
-    { status: 'Completed', userId: 2, crewId: 2, dateCompleted: newDate },
-    { status: 'Completed', userId: 2, crewId: 2, dateCompleted: newDate },
-    { status: 'Completed', userId: 3, crewId: 2, dateCompleted: newDate },
-    { status: 'Completed', userId: 4, crewId: 3, dateCompleted: newDate },
-    { status: 'Completed', userId: 4, crewId: 4, dateCompleted: newDate },
-    { status: 'Completed', userId: 4, crewId: 4, dateCompleted: newDate },
-    { status: 'Completed', userId: 4, crewId: 5, dateCompleted: newDate },
-    { status: 'Completed', userId: 5, crewId: 2, dateCompleted: newDate },
-    { status: 'Completed', userId: 6, crewId: 5, dateCompleted: newDate },
-    { status: 'Completed', userId: 7, crewId: 5, dateCompleted: newDate },
-    { status: 'Completed', userId: 7, crewId: 5, dateCompleted: newDate },
+    { status: 'Completed', userId: 1, crewId: 1, dateCompleted: moment().day(-7) },
+    { status: 'Completed', userId: 2, crewId: 2, dateCompleted: moment().day(-10) },
+    { status: 'Completed', userId: 2, crewId: 2, dateCompleted: moment().day(-12) },
+    { status: 'Completed', userId: 3, crewId: 2, dateCompleted: moment().day(-15) },
+    { status: 'Completed', userId: 4, crewId: 3, dateCompleted: moment().day(-20) },
+    { status: 'Completed', userId: 4, crewId: 4, dateCompleted: moment().day(-25) },
+    { status: 'Completed', userId: 4, crewId: 4, dateCompleted: moment().day(-30) },
+    { status: 'Completed', userId: 4, crewId: 5, dateCompleted: moment().day(-33) },
+    { status: 'Completed', userId: 5, crewId: 2, dateCompleted: moment().day(-40) },
+    { status: 'Completed', userId: 6, crewId: 5, dateCompleted: moment().day(-42) },
+    { status: 'Completed', userId: 7, crewId: 5, dateCompleted: moment().day(-50) },
+    { status: 'Completed', userId: 7, crewId: 5, dateCompleted: moment().day(-60) },
   ]
 
   const orders = await Promise.all(orderData.map(data => Order.create(data)))
