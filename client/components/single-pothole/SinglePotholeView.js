@@ -82,108 +82,114 @@ class SinglePothole extends Component {
 
       return (
         <Container>
-          <Segment style={{ margin: '2rem' }}>
-            <Grid divided="vertically">
-              <Grid.Row columns={2}>
-                <Grid.Column width={12} style={{ padding: 0 }}>
-                  <div style={{ height: '50vh', width: '100%' }}>
-                    <Map
-                      google={this.props.google}
-                      initialCenter={{
+          <Grid divided="vertically" style={{ marginTop: '1rem' }}>
+            <Grid.Row columns={2} style={{ height: '105vh' }}>
+              <Grid.Column width={12}>
+                <div>
+                  <Map
+                    style={{
+                      borderTopLeftRadius: '5%',
+                      borderBottomLeftRadius: '5%'
+                    }}
+                    google={this.props.google}
+                    initialCenter={{
+                      lat: latitude,
+                      lng: longitude,
+                    }}
+                    className={'map'}
+                    zoom={17}
+                  >
+                    <Marker
+                      name={'Pothole'}
+                      position={{
                         lat: latitude,
                         lng: longitude,
                       }}
-                      className={'map'}
-                      zoom={17}
-                    >
-                      <Marker
-                        name={'Pothole'}
-                        position={{
-                          lat: latitude,
-                          lng: longitude,
-                        }}
-                        icon={{
-                          url: marker,
-                        }}
-                      />
-                    </Map>
-                  </div>
-                </Grid.Column>
-                <Grid.Column
-                  width={4}
-                  style={{ margin: '0 0 12px 0', padding: '1rem 0 0 0', backgroundColor: "#c3ccdb" }}
-                >
-                  <Header textAlign="center" as="h2">
-                    Pothole Details
+                      icon={{
+                        url: marker,
+                      }}
+                    />
+                  </Map>
+                </div>
+              </Grid.Column>
+              <Grid.Column
+                width={4}
+                style={{
+                  margin: '0 0 12px 0', padding: '1rem 0 0 0', backgroundColor: "#c3ccdb",
+                  borderBottomRightRadius: '5%',
+                  borderTopRightRadius: '5%'
+                }}
+              >
+                <Header textAlign="center" as="h2">
+                  Pothole Details
                   </Header>
-                  <Container>
-                    <Image
-                      style={{ margin: '0 auto' }}
-                      src={
-                        this.props.pothole.imageUrl ||
-                        'https://upload.wikimedia.org/wikipedia/commons/1/10/Newport_Whitepit_Lane_pot_hole.JPG'
-                      }
-                      size="small"
-                    />
+                <Container>
+                  <Image
+                    style={{ margin: '0 auto' }}
+                    src={
+                      this.props.pothole.imageUrl ||
+                      'https://upload.wikimedia.org/wikipedia/commons/1/10/Newport_Whitepit_Lane_pot_hole.JPG'
+                    }
+                    size="small"
+                  />
 
-                    <Header as="h4" style={{ margin: '1rem 1rem 0 1rem' }}>
-                      {' '}
-                      Address:{' '}
-                    </Header>
-                    <Header as="h5" style={{ margin: '0 1rem' }}>
-                      {this.props.pothole.streetAddress}{' '}
-                      {this.props.pothole.zip}
-                    </Header>
-                    <br />
-                    <Header as="h4" style={{ margin: '0 1rem' }}>
-                      {' '}
-                      Service Number:{' '}
-                    </Header>
-                    <Header as="h5" style={{ margin: '0 1rem' }}>
-                      {this.props.pothole.serviceNumber}{' '}
-                    </Header>
-                    <Header as="h4" style={{ margin: '1rem 1rem 0 1rem' }}>
-                      {' '}
-                      Reported Date:{' '}
-                    </Header>
-                    <Header as="h5" style={{ margin: '0 1rem' }}>
-                      {this.props.pothole.createdAt.slice(0, 10)}{' '}
-                    </Header>
-                    <br />
-                    <Header as="h4" style={{ margin: '0 1rem' }}>
-                      {' '}
-                      Description:{' '}
-                    </Header>
-                    <Header as="h5" style={{ margin: '0 1rem' }}>
-                      {this.props.pothole.description ||
-                        `Lorem Ipsum has been the industry's standard dummy text
+                  <Header as="h3" style={{ margin: '1rem 1rem 0 1rem' }}>
+                    {' '}
+                    Address:{' '}
+                  </Header>
+                  <Header as="h5" style={{ margin: '0 1rem' }}>
+                    {this.props.pothole.streetAddress}{' '}
+                    {this.props.pothole.zip}
+                  </Header>
+                  <br />
+                  <Header as="h3" style={{ margin: '0 1rem' }}>
+                    {' '}
+                    Service Number:{' '}
+                  </Header>
+                  <Header as="h5" style={{ margin: '0 1rem' }}>
+                    {this.props.pothole.serviceNumber}{' '}
+                  </Header>
+                  <Header as="h3" style={{ margin: '1rem 1rem 0 1rem' }}>
+                    {' '}
+                    Reported Date:{' '}
+                  </Header>
+                  <Header as="h5" style={{ margin: '0 1rem' }}>
+                    {this.props.pothole.createdAt.slice(0, 10)}{' '}
+                  </Header>
+                  <br />
+                  <Header as="h3" style={{ margin: '0 1rem' }}>
+                    {' '}
+                    Description:{' '}
+                  </Header>
+                  <Header as="h5" style={{ margin: '0 1rem' }}>
+                    {this.props.pothole.description ||
+                      `Lorem Ipsum has been the industry's standard dummy text
                       ever since the 1500s`}
-                    </Header>
-                    <br />
-                    <Header as="h4" style={{ margin: '0 1rem' }}>
-                      {' '}
-                      Placement:{' '}
-                    </Header>
-                    <Header as="h5" style={{ margin: '0 1rem' }}>
-                      {this.props.pothole.placement || 'No details given'}{' '}
-                    </Header>
-                    <br />
-                    <Header as="h4" style={{ margin: '0 1rem' }}>
-                      {' '}
-                      Status:{' '}
-                    </Header>
-                    <Dropdown
-                      style={{ margin: '0 1rem 1rem 1rem' }}
-                      options={options}
-                      selection
-                      value={value}
-                      onChange={this.handleChange}
-                    />
-                  </Container>
-                </Grid.Column>
-              </Grid.Row>
-            </Grid>
-          </Segment>
+                  </Header>
+                  <br />
+                  <Header as="h3" style={{ margin: '0 1rem' }}>
+                    {' '}
+                    Placement:{' '}
+                  </Header>
+                  <Header as="h5" style={{ margin: '0 1rem' }}>
+                    {this.props.pothole.placement || 'No details given'}{' '}
+                  </Header>
+                  <br />
+                  <Header as="h3" style={{ margin: '0 1rem' }}>
+                    {' '}
+                    Status:{' '}
+                  </Header>
+                  <Dropdown
+                    options={options}
+                    selection
+                    value={value}
+                    onChange={this.handleChange}
+                  />
+
+                </Container>
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
           <Header as="h2" dividing style={{ margin: '2rem' }}>
             Comments
           </Header>
