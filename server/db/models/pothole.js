@@ -241,7 +241,7 @@ Pothole.prototype.incrementUpvotes = function() {
 }
 
 function generateServiceNumber(){
-  process.env.LAST_SERVICE_NUM += 1
+  process.env.LAST_SERVICE_NUM = Number(process.env.LAST_SERVICE_NUM) + 1
   let year = new Date()
   year = year.toDateString().slice(13)
   return year + '-0' + process.env.LAST_SERVICE_NUM
