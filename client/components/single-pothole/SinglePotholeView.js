@@ -15,7 +15,7 @@ import { connect } from 'react-redux';
 import { Map, Marker, GoogleApiWrapper } from 'google-maps-react';
 
 const accessToken = 'AIzaSyAd3YEc_nthBh2bFt5l-elcqgGc9KiMm2A';
-const open = 'https://s3.us-east-2.amazonaws.com/soundandcolor/completed-icon.png';
+const open = 'https://s3.us-east-2.amazonaws.com/soundandcolor/icon.png';
 const inProgress = 'https://s3.us-east-2.amazonaws.com/soundandcolor/pending-icon.png';
 const completed = 'https://s3.us-east-2.amazonaws.com/soundandcolor/completed-icon.png';
 
