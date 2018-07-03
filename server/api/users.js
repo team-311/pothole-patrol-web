@@ -27,7 +27,7 @@ router.get('/:id/upvoted', async (req, res, next) => {
   try {
     const user = await User.findById(req.params.id)
     let potholes = await user.getUpvoted({
-      attributes: ['id', 'streetAddress', 'status']
+      attributes: ['id', 'streetAddress', 'status', 'imageUrl']
     })
     res.json(potholes)
   } catch (err) {next(err)}
