@@ -237,6 +237,17 @@ Pothole.createOrders = async function() {
 // instance method
 Pothole.prototype.incrementUpvotes = function() {
   return this.increment(['upVotes'], { by: 1 });
-};
+}
+
+function generateServiceNumber(){
+  process.env.LAST_SERVICE_NUM += 1
+  let year = new Date()
+  year = year.toDateString().slice(13)
+  return year + '-0' + process.env.LAST_SERVICE_NUM
+}
+
+Pothole.beforeValidate((pothole) => {
+  if (!pothole.serviceNumber) pothole.serviceNumber = generateServiceNumber()
+});
 
 module.exports = Pothole;
