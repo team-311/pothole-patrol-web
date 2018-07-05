@@ -1,7 +1,7 @@
 import React from 'react';
 import { Table } from 'semantic-ui-react';
 import moment from 'moment'
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 const PotholeRow = props => {
   const pothole = props.pothole;

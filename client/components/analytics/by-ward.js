@@ -76,7 +76,7 @@ class ByWard extends React.Component {
           domainPadding={{ x: 30 }}
           theme={VictoryTheme.material}
         >
-          <VictoryLabel text={`Comparison by Ward\n(Last 30 Days)`} x={140} y={30} textAnchor="middle" />
+          <VictoryLabel text={`Comparison by Ward\n(Last 30 Days)`} x={180} y={30} textAnchor="middle" />
           <VictoryLabel text={`# of Potholes`} angle={-90} x={10} y={180} textAnchor="middle" />
           <VictoryAxis
             style={{ tickLabels: { angle: -45 } }}
@@ -85,7 +85,7 @@ class ByWard extends React.Component {
           />
           <VictoryAxis
             dependentAxis
-            tickValues={[25, 50, 100, 150, 200, 250]}
+            tickValues={[50, 100, 150, 200, 300, 400, 500, 600]}
             tickFormat={(x) => (`${x}`)}
           />
           <VictoryGroup offset={10} style={{ data: { width: 15 } }}>
@@ -93,17 +93,17 @@ class ByWard extends React.Component {
               data={returnArr}
               x={"status"}
               y={"count"}
-              style={{ data: { fill: "grey" } }}
+              style={{ data: { fill: "#36454F" } }}
             />
             <VictoryBar
               data={returnArr2}
               x={"status"}
               y={"count"}
-              style={{ data: { fill: "orange" } }}
+              style={{ data: { fill: "#FC4C02" } }}
             />
           </VictoryGroup >
         </VictoryChart>
-        <Menu compact>
+        <Menu compact className="dropdownMenu">
           <Dropdown item scrolling placeholder={`Ward #${this.state.wardId} (grey)`} >
             <Dropdown.Menu>
               {mapArray.map(item => (
@@ -111,7 +111,7 @@ class ByWard extends React.Component {
               ))}
             </Dropdown.Menu>
           </Dropdown>
-          <Dropdown item scrolling placeholder={`Ward #${this.state.wardId2} (gold)`} >
+          <Dropdown item scrolling placeholder={`Ward #${this.state.wardId2} (orange)`} >
             <Dropdown.Menu >
               {mapArray2.map(item => (
                 <Dropdown.Item value={item} onClick={this.handleChange2} key={item}>{item}</Dropdown.Item>

@@ -24,12 +24,11 @@ const createGetCrewListAction = crewList => ({ type: GOT_CREWLIST, crewList });
 
 const createUpdateOrderAction = order => ({ type: UPDATE_ORDER, order });
 
-const createGotOrdersAction = (orders) => ({ type: GOT_ORDERS, orders })
+const getOpenOrders = (orders) => ({ type: GET_OPEN_ORDERS, orders })
 
 const createGotOrderAction = (order) => ({ type: GOT_ORDER, order })
 
-const getOpenOrders = (orders) => ({ type: GET_OPEN_ORDERS, orders })
-
+const createGotOrdersAction = (orders) => ({ type: GOT_ORDERS, orders })
 
 // thunk creators
 export const createGetLatestOrdersThunk = page => {

@@ -240,11 +240,12 @@ Pothole.prototype.incrementUpvotes = function() {
   return this.increment(['upVotes'], { by: 1 });
 }
 
+let lastServiceNum = 1982795
 function generateServiceNumber(){
-  process.env.LAST_SERVICE_NUM = Number(process.env.LAST_SERVICE_NUM) + 1
+  lastServiceNum++
   let year = new Date()
   year = year.toDateString().slice(13)
-  return year + '-0' + process.env.LAST_SERVICE_NUM
+  return year + '-0' + lastServiceNum
 }
 
 Pothole.beforeValidate((pothole) => {

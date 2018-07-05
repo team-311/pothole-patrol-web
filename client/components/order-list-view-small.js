@@ -20,17 +20,17 @@ class OrderListViewSmall extends Component {
     return (
       <div>
         <div>
-          <Header size="huge" textAlign="center">Current Orders:</Header>
-          <Table celled padded>
+          <Header size="huge" textAlign="center" className="currHead">Current Orders:</Header>
+          <Table
+            celled
+            striped
+            compact="very"
+            selectable>
             <Table.Header>
               <Table.Row>
-                <Table.HeaderCell textAlign="center">Id</Table.HeaderCell>
-                <Table.HeaderCell singleLine textAlign="center">
-                  Status
-              </Table.HeaderCell>
-                <Table.HeaderCell textAlign="center">
-                  Date Created
-              </Table.HeaderCell>
+                <Table.HeaderCell textAlign="center">ID</Table.HeaderCell>
+                <Table.HeaderCell textAlign="center">Status</Table.HeaderCell>
+                <Table.HeaderCell textAlign="center">Date Created</Table.HeaderCell>
                 <Table.HeaderCell textAlign="center">Authorizer</Table.HeaderCell>
                 <Table.HeaderCell textAlign="center">Crew</Table.HeaderCell>
               </Table.Row>
@@ -51,6 +51,7 @@ class OrderListViewSmall extends Component {
                     date={date}
                     authorizer={order.user.name}
                     crew={order.crew.name}
+                    history={this.props.history}
                   />
                 );
               }))}

@@ -8,27 +8,30 @@ import { Menu } from 'semantic-ui-react'
 const Navbar = ({ handleClick, isLoggedIn }) => (
   <div>
     <Menu borderless inverted id="navbar">
-      <Menu.Item
-        as={Link}
-        name="dashboard"
-        to="/dashboard"
-        content="Dashboard"
-      />
-      {isLoggedIn ? (
-        <Menu.Menu position="right">
-          {/* The navbar will show these links after you log in */}
+      {isLoggedIn && (
+        <Menu.Menu>
           <Menu.Item
+            as={Link}
+            name="dashboard"
+            to="/dashboard"
+            content="PotholePatrol"
+          />
+          < Menu.Item
             as={Link}
             name="potholes"
             to="/potholes"
-            content="All Potholes"
+            content="Potholes"
           />
           <Menu.Item
             as={Link}
             name="allorders"
             to="/orders"
-            content="All Orders"
+            content="Orders"
           />
+        </Menu.Menu>
+      )}
+      {isLoggedIn && (
+        < Menu.Menu position="right">
           <Menu.Item
             as={Link}
             name="logout"
@@ -37,24 +40,23 @@ const Navbar = ({ handleClick, isLoggedIn }) => (
             onClick={handleClick}
           />
         </Menu.Menu>
-
-      ) : (
-          <Menu.Menu>
-            {/* The navbar will show these links before you log in */}
-            <Menu.Item
-              as={Link}
-              name="login"
-              to="/login"
-              content="Login"
-            />
-            <Menu.Item
-              as={Link}
-              name="signup"
-              to="/signup"
-              content="Signup"
-            />
-          </Menu.Menu>
-        )}
+      )}{!isLoggedIn && (
+        <Menu.Menu>
+          {/* The navbar will show these links before you log in */}
+          <Menu.Item
+            as={Link}
+            name="login"
+            to="/login"
+            content="Login"
+          />
+          <Menu.Item
+            as={Link}
+            name="signup"
+            to="/signup"
+            content="Signup"
+          />
+        </Menu.Menu>
+      )}
     </Menu>
   </div >
 )

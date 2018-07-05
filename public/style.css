@@ -64,3 +64,20 @@ form div {
   width: 80%;
   padding: 1em;
 }
+
+.dropdownMenu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.h5{
+  font-size: 13px;
+  margin-left: 90px;
+  margin-top: 50px;
+  padding: 10px
+}
+
+.ui.header:first-child {
+  margin-top: 1em;
+}

@@ -12,7 +12,7 @@ import PriorityPie from '../analytics/priority-pie'
 //import OrderListView from '../order-list-view'
 import { Table, Card, Text, Container } from 'semantic-ui-react';
 
-const Dashboard = () => {
+const Dashboard = (props) => {
   return (
     <Container className="container">
       <Card.Group itemsPerRow={5}>
@@ -23,20 +23,20 @@ const Dashboard = () => {
         <TotalInProgress />
       </Card.Group>
       <Card.Group itemsPerRow={4}>
-        <Card color="blue">
+        <Card color="orange">
           <AverageTimeComplete />
         </Card>
-        <Card color="blue">
+        <Card color="orange">
           <ReportedPerDay />
         </Card>
-        <Card color="blue">
+        <Card color="orange">
           <ByWard />
         </Card>
-        <Card color="blue">
+        <Card color="orange">
           <PriorityPie />
         </Card>
       </Card.Group>
-      <OrderListViewSmall />
+      <OrderListViewSmall history={props.history} />
     </Container>
   );
 };
