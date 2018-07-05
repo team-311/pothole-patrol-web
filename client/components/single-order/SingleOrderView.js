@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+const lodash = require('lodash')
 import {
   createGetOrderThunk,
   createGetCrewListThunk,
@@ -45,6 +46,8 @@ class SingleOrderView extends Component {
   }
 
   handleSearchChange = (e, { value }) => {
+    console.log(value)
+    console.log(this.props.potholes)
     this.setState({ isLoading: true, value });
 
     setTimeout(() => {
@@ -78,7 +81,7 @@ class SingleOrderView extends Component {
     this.id = this.props.match.params.id;
     this.props.getOrder(this.id);
     this.props.getCrewList();
-    this.props.getAllPotholes();
+    // this.props.getAllPotholes();
   };
 
   render() {
