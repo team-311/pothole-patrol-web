@@ -73,13 +73,12 @@ const Pothole = db.define(
         let status = this.getDataValue('status');
 
         const dateDifference = (today, prevDate) =>
-          ((today - prevDate) / (1000 * 60 * 60 * 24)) * 10;
+          ((today - prevDate) / (1000 * 60 * 60 * 24));
 
         if (potholeCreatedDate) {
           if (status === 'Open') {
             return (
-              dateDifference(todaysDate, potholeCreatedDate.getTime()) /
-              this.upVotes
+              (this.upVotes / dateDifference(todaysDate, potholeCreatedDate.getTime())) * 50
             );
           } else {
             return 0;
@@ -228,7 +227,7 @@ Pothole.createOrders = async function() {
     const order = await Order.create({
       status: 'Requested',
       crewId: crews[i].id,
-      userId: 1,
+      userId: 2,
     });
     await nextPotholes[i].setOrder(order);
     nextPotholes[i].save();
@@ -240,11 +239,12 @@ Pothole.prototype.incrementUpvotes = function() {
   return this.increment(['upVotes'], { by: 1 });
 }
 
+let lastServiceNum = 1982795
 function generateServiceNumber(){
-  process.env.LAST_SERVICE_NUM = Number(process.env.LAST_SERVICE_NUM) + 1
+  lastServiceNum++
   let year = new Date()
   year = year.toDateString().slice(13)
-  return year + '-0' + process.env.LAST_SERVICE_NUM
+  return year + '-0' + lastServiceNum
 }
 
 Pothole.beforeValidate((pothole) => {

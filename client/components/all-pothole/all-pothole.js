@@ -107,7 +107,7 @@ class AllPotholeView extends Component {
   getPriority(num) {
     if (num <= 10) {
       return 'Low';
-    } else if (num >= 20) {
+    } else if (num <= 20) {
       return 'Medium';
     } else {
       return 'High';
