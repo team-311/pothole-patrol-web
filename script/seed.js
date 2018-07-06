@@ -12,11 +12,11 @@ async function seed() {
   console.log('db synced!');
 
   const crew = await Promise.all([
-    Crew.create({ name: 'Moses Men', contactNumber: '9999999999' }),
-    Crew.create({ name: 'Schuyler Shandies', contactNumber: '9999999998' }),
-    Crew.create({ name: 'Rough Riders', contactNumber: '9999999997' }),
-    Crew.create({ name: 'French People', contactNumber: '9999999996' }),
-    Crew.create({ name: 'The Baristas', contactNumber: '9999999995' }),
+    Crew.create({ name: 'The Logan Squares', contactNumber: '9999999999' }),
+    Crew.create({ name: 'The Wicker Parkas', contactNumber: '9999999998' }),
+    Crew.create({ name: 'The Lakeview Lads', contactNumber: '9999999997' }),
+    Crew.create({ name: 'The Boys Town Ballers', contactNumber: '9999999996' }),
+    Crew.create({ name: 'The Lincoln Layers', contactNumber: '9999999995' }),
   ]);
 
   const users = await Promise.all([
@@ -28,8 +28,8 @@ async function seed() {
       password: '123',
     }),
     User.create({
-      firstName: 'Cordy',
-      lastName: 'Mabrother',
+      firstName: 'Gary',
+      lastName: 'McMahon',
       type: 'admin',
       email: 'murphy@email.com',
       password: '123',
@@ -126,7 +126,7 @@ async function seed() {
 
   let orderId = 1
   const potholeOrders = completedPotholes.map((pothole) => {
-    if (orderId > orderData.length ) orderId = 1
+    if (orderId > orderData.length) orderId = 1
     pothole.orderId = orderId
     orderId++
     return pothole.save()
