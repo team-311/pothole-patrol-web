@@ -12,11 +12,11 @@ async function seed() {
   console.log('db synced!');
 
   const crew = await Promise.all([
-    Crew.create({ name: 'Moses Men', contactNumber: '9999999999' }),
-    Crew.create({ name: 'Schuyler Shandies', contactNumber: '9999999998' }),
-    Crew.create({ name: 'Rough Riders', contactNumber: '9999999997' }),
-    Crew.create({ name: 'French People', contactNumber: '9999999996' }),
-    Crew.create({ name: 'The Baristas', contactNumber: '9999999995' }),
+    Crew.create({ name: 'Logan Squares', contactNumber: '9999999999' }),
+    Crew.create({ name: 'Wicker Parkas', contactNumber: '9999999998' }),
+    Crew.create({ name: 'Lakeview Lads', contactNumber: '9999999997' }),
+    Crew.create({ name: 'Boys Town Ballers', contactNumber: '9999999996' }),
+    Crew.create({ name: 'Lincoln Layers', contactNumber: '9999999995' }),
   ]);
 
   const users = await Promise.all([
@@ -28,17 +28,17 @@ async function seed() {
       password: '123',
     }),
     User.create({
-      firstName: 'Cordy',
-      lastName: 'Mabrother',
+      firstName: 'Rahmn',
+      lastName: 'Emanuel',
       type: 'admin',
-      email: 'murphy@email.com',
+      email: 'rahm@email.com',
       password: '123',
     }),
     User.create({
-      firstName: 'George',
-      lastName: 'Washington',
+      firstName: 'Jane',
+      lastName: 'Addams',
       type: 'admin',
-      email: 'george@email.com',
+      email: 'jane@email.com',
       password: '123',
     }),
     User.create({
@@ -74,18 +74,18 @@ async function seed() {
   ]);
 
   const orderData = [
-    { status: 'Completed', userId: 1, crewId: 1, dateCompleted: moment().day(-7) },
+    { status: 'Completed', userId: 2, crewId: 1, dateCompleted: moment().day(-7) },
     { status: 'Completed', userId: 2, crewId: 2, dateCompleted: moment().day(-10) },
     { status: 'Completed', userId: 2, crewId: 2, dateCompleted: moment().day(-12) },
-    { status: 'Completed', userId: 3, crewId: 2, dateCompleted: moment().day(-15) },
-    { status: 'Completed', userId: 4, crewId: 3, dateCompleted: moment().day(-20) },
-    { status: 'Completed', userId: 4, crewId: 4, dateCompleted: moment().day(-25) },
-    { status: 'Completed', userId: 4, crewId: 4, dateCompleted: moment().day(-30) },
-    { status: 'Completed', userId: 4, crewId: 5, dateCompleted: moment().day(-33) },
-    { status: 'Completed', userId: 5, crewId: 2, dateCompleted: moment().day(-40) },
-    { status: 'Completed', userId: 6, crewId: 5, dateCompleted: moment().day(-42) },
-    { status: 'Completed', userId: 7, crewId: 5, dateCompleted: moment().day(-50) },
-    { status: 'Completed', userId: 7, crewId: 5, dateCompleted: moment().day(-60) },
+    { status: 'Completed', userId: 2, crewId: 2, dateCompleted: moment().day(-15) },
+    { status: 'Completed', userId: 2, crewId: 3, dateCompleted: moment().day(-20) },
+    { status: 'Completed', userId: 3, crewId: 4, dateCompleted: moment().day(-25) },
+    { status: 'Completed', userId: 3, crewId: 4, dateCompleted: moment().day(-30) },
+    { status: 'Completed', userId: 3, crewId: 5, dateCompleted: moment().day(-33) },
+    { status: 'Completed', userId: 3, crewId: 2, dateCompleted: moment().day(-40) },
+    { status: 'Completed', userId: 2, crewId: 5, dateCompleted: moment().day(-42) },
+    { status: 'Completed', userId: 3, crewId: 5, dateCompleted: moment().day(-50) },
+    { status: 'Completed', userId: 2, crewId: 5, dateCompleted: moment().day(-60) },
   ]
 
   const orders = await Promise.all(orderData.map(data => Order.create(data)))
