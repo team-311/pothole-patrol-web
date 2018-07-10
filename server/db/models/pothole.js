@@ -73,13 +73,12 @@ const Pothole = db.define(
         let status = this.getDataValue('status');
 
         const dateDifference = (today, prevDate) =>
-          ((today - prevDate) / (1000 * 60 * 60 * 24)) * 10;
+          ((today - prevDate) / (1000 * 60 * 60 * 24));
 
         if (potholeCreatedDate) {
           if (status === 'Open') {
             return (
-              dateDifference(todaysDate, potholeCreatedDate.getTime()) /
-              this.upVotes
+              (this.upVotes / dateDifference(todaysDate, potholeCreatedDate.getTime())) * 50
             );
           } else {
             return 0;
@@ -228,7 +227,7 @@ Pothole.createOrders = async function() {
     const order = await Order.create({
       status: 'Requested',
       crewId: crews[i].id,
-      userId: 1,
+      userId: 2,
     });
     await nextPotholes[i].setOrder(order);
     nextPotholes[i].save();

@@ -1,5 +1,6 @@
 const router = require('express').Router()
 const { Order, User, Crew, Pothole } = require('../db/models')
+const Op = require('sequelize').Op
 
 
 router.get('/', async (req, res, next) => {
@@ -31,7 +32,9 @@ router.get('/open', async (req, res, next) => {
   try {
     const data = await Order.findAll({
       where: {
-        status: "Requested"
+        status: {
+          [Op.or]: ["Requested", "In Progress"]
+        },
       }, include: [User, Crew, Pothole]
     });
     res.json(data);
