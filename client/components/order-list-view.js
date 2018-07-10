@@ -63,13 +63,15 @@ class OrderListView extends Component {
               );
               const [day, month, dayNumber, year] = formattedDate.split(' ');
               const date = [month, ' ', dayNumber, ', ', year].join('');
+              const authorizerName = order.user ? order.user.name : 'Not Assigned'
+
               return (
                 <OrderRowItem
                   key={order.id}
                   id={order.id}
                   status={order.status}
                   date={date}
-                  authorizer={order.user.name}
+                  authorizer={authorizerName}
                   crew={order.crew.name}
                   history={this.props.history}
                 />

@@ -41,9 +41,16 @@ Order.createOrderForCrew = async function(crewId) {
   });
 
   openPotholes.sort((a, b) => b.priority - a.priority)
+  const adminUser = await User.findOne({
+    where: {
+      type: 'admin'
+    }
+  })
+
   const order = await this.create({
     status: 'Requested',
     crewId,
+    userId: adminUser.id
   })
 
   return order.addPothole(openPotholes[0])
