@@ -67,7 +67,6 @@ export const createGetCrewListThunk = () => {
 };
 
 export const createUpdateOrderThunk = (order, orderId) => {
-  console.log(order)
   return async dispatch => {
     try {
       const response = await axios.put(`/api/orders/${orderId}`, order);

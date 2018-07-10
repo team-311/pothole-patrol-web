@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-const lodash = require('lodash')
+import debounce from 'lodash/debounce';
 import {
   createGetOrderThunk,
   createGetCrewListThunk,
   createUpdateOrderThunk,
   createGetLatestPotholesThunk,
   createUpdateStatusThunk,
+  createSearchThunk,
 } from '../../store';
 import {
   Grid,
@@ -25,6 +26,8 @@ class SingleOrderView extends Component {
     super();
     this.id = null;
     this.handleChange = this.handleChange.bind(this);
+    this.handleSearchChange = this.handleSearchChange.bind(this)
+    this.search = React.createRef();
   }
 
   UNSAFE_componentWillMount = () => {
@@ -36,38 +39,20 @@ class SingleOrderView extends Component {
     this.setState({ isLoading: false, results: [], value: '' })
   }
 
-  handleResultSelect = (e, { result }) => {
-    this.setState({ value: result.title });
-    const pothole = this.props.potholes.find(ph => ph.id === result.id)
-    this.props.updatePotholeOrder({ ...pothole, orderId: this.id }, pothole.id)
+  handleResultSelect = async (e, { result }) => {
+    this.search.current.value = ''
+    debugger
+    await this.props.updatePotholeOrder({ orderId: this.id }, result.id)
 
-    this.id = this.props.match.params.id;
     this.props.getOrder(this.id);
   }
 
-  handleSearchChange = (e, { value }) => {
-    console.log(value)
-    console.log(this.props.potholes)
-    this.setState({ isLoading: true, value });
-
-    setTimeout(() => {
-      if (this.state.value.length < 1) return this.resetComponent();
-
-      const re = new RegExp(this.state.value, 'i');
-      const isMatch = result => re.test(result.streetAddress);
-
-      this.setState({
-        isLoading: false,
-        results: this.props.potholes.filter(isMatch).map(ph => {
-          return {
-            id: ph.id,
-            title: ph.streetAddress,
-            description: ph.status,
-          };
-        }),
-      });
-    }, 300)
-  };
+  handleSearchChange = debounce((e, { value }) => {
+    this.setState({ isLoading: true, value }, async () => {
+      await this.props.getSearch(value)
+      this.setState({ isLoading: false })
+    });
+  }, 1000)
 
 
   handleChange = (e, { value }) => {
@@ -81,7 +66,6 @@ class SingleOrderView extends Component {
     this.id = this.props.match.params.id;
     this.props.getOrder(this.id);
     this.props.getCrewList();
-    // this.props.getAllPotholes();
   };
 
   render() {
@@ -171,8 +155,8 @@ class SingleOrderView extends Component {
                       loading={this.state.isLoading}
                       onResultSelect={this.handleResultSelect}
                       onSearchChange={this.handleSearchChange}
-                      results={this.state.results}
-                      value={this.state.value}
+                      results={this.props.searchResults}
+                      ref={this.search}
                     />
                   </Table.HeaderCell>
                 </Table.Row>
@@ -209,6 +193,13 @@ const mapStateToProps = state => {
     order: state.orders.order,
     crewList: state.orders.crewList,
     potholes: state.potholes.requests,
+    searchResults: state.potholes.searchResults.map(ph => {
+      return {
+        id: ph.id,
+        title: ph.streetAddress,
+        description: ph.status,
+      }
+    })
   };
 };
 
@@ -219,7 +210,8 @@ const mapDispatchToProps = dispatch => {
     updateOrder: (order, orderId) =>
       dispatch(createUpdateOrderThunk(order, orderId)),
     getAllPotholes: () => dispatch(createGetLatestPotholesThunk()),
-    updatePotholeOrder: (pothole, potholeId) => dispatch(createUpdateStatusThunk(pothole, potholeId))
+    updatePotholeOrder: (pothole, potholeId) => dispatch(createUpdateStatusThunk(pothole, potholeId)),
+    getSearch: (q) => dispatch(createSearchThunk(q))
   };
 };
 
