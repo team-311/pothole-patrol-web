@@ -17,7 +17,7 @@ class TotalInProgress extends React.Component {
           <Card.Header>Currently In Progress:</Card.Header>
           <Card.Description>
             <Icon circular name='warning sign' />
-            {this.props.allInProgress.length}
+            {this.props.allInProgress}
           </Card.Description>
         </Card.Content>
       </Card>

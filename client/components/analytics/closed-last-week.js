@@ -17,7 +17,7 @@ class ClosedLastWeek extends React.Component {
           <Card.Header>Completed in Last 7 Days:</Card.Header>
           <Card.Description>
             <Icon name='check circle' />
-            {this.props.allClosedLastWeekNum.length}
+            {this.props.allClosedLastWeekNum}
           </Card.Description>
         </Card.Content>
       </Card>

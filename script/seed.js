@@ -126,7 +126,7 @@ async function seed() {
 
   let orderId = 1
   const potholeOrders = completedPotholes.map((pothole) => {
-    if (orderId > orderData.length ) orderId = 1
+    if (orderId > orderData.length) orderId = 1
     pothole.orderId = orderId
     orderId++
     return pothole.save()
