@@ -123,7 +123,7 @@ class SinglePothole extends Component {
                 <Header textAlign="center" as="h2">
                   Pothole Details
                 </Header>
-                <Container>
+                <Container style={{ maxHeight: '55vh' }}>
                   <Image
                     style={{ margin: '0 auto' }}
                     src={
@@ -190,6 +190,7 @@ class SinglePothole extends Component {
               </Grid.Column>
             </Grid.Row>
           </Grid>
+
           <Header as="h2" dividing style={{ margin: '2rem' }}>
             Comments
           </Header>

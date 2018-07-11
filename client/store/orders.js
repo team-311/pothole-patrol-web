@@ -8,7 +8,6 @@ const GOT_CREWLIST = 'GOT_CREWLIST';
 const UPDATE_ORDER = 'UPDATE_ORDER';
 const GET_OPEN_ORDERS = 'GET_OPEN_ORDERS'
 
-
 // initial state
 const initialState = {
   count: 0,
@@ -105,7 +104,7 @@ export default function (state = initialState, action) {
     case GOT_CREWLIST:
       return { ...state, crewList: action.crewList };
     case UPDATE_ORDER:
-      return { ...state, order: action.order };
+      return { ...state, order: action.order }
     default:
       return state
   }

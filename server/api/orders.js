@@ -23,11 +23,10 @@ router.get('/', async (req, res, next) => {
       orders,
       currentPage: page,
       lastPage,
-    });
-  } catch (err) {
-    next(err);
-  }
-});
+    })
+  } catch (err) { next(err) }
+})
+
 
 router.get('/open', async (req, res, next) => {
   try {

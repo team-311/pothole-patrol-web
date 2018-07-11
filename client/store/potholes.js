@@ -16,6 +16,7 @@ const GET_BY_WARD = 'GET_BY_WARD'
 const GET_BY_WARD2 = 'GET_BY_WARD2'
 const UPDATE_STATUS = 'UPDATE_STATUS';
 const GET_ALL_OPEN_PRIORITY = 'GET_ALL_OPEN_PRIORITY'
+const GET_POTHOLES_BY_SEARCH = 'GET_POTHOLES_BY_SEARCH'
 
 // initial state
 const initialState = {
@@ -24,6 +25,7 @@ const initialState = {
   currentPage: 1,
   lastPage: 1,
   pothole: {},
+  searchResults: [],
 };
 
 // action creators
@@ -97,6 +99,11 @@ const createUpdateStatusAction = pothole => ({
   type: UPDATE_STATUS,
   pothole,
 });
+
+const createSearchAction = potholes => ({
+  type: GET_POTHOLES_BY_SEARCH,
+  potholes,
+})
 
 // thunk creators
 export const createGetLatestPotholesThunk = page => {
@@ -233,6 +240,18 @@ export const createUpdateStatusThunk = (pothole, potholeId) => {
   };
 };
 
+export const createSearchThunk = (q) => {
+  return async (dispatch) => {
+    try {
+      const { data } = await axios.get(`/api/potholes/search?q=${q}`)
+      dispatch(createSearchAction(data))
+    } catch (error) {
+      console.error(error)
+    }
+
+  }
+}
+
 // reducer
 export default function (state = initialState, action) {
   switch (action.type) {
@@ -242,6 +261,8 @@ export default function (state = initialState, action) {
       return { ...state, pothole: action.pothole };
     case UPDATE_STATUS:
       return { ...state, pothole: action.pothole };
+    case GET_POTHOLES_BY_SEARCH:
+      return { ...state, searchResults: action.potholes }
     default:
       return state;
   }
