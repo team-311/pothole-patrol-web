@@ -56,7 +56,7 @@ router.get('/nearby', async (req, res, next) => {
 
 router.get('/allopen', async (req, res, next) => {
   try {
-    const data = await Pothole.findAll({
+    const data = await Pothole.count({
       where: {
         status: {
           [Op.like]: 'Open%',
@@ -86,7 +86,7 @@ router.get('/allopen/priority', async (req, res, next) => {
 
 router.get('/allinprogress', async (req, res, next) => {
   try {
-    const data = await Pothole.findAll({
+    const data = await Pothole.count({
       where: {
         status: 'In-progress'
       },
@@ -99,7 +99,7 @@ router.get('/allinprogress', async (req, res, next) => {
 
 router.get('/allclosed', async (req, res, next) => {
   try {
-    const data = await Pothole.findAll({
+    const data = await Pothole.count({
       where: {
         status: 'Completed'
       }
@@ -111,7 +111,7 @@ router.get('/allclosed', async (req, res, next) => {
 });
 router.get('/allclosed/lastweeknum', async (req, res, next) => {
   try {
-    const data = await Pothole.findAll({
+    const data = await Pothole.count({
       where: {
         completionDate: {
           [Op.gt]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000),
@@ -174,7 +174,7 @@ router.get('/allclosed/lastweek', async (req, res, next) => {
 
 router.get('/allclosed/lastmonth', async (req, res, next) => {
   try {
-    const data = await Pothole.findAll({
+    const data = await Pothole.count({
       where: {
         status: 'Completed',
         completionDate: {

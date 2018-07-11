@@ -17,7 +17,7 @@ class TotalOpen extends React.Component {
           <Card.Header>Currently Open:</Card.Header>
           <Card.Description>
             <Icon circular name='calendar check outline' />
-            {this.props.allOpen.length}
+            {this.props.allOpen}
           </Card.Description>
         </Card.Content>
       </Card>

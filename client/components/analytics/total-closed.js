@@ -17,7 +17,7 @@ class TotalClosed extends React.Component {
           <Card.Header>Total Completed:</Card.Header>
           <Card.Description>
             <Icon circular name='check' />
-            {this.props.allClosed.length}
+            {this.props.allClosed}
           </Card.Description>
         </Card.Content>
       </Card>

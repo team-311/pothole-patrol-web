@@ -12,19 +12,11 @@ async function seed() {
   console.log('db synced!');
 
   const crew = await Promise.all([
-<<<<<<< HEAD
-    Crew.create({ name: 'The Logan Squares', contactNumber: '9999999999' }),
-    Crew.create({ name: 'The Wicker Parkas', contactNumber: '9999999998' }),
-    Crew.create({ name: 'The Lakeview Lads', contactNumber: '9999999997' }),
-    Crew.create({ name: 'The Boys Town Ballers', contactNumber: '9999999996' }),
-    Crew.create({ name: 'The Lincoln Layers', contactNumber: '9999999995' }),
-=======
     Crew.create({ name: 'Logan Squares', contactNumber: '9999999999' }),
     Crew.create({ name: 'Wicker Parkas', contactNumber: '9999999998' }),
     Crew.create({ name: 'Lakeview Lads', contactNumber: '9999999997' }),
     Crew.create({ name: 'Boys Town Ballers', contactNumber: '9999999996' }),
     Crew.create({ name: 'Lincoln Layers', contactNumber: '9999999995' }),
->>>>>>> ef1117692da658d591676946175a7fbe6cf19786
   ]);
 
   const users = await Promise.all([
@@ -36,13 +28,8 @@ async function seed() {
       password: '123',
     }),
     User.create({
-<<<<<<< HEAD
-      firstName: 'Gary',
-      lastName: 'McMahon',
-=======
       firstName: 'Rahmn',
       lastName: 'Emanuel',
->>>>>>> ef1117692da658d591676946175a7fbe6cf19786
       type: 'admin',
       email: 'rahm@email.com',
       password: '123',
