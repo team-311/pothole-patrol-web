@@ -27,7 +27,6 @@ class SingleOrderView extends Component {
     this.id = null;
     this.handleChange = this.handleChange.bind(this);
     this.handleSearchChange = this.handleSearchChange.bind(this)
-    this.search = React.createRef();
   }
 
   UNSAFE_componentWillMount = () => {
@@ -40,20 +39,19 @@ class SingleOrderView extends Component {
   }
 
   handleResultSelect = async (e, { result }) => {
-    this.search.current.value = ''
-    debugger
+    this.setState({ value: '' })
     await this.props.updatePotholeOrder({ orderId: this.id }, result.id)
 
     this.props.getOrder(this.id);
   }
 
-  handleSearchChange = debounce((e, { value }) => {
-    this.setState({ isLoading: true, value }, async () => {
+  handleSearchChange = (e, { value }) => {
+    this.setState({ isLoading: true, value }, debounce(async () => {
       await this.props.getSearch(value)
       this.setState({ isLoading: false })
-    });
-  }, 1000)
 
+    }, 1000))
+  }
 
   handleChange = (e, { value }) => {
     const crew = this.props.crewList.find(c => c.id === value);
@@ -156,7 +154,7 @@ class SingleOrderView extends Component {
                       onResultSelect={this.handleResultSelect}
                       onSearchChange={this.handleSearchChange}
                       results={this.props.searchResults}
-                      ref={this.search}
+                      value={this.state.value}
                     />
                   </Table.HeaderCell>
                 </Table.Row>
