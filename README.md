@@ -2,7 +2,7 @@
 
 Pothole Patrol is a comprehensive pothole management system for Chicago, built using real data from 30,000 pothole service requests submitted this year. With it, residents can report potholes, Chicago administrators can oversee pothole repair, and city crew members can access their daily repair assignments and update admins on their progress.
 
-* View our backend and web repo: https://github.com/team-311/pothole-patrol-web
+* View our frontend React Native repo: https://github.com/team-311/pothole-patrol-native
 * See our deployed app on Heroku: https://pothole-patrol-fullstack.herokuapp.com
 
 ## Why
